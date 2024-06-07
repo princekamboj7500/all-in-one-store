@@ -3,7 +3,7 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://signs-electronics-recommendations-cooperative.trycloudflare.com"
+application_url = "https://ac-cause-notion-channel.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://signs-electronics-recommendations-cooperative.trycloudflare.com/auth/callback",
-  "https://signs-electronics-recommendations-cooperative.trycloudflare.com/auth/shopify/callback",
-  "https://signs-electronics-recommendations-cooperative.trycloudflare.com/api/auth/callback"
+  "https://ac-cause-notion-channel.trycloudflare.com/auth/callback",
+  "https://ac-cause-notion-channel.trycloudflare.com/auth/shopify/callback",
+  "https://ac-cause-notion-channel.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -80,19 +80,36 @@ export const loader = async ({ request }) => {
     
       const appId = result.data.currentAppInstallation.id;
       const metafielData = result.data.currentAppInstallation.metafields.edges;
-    console.log(metafielData,"metafielData--")
-      const appName = metafielData.filter(item => item.node.namespace === "Scroll Top To Bottom");
-      
-      const appSettings = appName.length > 0 ? appName[0].node.value : {
-        app_name: "Scroll Top To Bottom",
+      const defaultSettings = {
+        app_name: "ScrollTopToBottom",
         app_status: false,
         show_on_desktop: 1,
         show_on_mobile:  1,
         fill_animation: 0,
         theme_icon:  "SvgIcon1",
-     
       };
-     const  data = JSON.parse(appSettings);
+      console.log(metafielData,"metafielData--")
+     
+      const appName =
+    metafielData.length > 0
+      ? metafielData.filter((item) => item.node.namespace === "ScrollTopToBottom")
+      : [];
+
+  let appSettings =
+    appName.length > 0 ? appName[0].node.value : defaultSettings;
+     
+      let data;
+      if (typeof appSettings === 'string') {
+          try {
+              data = JSON.parse(appSettings);
+          } catch (error) {
+              console.error('Error parsing appSettings:', error);
+              data = {}; // or handle the error as needed
+          }
+      } else {
+          data = appSettings;
+      }
+      
   
      return {data};
 };
@@ -114,8 +131,7 @@ export default function ScrollToTop() {
   const [msgData, setMsgData] = useState("");
  
   const handleFocus = (fieldName) => {
-
-    setActiveField(fieldName);
+     setActiveField(fieldName);
   };
 
   const toggleActive = useCallback(

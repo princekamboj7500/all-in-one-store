@@ -435,7 +435,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url="https://help.shopify.com/manual"
+                    url="/app/auto_external_links"
                   >
                     <InlineStack align="space-between"   gap="200" blockAlign="center">
                       <div className="app_icon">
@@ -453,7 +453,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url="https://help.shopify.com/manual"
+                    url=""
                   >
                     <InlineStack align="space-between"  gap="200"  blockAlign="center">
                       <div className="app_icon">
