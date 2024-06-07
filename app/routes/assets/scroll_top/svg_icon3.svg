@@ -1,0 +1,4 @@
+<svg class="scroll-top__svg-circle--outline" width="30" height="30" viewBox="0 0 41.5 41.5" xmlns="http://www.w3.org/2000/svg">
+    <path class="scroll-top__svg-circle--filled" d="M33.49,29.84a2,2,0,0,1-1.36-.53L24.68,22.4l-7.46,6.91a2,2,0,0,1-2.72-2.93l8.82-8.18a2,2,0,0,1,2.72,0l8.82,8.18a2,2,0,0,1-1.37,3.46Z" transform="translate(-3.93 -4.01)"></path>
+    <path class="all-in-one__svg-fill" d="M24.68,45.51A20.75,20.75,0,1,1,45.43,24.76,20.78,20.78,0,0,1,24.68,45.51Zm0-40A19.25,19.25,0,1,0,43.93,24.76,19.26,19.26,0,0,0,24.68,5.51Z" transform="translate(-3.93 -4.01)"></path>
+</svg>

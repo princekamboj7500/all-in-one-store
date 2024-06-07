@@ -1,0 +1,200 @@
+.vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack{
+    background-color: var(--p-color-bg-surface-secondary);
+    border-radius: var(--p-border-radius-200);
+    padding: var(--p-space-400);
+    width: calc(50% - var(--p-space-200));
+}
+.vitals_app_body>.Polaris-InlineStack>.Polaris-BlockStack{
+    background-color: var(--p-color-bg-surface-secondary);
+    border-radius: var(--p-border-radius-200);
+    padding: var(--p-space-400);
+    width: calc(50% - var(--p-space-200));
+}
+.upsell_chart_data  .app_upsell_text.Polaris-Link--monochrome{
+    font-weight: var(--p-font-weight-semibold);
+}
+gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Title {
+    font-size: 25px;
+    display: inline;
+    margin-right: var(--p-space-200);
+  }
+  .scroll_up_to_top_page  .Polaris-Header-Title__SubTitle {
+    margin-top: var(--p-space-050);
+    color: var(--p-color-text-secondary);
+    max-width: 60ch;
+  }
+  .color_section{
+    display: flex;
+  }
+  .color_section input[type="color"] {
+    height: 40px;
+    background-color: transparent;
+    width: 41px;
+    border: none;
+    padding: 0%;
+    border-radius: 6px;
+  }
+  .color_section input[type="color"]::-webkit-color-swatch {
+    border: none;
+      border-radius:10px;
+  }
+ 
+  
+  .grid_2nd_card_conatiner {
+    background-color: white;
+    border-radius: 62px;
+    padding: 25px;
+    position: relative;
+    height: 756px;
+    outline: 10px solid #f7f7f7;
+  }
+
+  .all_preview_header{
+    padding: 5px 10px;
+    background: #eee;
+    color: #121212;
+    border-radius: 10px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom:20px;
+  }
+  .preview_image {
+    height: 160px;
+    margin: 0 auto;
+    display: block;
+}
+.all_preview_body h1{
+    color: #888;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    margin-bottom: 10px;
+}
+.price_section_grid_2nd  del{
+    margin-right: 15px;
+    opacity: 0.8;
+    color: #888;
+    font-size: 0.95rem;
+}
+.price_section_grid_2nd span{
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.add_cart_button{
+    width: 100%;
+    height: 40px;
+    margin: 10px 0 30px;
+    border: none;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    line-height: 37px;
+    letter-spacing: .1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 0.3rem;
+
+}
+.product_description {
+    
+  padding: 10px 0;
+  color: #888;
+  font-weight: 400;
+  font-size: 16px;
+}
+.product_input{
+  font-size: 1rem;
+    height: 40px;
+    margin-top: 12px;
+    background-color: #eee;
+    color: #777;
+    border: 1px solid grey;
+    border-radius: 0.3rem;
+    padding: 0 12px;
+    box-sizing: border-box;
+    width: 80px;
+}
+.All_app_scroll_icon{
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-100);
+  height: 100%;
+}
+ .theme_image_icons .Polaris-Box:hover{
+  border-width: var(--p-border-width-050);
+  border-color: var(--p-color-border-hover);
+} 
+
+.active_icon{
+  border-width: var(--p-border-width-050);
+  border-style: solid;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border-color:var(--p-color-border-emphasis)
+} 
+.app_icon{
+  background-color: #f0f2ff;
+  border-radius: var(--p-border-radius-200);
+  height: 42px;
+  min-width: 42px;
+  position: relative;
+}
+.apps_name >.Polaris-InlineStack {
+  row-gap: var(--p-space-600);
+}
+
+.apps_name>.Polaris-InlineStack>.all_in_apps_Card {
+  flex: 1;
+  min-width: 290px;
+}
+.all_in_apps_Card a .Polaris-InlineStack{
+  display: inline-flex;
+}
+
+
+.app_preview_scroll_icon{
+  cursor: pointer;
+  position: absolute;
+    right: 24px;
+}
+
+.All_app_scroll_icon svg{
+  width: 36px;
+    height: 36px;
+}
+.Favicon_cart_count_page .color_section {
+  display: flex;
+}
+.Favicon_cart_count_page .color_section input[type="color"] {
+  height: 43px;
+  background-color: transparent;
+  width: 40px;
+  border: none;
+  padding: 0%;
+  border-radius: 6px;
+}
+.Favicon_cart_count_page .color_section input[type="color"]::-webkit-color-swatch {
+  border-radius: 10px;
+}
+.Favicon_cart_count_page .color_section input[type="color"] {
+  height: 42px;
+  background-color: transparent;
+  width: 38px;
+  border: none;
+  padding: 0%;
+  border-radius: 6px;
+  margin: -4px;
+}
+
+
+
+@media only screen and  (min-width: 728px) {
+  .apps_name>.Polaris-InlineStack>.all_in_apps_Card {
+      max-width: calc(33.33333% - 10px);
+  }
+}

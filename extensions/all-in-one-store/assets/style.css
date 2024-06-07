@@ -1,0 +1,10 @@
+body{
+    position: relative;
+}
+
+.all_in_one_store .scroll_top{bottom: 9px;right: 8px;position: fixed;z-index: 1000;}
+
+.scroll_arrow_icon{
+    cursor: pointer;
+    
+}

@@ -1,0 +1,4 @@
+<svg class="scroll-top__svg-circle--outline" width="30" height="30" viewBox="0 0 41.5 41.5" xmlns="http://www.w3.org/2000/svg">
+    <path class="all-in-one__svg-arrow" fill="#fff" d="M33.49,30.85a2,2,0,0,1-1.36-.54L24.68,23.4l-7.46,6.91a2,2,0,0,1-2.72-2.93l8.82-8.18a2,2,0,0,1,2.72,0l8.81,8.18a2,2,0,0,1-1.36,3.47Z" transform="translate(-3.93 -4.01)"></path>
+    <path class="all-in-one__svg-arrow" d="M44.68,4h-40a.74.74,0,0,0-.75.75v40a.75.75,0,0,0,.75.75h40a.76.76,0,0,0,.75-.75v-40A.75.75,0,0,0,44.68,4ZM14.5,27.38l8.82-8.18a2,2,0,0,1,2.72,0l8.81,8.18a2,2,0,1,1-2.72,2.93L24.68,23.4l-7.46,6.91a2,2,0,0,1-2.72-2.93Z" transform="translate(-3.93 -4.01)"></path>
+</svg>

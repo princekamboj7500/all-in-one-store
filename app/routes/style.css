@@ -1,0 +1,6 @@
+.vitals_app_body  .Polaris-InlineStack .Polaris-InlineStack{
+    background-color: var(--p-color-bg-surface-secondary);
+    border-radius: var(--p-border-radius-200);
+    padding: var(--p-space-400);
+    width: calc(50% - var(--p-space-200));
+}
