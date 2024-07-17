@@ -96,7 +96,7 @@ function BuilderCreate() {
           >
             <InlineStack blockAlign="center">
               <div className="aios-upsell_step_counter">
-             
+              <div className="aios-upsell_step_counter">01</div>
                 </div>
               <BlockStack>
                 <div className="aios-upsell_step_heading">Select Products</div>
