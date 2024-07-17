@@ -3,23 +3,23 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://ac-cause-notion-channel.trycloudflare.com"
+application_url = "https://contacted-wins-briefly-acres.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "digitalproducttestingapp.myshopify.com"
+dev_store_url = "droptrackingapp.myshopify.com"
 include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = ""
+scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://ac-cause-notion-channel.trycloudflare.com/auth/callback",
-  "https://ac-cause-notion-channel.trycloudflare.com/auth/shopify/callback",
-  "https://ac-cause-notion-channel.trycloudflare.com/api/auth/callback"
+  "https://contacted-wins-briefly-acres.trycloudflare.com/auth/callback",
+  "https://contacted-wins-briefly-acres.trycloudflare.com/auth/shopify/callback",
+  "https://contacted-wins-briefly-acres.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

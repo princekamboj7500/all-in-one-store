@@ -1,0 +1,16 @@
+ 
+
+<script>
+window.productReviews= {{ app.metafields.ProductReviews.items}}
+
+</script>
+ <featuredbadge></featuredbadge>
+{% schema %}
+{
+ "name": "Featured Badge",
+  "javascript": "bundle.js",
+ "target": "section",
+ "settings":[]
+}
+
+{% endschema %}

@@ -1,0 +1,29 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "37128c1641a4e826bc6c7fc319b09b57"
+name = "All In One"
+handle = "all-in-one-34"
+application_url = "https://survivor-filme-scholarships-facilities.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "3dproductt.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products, write_products"
+
+[auth]
+redirect_urls = [
+  "https://survivor-filme-scholarships-facilities.trycloudflare.com/auth/callback",
+  "https://survivor-filme-scholarships-facilities.trycloudflare.com/auth/shopify/callback",
+  "https://survivor-filme-scholarships-facilities.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-04"
+
+[pos]
+embedded = false

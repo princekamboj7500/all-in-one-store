@@ -55,6 +55,7 @@ import "./assets/style.css";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import DeactivatePopover from "./components/DeactivatePopover";
+// import Test from "./components/Test";
 // import GraphCard from './components/GraphCard';
 
 export const loader = async ({ request }) => {
@@ -86,12 +87,13 @@ export const loader = async ({ request }) => {
     animation: "Pop",
     badge_color: "#000000",
     text_color: "red",
-    animation_repeat: "2 Seconds",
+    
   };
   const appName =
     metafielData.length > 0
       ? metafielData.filter((item) => item.node.namespace === "CartFavicon")
       : [];
+      console.log(appName,"appName--")
 
   let appSettings =
     appName.length > 0 ? appName[0].node.value : defaultSettings;
@@ -505,6 +507,7 @@ function Favicon_cart_count(props) {
         ]}
       >
         <div className="Favicon_cart_count">
+        {/* <Test/> */}
         <div className="SettingsDataTab_container">
         <BlockStack gap="400">
           <InlineGrid columns={["oneThird", "twoThirds"]}>
@@ -537,15 +540,7 @@ function Favicon_cart_count(props) {
                           onFocus={() => handleFocus("field2")}
                         />
 
-                        <Select
-                          label="Animation"
-                          options={Height_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "animation")
-                          }
-                          value={formData.animation}
-                          onFocus={() => handleFocus("field3")}
-                        />
+                        
 
                         <div className="color_section">
                           <TextField
@@ -590,7 +585,7 @@ function Favicon_cart_count(props) {
                           </div>
                        
 
-                        <Select
+                        {/* <Select
                           label="Animation repetition interval"
                           options={Button_Size_options}
                           onChange={(value) =>
@@ -598,7 +593,7 @@ function Favicon_cart_count(props) {
                           }
                           value={formData.animation_repeat}
                           onFocus={() => handleFocus("field6")}
-                        />
+                        /> */}
                       </BlockStack>
                     </div>
                   </BlockStack>

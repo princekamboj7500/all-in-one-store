@@ -1,0 +1,29 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "9263ed886007b78f0aff3f64d52507ac"
+name = "AIOS"
+handle = "aios"
+application_url = "https://cfr-facility-introduced-marcus.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "3dproductt.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products"
+
+[auth]
+redirect_urls = [
+  "https://cfr-facility-introduced-marcus.trycloudflare.com/auth/callback",
+  "https://cfr-facility-introduced-marcus.trycloudflare.com/auth/shopify/callback",
+  "https://cfr-facility-introduced-marcus.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-04"
+
+[pos]
+embedded = false

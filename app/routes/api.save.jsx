@@ -8,26 +8,10 @@ export const action = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
 
     const reqData = await request.json();
-    const stores = await db.stores.findUnique({
-      where: {
-        store: session.shop,
-      },
-      select: {
-        id: true,
-      },
-    });
+    
 
     if (reqData && reqData.actionType === "deactivate") {
-      const newData = {
-        isActive: reqData.data.app_status,
-      };
-      const updatedData = await db.AppSettings.update({
-        where: {
-          store_id: parseInt(stores.id),
-          app_name: reqData.data.app_name,
-        },
-        data: newData,
-      });
+    
       const response = await admin.graphql(`query {
                 currentAppInstallation {
                   id
@@ -53,7 +37,9 @@ export const action = async ({ request }) => {
         message: "Deactivated Successfully",
       });
     } else if (reqData && reqData.actionType === "save") {
-      console.log("Hello-----------");
+
+        console.log(reqData.data,"reqData.data---")
+   
       const response = await admin.graphql(`query {
             currentAppInstallation {
               id
@@ -129,11 +115,11 @@ export const action = async ({ request }) => {
 
         }`);
       const result = await response.json();
-      console.log(result, "result---");
+   
       const dataId = result.data.currentAppInstallation.metafields.edges;
-      console.log(dataId, "dataId--");
+   
       const appId = result.data.currentAppInstallation.id;
-      console.log(appId, "appId---------");
+    
 
       try {
         const createMetafield = await admin.graphql(
@@ -166,7 +152,7 @@ export const action = async ({ request }) => {
           },
         );
         const test = await createMetafield.json();
-        console.log(test, "result---");
+
       } catch (err) {
         console.log(err);
       }

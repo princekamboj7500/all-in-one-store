@@ -1,0 +1,25 @@
+
+
+
+
+<script>
+
+
+window.productReviews = {{ app.metafields.ProductReviews.items}}
+window.currentProduct = {{ product  |  json}}
+
+</script>
+
+
+
+
+<productreview></productreview>
+{% schema %}
+{
+ "name": "Product Reviews",
+  "javascript": "bundle.js",
+ "target": "section",
+ "settings":[]
+}
+
+{% endschema %}

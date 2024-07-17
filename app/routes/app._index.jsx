@@ -453,7 +453,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url=""
+                    url="/app/instant_search"
                   >
                     <InlineStack align="space-between"  gap="200"  blockAlign="center">
                       <div className="app_icon">
@@ -471,7 +471,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url="https://help.shopify.com/manual"
+                    url="/app/inactive_tab_message"
                   >
                     <InlineStack align="space-between"   gap="200" blockAlign="center">
                       <div className="app_icon">
@@ -479,7 +479,7 @@ export default function Index() {
                       </div>
                       <div className="app_name">
                         <Text variant="bodyMd" as="h3">
-                        Product review
+                       Inactive Tab Message
                         </Text>
                       </div>
                     </InlineStack>
@@ -490,7 +490,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url="https://help.shopify.com/manual"
+                    url="/app/cart_notice"
                   >
                     <InlineStack align="space-between" blockAlign="center">
                       <div className="app_icon">
@@ -498,7 +498,7 @@ export default function Index() {
                       </div>
                       <div className="app_name">
                         <Text variant="bodyMd" as="h3">
-                          Visitor Replays
+                          Cart Notice
                         </Text>
                       </div>
                     </InlineStack>
@@ -508,7 +508,7 @@ export default function Index() {
                   <Link
                     monochrome
                     removeUnderline
-                    url="https://help.shopify.com/manual"
+                    url="/app/hide_dynamic_checkout_buttons"
                   >
                     <InlineStack align="space-between"  gap="200"  blockAlign="center">
                       <div className="app_icon">
@@ -516,21 +516,35 @@ export default function Index() {
                       </div>
                       <div className="app_name">
                         <Text variant="bodyMd" as="h3">
-                          Cookies Banner
+                          Hide Dynamic Checkout Button
                         </Text>
                       </div>
                     </InlineStack>
                   </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/sticky_add_cart">
+                  <Link monochrome removeUnderline url="/app/cookie_banner">
                     <InlineStack align="space-between"  gap="200"  blockAlign="center">
                       <div className="app_icon">
                         <img src={upsell} style={{ width: "100%" }} />
                       </div>
                       <div className="app_name">
                         <Text variant="bodyMd" as="h3">
-                        cart notice
+                       Cookie Banner
+                        </Text>
+                      </div>
+                    </InlineStack>
+                  </Link>
+                  </div>
+                  <div className="all_in_apps_Card">
+                  <Link monochrome removeUnderline url="/app/product_reviews">
+                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
+                      <div className="app_icon">
+                        <img src={upsell} style={{ width: "100%" }} />
+                      </div>
+                      <div className="app_name">
+                        <Text variant="bodyMd" as="h3">
+                        Product Reviews
                         </Text>
                       </div>
                     </InlineStack>
@@ -545,6 +559,20 @@ export default function Index() {
                       <div className="app_name">
                         <Text variant="bodyMd" as="h3">
                         Inactive tab massage
+                        </Text>
+                      </div>
+                    </InlineStack>
+                  </Link>
+                  </div>
+                  <div className="all_in_apps_Card">
+                  <Link monochrome removeUnderline url="/app/upsell_builder">
+                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
+                      <div className="app_icon">
+                        <img src={upsell} style={{ width: "100%" }} />
+                      </div>
+                      <div className="app_name">
+                        <Text variant="bodyMd" as="h3">
+                       Upsell Builder
                         </Text>
                       </div>
                     </InlineStack>

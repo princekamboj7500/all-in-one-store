@@ -1,0 +1,17 @@
+
+
+
+<script>
+window.productReviews= {{ app.metafields.ProductReviews.items}}
+
+</script>
+<featuredreview></featuredreview>
+{% schema %}
+{
+ "name": "Featured Reviews",
+  "javascript": "bundle.js",
+ "target": "section",
+ "settings":[]
+}
+
+{% endschema %}

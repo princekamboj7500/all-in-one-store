@@ -1,20 +1,34 @@
 <div class="all_in_one_store" id="main_widget">
 
 </div>
-
+ 
 <script>
- window.myGlobalVariable = "Hello, World!";
-window.Scrolltop = {{ app.metafields.ScrollTopToBottom.items }};
 
+window.money =  "{{ cart.currency.symbol }}";
+window.Scrolltop = {{ app.metafields.ScrollTopToBottom.items }};
+window.FavIcon = {{ app.metafields.CartFavicon.items }};
+window.StickyCart = {{app.metafields.StickyAddCart.items}};
+window.CartNotice= {{app.metafields.CartNotice.items }}
+window.InstantSearch = {{app.metafields.CartNotice.items}}
+window.AutoExternalLinks = {{app.metafields.AutoExternalLinks.items}}
+window.InActiveTab = {{app.metafields.InactiveTabMessage.items}}
+window.cookieBanner = {{ app.metafields.cookiebanner.items}}
+window.HideDynamicCheckout = {{ app.metafields.HideDynamicCheckout.items}}
+window.collection_selector = '.product-grid .grid__item',
+window.shop =  "{{ shop.permanent_domain  }}"
+window.apiEndPoint = "https://create-sp-desire-driven.trycloudflare.com/"
+window.productReviews = {{ app.metafields.ProductReviews.items}}
+window.currentProduct = {{ product  |  json}}
 </script>
-    <allinone></allinone>
-    <scrolltotop></scrolltotop>
-    <product-review></product-review>
+  
+
+
+  
 {% schema %}
 {
- "name": " All in One store",
-"javascript": "script.js",
-"target": "body",
+ "name": "All in One store",
+ "javascript": "bundle.js",
+ "target": "body",
  "settings":[]
 }
 

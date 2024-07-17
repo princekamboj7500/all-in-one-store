@@ -88,7 +88,7 @@ export const loader = async ({ request }) => {
         fill_animation: 0,
         theme_icon:  "SvgIcon1",
       };
-      console.log(metafielData,"metafielData--")
+     
      
       const appName =
     metafielData.length > 0
@@ -158,6 +158,8 @@ export default function ScrollToTop() {
     { name: "SvgIcon16", imgSrc: <SvgIcon16 color={formData.button_color} /> },
   ];
 
+
+  
   const handleColorChange = (e) => {
     const colorValue = e.target.value;
     setFormData({
