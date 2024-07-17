@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = "mysql://root:@localhost:3306/all_in_one_store"
+  provider = "mongodb"
+  url      = "mongodb+srv://doadmin:7Le8D013O9vg42ku@db-mongodb-nyc3-03213-594d4f98.mongo.ondigitalocean.com/admin"
 }
-
 model Session {
-  id          String    @id 
-  shop        String
+   session_id     String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @unique
+  shop        String    @unique
   state       String
   isOnline    Boolean   @default(false)
   scope       String?
@@ -18,34 +18,36 @@ model Session {
   userId      BigInt?
 }
 
-model stores {
-  id            BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
-  store         String               @unique(map: "stores_store_unique") @db.VarChar(255)
-  token         String               @db.VarChar(255)
-  created_at    DateTime?            @db.Timestamp(0)
-  updated_at    DateTime?            @db.Timestamp(0)
+model Reviews{
+   id      String @id @default(auto()) @map("_id") @db.ObjectId
+  store_name           String 
+  product_id         String    
+  product_handle     String
+  product_image      String?
+  product_title      String?
+  rating             String
+  name             String
+  email             String
+  reviewDesc         String?
+  image        String[]
+  status          String?
+  source             String
+  verified            Boolean   @default(false)
+  featured           Boolean   @default(false)
+  storeReply            String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now())
 }
 
-model AppSettings{
-  id                        BigInt       @id @default(autoincrement())
-  store_id                 Int          
-   isActive               Boolean        @default(false)
-  app_name                String      @unique @db.VarChar(255) 
- appJsonData              Json             @map("app_json_data")
- created_at               DateTime        @default(now()) @db.Timestamp(0)
-  updated_at               DateTime      @default(now()) @db.Timestamp(0)
- 
+model ReviewAnalytics {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  store_name           String @unique
+   count     String[]   @default([])
+  starclick  String[] @default([])
+  imageclick String[] @default([])
+
 }
 
 
 
 
-enum stores_installed {
-  VALUE_0 @map("0")
-  VALUE_1 @map("1")
-}
-
-enum stores_is_first_time {
-  VALUE_0 @map("0")
-  VALUE_1 @map("1")
-}
