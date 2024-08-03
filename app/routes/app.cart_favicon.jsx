@@ -7,6 +7,7 @@ import {
   ContextualSaveBar,
   Button,
   Frame,
+  ColorPicker,
   ButtonGroup,
   Card,
   Checkbox,
@@ -41,22 +42,11 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import {
-  ChevronDownIcon,
-  XIcon,
-  MinusIcon,
-  SearchIcon,
-  ExternalIcon,
-  CalendarIcon,
-  AlertCircleIcon,
-  ArrowRightIcon,
-} from "@shopify/polaris-icons";
+import { ExternalIcon } from "@shopify/polaris-icons";
 import "./assets/style.css";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import DeactivatePopover from "./components/DeactivatePopover";
-// import Test from "./components/Test";
-// import GraphCard from './components/GraphCard';
 
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
@@ -82,18 +72,16 @@ export const loader = async ({ request }) => {
   const defaultSettings = {
     app_name: "CartFavicon",
     app_status: false,
-    shape: "Circle",
-    location: "Bottom Left",
-    animation: "Pop",
+    // shape: "Circle",
+    // location: "Bottom Left",
+
     badge_color: "#000000",
-    text_color: "red",
-    
+    text_color: "#ffffff",
   };
   const appName =
     metafielData.length > 0
       ? metafielData.filter((item) => item.node.namespace === "CartFavicon")
       : [];
-      console.log(appName,"appName--")
 
   let appSettings =
     appName.length > 0 ? appName[0].node.value : defaultSettings;
@@ -109,8 +97,6 @@ export const loader = async ({ request }) => {
   } else {
     data = appSettings;
   }
-
-  console.log(data, "Parsed data--");
 
   return { data };
 };
@@ -143,253 +129,18 @@ function Favicon_cart_count(props) {
   const handleInputChange = (value, property) => {
     setFormData((formData) => ({
       ...formData,
-     [property]: value,
+      [property]: value,
     }));
   };
-   const handleColorChange = (value,field) => {
-      setFormData({
-        ...formData,
-        [field]: value,
-      });
-    };
-  const Location_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "Circle", value: "Circle" },
-    { label: "Rectangle", value: "Rectangle" },
-  ];
-  const Cart_bar_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "Top Left", value: "Top Left" },
-    { label: "Top Right", value: "Top Right" },
-    { label: "Bottom Left", value: "Bottom Left" },
-    { label: "Bottom right", value: "Bottom right" },
-  ];
-  const Height_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "Slide", value: "Slide" },
-    { label: "Fade", value: "Fade" },
-    { label: "Pop", value: "Pop" },
-    { label: "Pop and Fade", value: "Pop and Fade" },
-    { label: "No Animation", value: "No Animation" },
-  ];
-  const Button_Size_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "1 Seconds", value: "1 Seconds" },
-    { label: "2 Seconds", value: "2 Seconds" },
-    { label: "3 Seconds", value: "3 Seconds" },
-    { label: "5 Seconds", value: "5 Seconds" },
-    { label: "Never", value: "Never" },
-  ];
-  const SettingsDataTab = () => {
-   
-   
-    // const handleInputChange = (value, property) => {
-    //   setFormData((formData) => ({
-    //     ...formData,
-    //     [property]: value,
-    //   }));
-    // };
-    
-   
-
-    // const handleColorChange = (value,field) => {
-    //   setFormData({
-    //     ...formData,
-    //     [field]: value,
-    //   });
-    // };
-   
-    
-    //   const handleColorChange = useCallback((value, fieldName) => {
-    //     setFormData((prevFormData) => ({
-    //       ...prevFormData,
-    //       [fieldName]: value,
-    //     }));
-    //   }, []);
-  
-
-    return (
-      <div className="SettingsDataTab_container">
-        <BlockStack gap="400">
-          <InlineGrid columns={["oneThird", "twoThirds"]}>
-            <Text variant="headingMd" as="h6">
-              Settings
-            </Text>
-            <Layout>
-              <Layout.Section>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="300">
-                    <div className="checkbox_section">
-                      <BlockStack gap="400">
-                        <Select
-                          label="Shape"
-                          options={Location_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "shape")
-                          }
-                          value={formData.shape}
-                          onFocus={() => handleFocus("field1")}
-                        />
-
-                        <Select
-                          label="The location of the bullet."
-                          options={Cart_bar_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "location")
-                          }
-                          value={formData.location}
-                          onFocus={() => handleFocus("field2")}
-                        />
-
-                        <Select
-                          label="Animation"
-                          options={Height_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "animation")
-                          }
-                          value={formData.animation}
-                          onFocus={() => handleFocus("field3")}
-                        />
-
-                        <div className="color_section">
-                          {/* <TextField
-                            label="Badge color"
-                            type="text"
-                            onFocus={() => handleFocus("field4")}
-                            value={formData.badge_color}
-                            onChange={(e) =>
-                              handleInputChange(e, "badge_color")
-                            }
-                            autoComplete="off"
-                            connectedLeft={
-                              <input
-                                type="color"
-                                onChange={handleColorChange}
-                                value={formData.badge_color}
-                              />
-                            }
-                          /> */}
-                        </div>
-
-                        <div className="color_section">
-                          {/* <TextField
-                            label="Text color"
-                            onFocus={() => handleFocus("field1")}
-                            type="text"
-                            value={formData.text_color}
-                            onChange={(e) => handleInputChange(e, "text_color")}
-                            autoComplete="off"
-                            connectedLeft={
-                              <input
-                                type="color"
-                                onChange={(e) =>
-                                  handleColorChange(e.target.value , "text_color")
-                                }
-                                value={formData.text_color}
-                              />
-                            }
-                          /> */}
-                           <TextField
-                            onFocus={() => handleFocus("field1")}
-                            label="Button Color"
-                            type="text"
-                            value={formData.text_color}
-                            onChange={(e) =>
-                              handleInputChange(e, "text_color")
-                            }
-                            autoComplete="off"
-                            connectedLeft={
-                              <input
-                                type="color"
-                                value={formData.text_color}
-                                onChange={handleColorChange}
-                              />
-                            }
-                          />
-                        </div>
-
-                        <Select
-                          label="Animation repetition interval"
-                          options={Button_Size_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "animation_repeat")
-                          }
-                          value={formData.animation_repeat}
-                          onFocus={() => handleFocus("field6")}
-                        />
-                      </BlockStack>
-                    </div>
-                  </BlockStack>
-                </Card>
-              </Layout.Section>
-            </Layout>
-          </InlineGrid>
-
-          <div className="lower_section">
-            <Grid>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      Check our Help Center
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        If you need help with setting up the Favicon Cart Count
-                        app, please check our exhaustive Help Center for
-                        details.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          icon={ExternalIcon}
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingSm" as="h6">
-                            Get help
-                          </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      We're here for you, 24/7
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        We know how complex Vitals is - that's why{" "}
-                        <Link href="#">we are available 24/7</Link> to support
-                        you in setting it up.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingSm" as="h6">
-                            Contact us
-                          </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-            </Grid>
-          </div>
-        </BlockStack>
-      </div>
-    );
+  const handleColorChange = (value, field) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
   };
+
+
+  
 
   const toggleActive = useCallback(
     () => setActive((prevActive) => !prevActive),
@@ -478,6 +229,7 @@ function Favicon_cart_count(props) {
       setActiveField(false);
     }
   };
+ 
 
   return (
     <div className="Favicon_cart_count_page">
@@ -507,85 +259,95 @@ function Favicon_cart_count(props) {
         ]}
       >
         <div className="Favicon_cart_count">
-        {/* <Test/> */}
-        <div className="SettingsDataTab_container">
-        <BlockStack gap="400">
-          <InlineGrid columns={["oneThird", "twoThirds"]}>
-            <Text variant="headingMd" as="h6">
-              Settings
-            </Text>
-            <Layout>
-              <Layout.Section>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="300">
-                    <div className="checkbox_section">
-                      <BlockStack gap="400">
-                        <Select
-                          label="Shape"
-                          options={Location_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "shape")
-                          }
-                          value={formData.shape}
-                          onFocus={() => handleFocus("field1")}
-                        />
+          {/* <Test/> */}
+          <div className="SettingsDataTab_container">
+            <BlockStack gap="400">
+              <InlineGrid columns={["oneThird", "twoThirds"]}>
+                <Text variant="headingMd" as="h6">
+                  Settings
+                </Text>
+                <Layout>
+                  <Layout.Section>
+                    <Card roundedAbove="sm">
+                      <BlockStack gap="300">
+                        <div className="checkbox_section">
+                          <BlockStack gap="400">
+                            {/* <Select
+                              label="Shape"
+                              options={Location_options}
+                              onChange={(value) =>
+                                handleSelectChange(value, "shape")
+                              }
+                              value={formData.shape}
+                              onFocus={() => handleFocus("field1")}
+                            /> */}
 
-                        <Select
-                          label="The location of the bullet."
-                          options={Cart_bar_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "location")
-                          }
-                          value={formData.location}
-                          onFocus={() => handleFocus("field2")}
-                        />
+                            {/* <Select
+                              label="The location of the bullet."
+                              options={Cart_bar_options}
+                              onChange={(value) =>
+                                handleSelectChange(value, "location")
+                              }
+                              value={formData.location}
+                              onFocus={() => handleFocus("field2")}
+                            /> */}
 
-                        
-
-                        <div className="color_section">
-                          <TextField
-                            label="Badge color"
-                            type="text"
-                            onFocus={() => handleFocus("field4")}
-                            value={formData.badge_color}
-                            onChange={(e) =>
-                              handleInputChange(e, "badge_color")
-                            }
-                            autoComplete="off"
-                            connectedLeft={
-                              <input
-                                type="color"
-                                onChange={(e) =>
-                                  handleColorChange(e.target.value , "badge_color")
-                                }
+                            <div className="color_section">
+                              <TextField
+                                label="Badge color"
+                                type="text"
+                                onFocus={() => handleFocus("field4")}
                                 value={formData.badge_color}
-                              />
-                            }
-                          />
-                        </div>
-
-                        <div className="color_section">
-                          <TextField
-                            label="Text color"
-                            onFocus={() => handleFocus("field1")}
-                            type="text"
-                            value={formData.text_color}
-                            onChange={(e) => handleInputChange(e, "text_color")}
-                            autoComplete="off"
-                            connectedLeft={
-                              <input
-                                type="color"
                                 onChange={(e) =>
-                                  handleColorChange(e.target.value , "text_color")
+                                  handleInputChange(e, "badge_color")
                                 }
-                                value={formData.text_color}
+                                autoComplete="off"
+                                connectedLeft={
+                                  <input
+                                    type="color"
+                                    onChange={(e) =>
+                                      handleColorChange(
+                                        e.target.value,
+                                        "badge_color",
+                                      )
+                                    }
+                                    value={formData.badge_color}
+                                  />
+                                }
                               />
-                            }
-                          />
-                          </div>
-                       
+                            </div>
 
-                        {/* <Select
+                            <div className="color_section">
+                              <TextField
+                                label="Text color"
+                                onFocus={() => handleFocus("field1")}
+                                type="text"
+                                value={formData.text_color}
+                                onChange={(e) =>
+                                  handleInputChange(e, "text_color")
+                                }
+                                autoComplete="off"
+                                connectedLeft={
+                                  <input
+                                    type="color"
+                                    onChange={(e) =>
+                                      handleColorChange(
+                                        e.target.value,
+                                        "text_color",
+                                      )
+                                    }
+                                    style={{
+                                      boxShadow: formData.text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                      width:formData.text_color === '#ffffff' ? '34px':'38px',
+                                         height:formData.text_color === '#ffffff' ? '34px':'38px'
+                                    }}
+                                    value={formData.text_color}
+                                  />
+                                }
+                              />
+                            </div>
+                         
+                            {/* <Select
                           label="Animation repetition interval"
                           options={Button_Size_options}
                           onChange={(value) =>
@@ -594,78 +356,77 @@ function Favicon_cart_count(props) {
                           value={formData.animation_repeat}
                           onFocus={() => handleFocus("field6")}
                         /> */}
+                          </BlockStack>
+                        </div>
                       </BlockStack>
-                    </div>
-                  </BlockStack>
-                </Card>
-              </Layout.Section>
-            </Layout>
-          </InlineGrid>
+                    </Card>
+                  </Layout.Section>
+                </Layout>
+              </InlineGrid>
 
-          <div className="lower_section">
-            <Grid>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      Check our Help Center
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        If you need help with setting up the Favicon Cart Count
-                        app, please check our exhaustive Help Center for
-                        details.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          icon={ExternalIcon}
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingSm" as="h6">
-                            Get help
+              {/* <div className="lower_section">
+                <Grid>
+                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+                    <Card roundedAbove="sm">
+                      <BlockStack gap="200">
+                        <Text as="h2" variant="headingSm">
+                          Check our Help Center
+                        </Text>
+                        <BlockStack gap="200">
+                          <Text as="p" fontWeight="reguler">
+                            If you need help with setting up the Favicon Cart
+                            Count app, please check our exhaustive Help Center
+                            for details.
                           </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      We're here for you, 24/7
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        We know how complex Vitals is - that's why{" "}
-                        <Link href="#">we are available 24/7</Link> to support
-                        you in setting it up.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingSm" as="h6">
-                            Contact us
+                        </BlockStack>
+                        <InlineStack align="end">
+                          <ButtonGroup>
+                            <Button
+                              icon={ExternalIcon}
+                              onClick={() => {}}
+                              accessibilityLabel="Fulfill items"
+                            >
+                              <Text variant="headingSm" as="h6">
+                                Get help
+                              </Text>
+                            </Button>
+                          </ButtonGroup>
+                        </InlineStack>
+                      </BlockStack>
+                    </Card>
+                  </Grid.Cell>
+                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+                    <Card roundedAbove="sm">
+                      <BlockStack gap="200">
+                        <Text as="h2" variant="headingSm">
+                          We're here for you, 24/7
+                        </Text>
+                        <BlockStack gap="200">
+                          <Text as="p" fontWeight="reguler">
+                            We know how complex Vitals is - that's why{" "}
+                            <Link href="#">we are available 24/7</Link> to
+                            support you in setting it up.
                           </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-            </Grid>
+                        </BlockStack>
+                        <InlineStack align="end">
+                          <ButtonGroup>
+                            <Button
+                              onClick={() => {}}
+                              accessibilityLabel="Fulfill items"
+                            >
+                              <Text variant="headingSm" as="h6">
+                                Contact us
+                              </Text>
+                            </Button>
+                          </ButtonGroup>
+                        </InlineStack>
+                      </BlockStack>
+                    </Card>
+                  </Grid.Cell>
+                </Grid>
+              </div> */}
+            </BlockStack>
           </div>
-        </BlockStack>
-      </div>
-           
         </div>
         {activeField && (
           <Frame

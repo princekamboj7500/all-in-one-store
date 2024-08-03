@@ -121,9 +121,25 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
 .All_app_scroll_icon{
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  gap: var(--p-space-100);
-  height: 100%;
+ 
+}
+.aios-button-color-picker{
+  appearance: none;
+  background: #fff;
+  border: none;
+  border-radius: var(--p-border-radius-200);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .19);
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  height: var(--p-space-800);
+  line-height: inherit;
+  margin-right: .5rem;
+  padding: 0;
+  width: var(--p-space-800);
+}
+.aios_color_picker{
+  display: flex;
 }
  .theme_image_icons .Polaris-Box:hover{
   border-width: var(--p-border-width-050);
@@ -162,34 +178,23 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
   position: absolute;
     right: 24px;
 }
-
-.All_app_scroll_icon svg{
-  width: 36px;
-    height: 36px;
+.aios_scroll_images{
+  border:2px solid transparent;
+  padding: 10px;
+  border-radius: 0.25rem;
 }
+.aios_scroll_images.aios_scroll_active{
+border:2px solid var(--p-color-border-emphasis)
+}
+
 .Favicon_cart_count_page .color_section {
   display: flex;
 }
-.Favicon_cart_count_page .color_section input[type="color"] {
-  height: 43px;
-  background-color: transparent;
-  width: 40px;
-  border: none;
-  padding: 0%;
-  border-radius: 6px;
-}
+
 .Favicon_cart_count_page .color_section input[type="color"]::-webkit-color-swatch {
   border-radius: 10px;
 }
-.Favicon_cart_count_page .color_section input[type="color"] {
-  height: 42px;
-  background-color: transparent;
-  width: 38px;
-  border: none;
-  padding: 0%;
-  border-radius: 6px;
-  margin: -4px;
-}
+
 .vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack {
   background-color: var(--p-color-bg-surface-secondary);
   border-radius: var(--p-border-radius-200);
@@ -361,13 +366,7 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
   width: 80px;
 }
 
-.All_app_scroll_icon {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: var(--p-space-100);
-  height: 100%;
-}
+
 
 .theme_image_icons .Polaris-Box:hover {
   border-width: var(--p-border-width-050);
@@ -419,14 +418,7 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
   display: flex;
 }
 
-.Favicon_cart_count_page .color_section input[type="color"] {
-  height: 43px;
-  background-color: transparent;
-  width: 40px;
-  border: none;
-  padding: 0%;
-  border-radius: 6px;
-}
+
 
 .Favicon_cart_count_page .color_section input[type="color"]::-webkit-color-swatch {
   border-radius: 10px;
@@ -729,6 +721,114 @@ div#AppFrameScrollable{
 .aios-upsell_nav-link.aios-upsell-steps.aios-upsell-current-step:hover {
   background-color: var(--p-color-bg-surface-emphasis-hover);
 }
+.aios-upsell-completed-step .aios-upsell_step_counter{
+  border-color: var(--p-color-border-emphasis);
+
+}
+.aios-upsell-completed-step  .Polaris-Icon svg{
+fill:var(--p-color-icon-emphasis);
+}
+.aios_layout_spacer{
+  margin-top:20px;
+}
+.buy_one_wrapper {
+  display:flex;
+  justify-content: space-between;
+}
+.preview_header h1{
+  font-size: 24px;
+  font-weight: 800;
+  margin: 30px 0;
+}
+.buy_box_title{
+  font-size: 16px;
+  margin: 20px 0;
+}
+.buy_one_box {
+  text-align: center;
+}
+.buy_box_variants select{
+  padding: 10px 16px;
+    border-radius: 4px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+}
+.buy_badge{
+  margin-bottom: 10px;
+}
+.offer-price{
+  display: flex;
+  justify-content: space-between;
+}
+.offer-price span{
+  border: 1px solid #d83b3b;
+  background-color: #d83b3b;
+  color: #ffffff;
+  border-radius: 5px;
+        padding: 1px 4px;
+}
+.add-cart{
+  
+}
+.add-cart span{
+  border: 1px solid #d83b3b;
+  background-color: #d83b3b;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+        padding: 7px 26px;
+}
+.add-cart span:hover{
+  background-color: #d83b3bb8;
+    border: 1px solid #d83b3bb8;
+}
+.buy_one_icon svg{
+  width: 2em;
+
+}
+.upsell_products_bundles_list{
+  background: var(--p-color-bg-surface-secondary);
+  border-radius: var(--p-border-radius-200);
+}
+.aios_placements_reviews{
+  padding:12px;
+}
+.aios-product-appearnce{
+  display: flex;
+  flex-direction: column;
+}
+.buy_one_icon svg path{
+  fill:#d83b3bb8;
+}
+.buy_badge span{
+  border: 1px solid #d83b3b;
+  background-color: #d83b3b;
+  color: #ffffff;
+  border-radius: 5px;
+        padding: 1px 4px;
+}
+.buy_one_get_off_box{
+  border-radius: 4px;
+  border: 1px solid #eee;
+  padding: 16px;
+  text-align: center;
+}
+.upsell_bundle_name{    
+  display: flex;
+  width: 50px;
+  height: 50px;
+  font-size: 16px;
+  background: #f6f6f6;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+
+}
+.upsell_bundle_name.upsell_active_bundle{
+     background-color: #c5f3e0;
+     color: #31765a;
+}
+
 @media only screen and (min-width: 728px) {
   .apps_name>.Polaris-InlineStack>.all_in_apps_Card {
     max-width: calc(33.33333% - 10px);

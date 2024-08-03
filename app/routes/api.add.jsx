@@ -45,7 +45,7 @@ export const action = async ({ request }) => {
   const  review = formData.get("review");
   const pTitle = formData.get("pTitle");
   const pImage = formData.get("pImage")
-
+  const status = formData.get("status")
 const addReviews = await db.Reviews.create({
     data:{
         store_name:shopName,
@@ -59,13 +59,13 @@ const addReviews = await db.Reviews.create({
         product_image :pImage,
         product_title: pTitle,
         createdAt: new Date(),
-        status:"Unpublished",
+        status:status,
         source:"AIOS"
     },
 })
-return { success: true, message:"Review added successfully",};
+return { success: true, message:"Review added successfully",data:addReviews};
 }catch (error) {
-  console.error('Error uploading files: ', error);
-  return json({ error: 'Error uploading files' }, { status: 500 });
+  console.error('Error: ', error);
+  return json({ error: 'Error  adding in review' }, { status: 500 });
 }
 };

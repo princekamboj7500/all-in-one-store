@@ -38,3 +38,4 @@ export { default as svg_icon14} from './scroll_top/svg_icon14.svg';
 export { default as svg_icon15} from './scroll_top/svg_icon15.svg';
 export { default as svg_icon16} from './scroll_top/svg_icon16.svg';
 export { default as product_bundle} from './product_bundle.png';
+export { default as bogo} from './bogo.png';

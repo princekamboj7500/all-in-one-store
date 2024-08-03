@@ -314,6 +314,11 @@ function CookieBanner(props) {
                                                     handleFocus("cookie_banner_bg")
                                                     handleColorChange(e, "cookie_banner_bg")
                                                 } }
+                                                style={{
+                                                    boxShadow: formData.cookie_banner_bg === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.cookie_banner_bg === '#ffffff' ? '34px':'38px',
+                                                       height:formData.cookie_banner_bg === '#ffffff' ? '34px':'38px'
+                                                  }}
                                             />
                                         }
                                     />
@@ -337,6 +342,11 @@ function CookieBanner(props) {
                                                     handleFocus("cookie_banner_color")
                                                     handleColorChange(e, "cookie_banner_color")
                                                 }}
+                                                style={{
+                                                    boxShadow: formData.cookie_banner_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.cookie_banner_color === '#ffffff' ? '34px':'38px',
+                                                       height:formData.cookie_banner_color === '#ffffff' ? '34px':'38px'
+                                                  }}
                                             />
                                         }
                                     />
@@ -359,6 +369,11 @@ function CookieBanner(props) {
                                                     handleFocus("acceptbtn_bg")
                                                     handleColorChange(e, "acceptbtn_bg")
                                                 }}
+                                                style={{
+                                                    boxShadow: formData.acceptbtn_bg === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.acceptbtn_bg === '#ffffff' ? '34px':'38px',
+                                                       height:formData.acceptbtn_bg === '#ffffff' ? '34px':'38px'
+                                                  }}
                                             />
                                         }
                                     />
@@ -382,6 +397,11 @@ function CookieBanner(props) {
                                                     handleColorChange(e, "acceptbtn_color")
                                                 }
                                                 }
+                                                style={{
+                                                    boxShadow: formData.acceptbtn_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.acceptbtn_color === '#ffffff' ? '34px':'38px',
+                                                       height:formData.acceptbtn_color === '#ffffff' ? '34px':'38px'
+                                                  }}
                                             />
                                         }
                                     />
@@ -432,6 +452,11 @@ function CookieBanner(props) {
                                                     handleColorChange(e, "learnmore_color")
                                                 }
                                                 }
+                                                style={{
+                                                    boxShadow: formData.learnmore_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.learnmore_color === '#ffffff' ? '34px':'38px',
+                                                       height:formData.learnmore_color === '#ffffff' ? '34px':'38px'
+                                                  }}
                                             />
                                         }
                                     />
@@ -605,7 +630,12 @@ function CookieBanner(props) {
                                             onChange={(e) =>{
                                                 handleFocus("reject_btn_border")
                                                 handleColorChange(e, "reject_btn_border")
-                                            }}/>
+                                            }} style={{
+                                                boxShadow: formData.reject_btn_border === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                width:formData.reject_btn_border === '#ffffff' ? '34px':'38px',
+                                                   height:formData.reject_btn_border === '#ffffff' ? '34px':'38px'
+                                              }}
+                                            />
                                         }
                                     />
                                 </div>}
@@ -626,7 +656,12 @@ function CookieBanner(props) {
                                                 onChange={(e) =>{
                                                     handleFocus("reject_btn_bg")
                                                     handleColorChange(e, "reject_btn_bg")
-                                                }}/>
+                                                }}style={{
+                                                    boxShadow: formData.reject_btn_bg === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                    width:formData.reject_btn_bg === '#ffffff' ? '34px':'38px',
+                                                       height:formData.reject_btn_bg === '#ffffff' ? '34px':'38px'
+                                                  }}
+                                                />
                                             }
                                         />
                                     </div>
@@ -648,7 +683,12 @@ function CookieBanner(props) {
                                             onChange={(e) =>{
                                                 handleFocus("reject_text_color")
                                                 handleColorChange(e, "reject_text_color")
-                                            }}/>
+                                            }}style={{
+                                                boxShadow: formData.reject_text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                width:formData.reject_text_color === '#ffffff' ? '34px':'38px',
+                                                   height:formData.reject_text_color === '#ffffff' ? '34px':'38px'
+                                              }}
+                                            />
                                         }
                                     />
                                 </div>

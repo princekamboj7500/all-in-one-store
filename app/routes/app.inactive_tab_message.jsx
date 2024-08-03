@@ -30,7 +30,7 @@ export const loader = async ({ request }) => {
 
     const appId = result.data.currentAppInstallation.id;
     const metafielData = result.data.currentAppInstallation.metafields.edges;
-console.log(metafielData,"metafielData--")
+
     const defaultSettings = {
         app_name: "InactiveTabMessage",
         app_status: false,
@@ -44,7 +44,7 @@ console.log(metafielData,"metafielData--")
             : [];
 
     let appSettings = appName.length > 0 ? appName[0].node.value : defaultSettings;
-    // console.log(appSettings,"appSettings--")
+   
 
     let data;
     if (typeof appSettings === 'string') {

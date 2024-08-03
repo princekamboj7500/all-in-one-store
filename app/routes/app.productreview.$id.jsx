@@ -47,7 +47,7 @@ import Table from "./components/Table";
 export const loader = async ({ request, params }) => {
   const productId = params.id;
   const { session, admin } = await authenticate.admin(request);
-  console.log(session.shop, "lll");
+  
   const storeName = session.shop.split(".")[0];
   const getReviews = await db.Reviews.findMany({
     where: {

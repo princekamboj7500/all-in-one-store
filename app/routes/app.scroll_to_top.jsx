@@ -9,9 +9,9 @@ import {
   TextField,
   Button,
   Icon,
-  
   Tooltip,
-  Link, OptionList,
+  Link,
+  OptionList,
   Popover,
   ActionList,
   BlockStack,
@@ -37,10 +37,16 @@ import {
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 
-
 import {
-  ChevronDownIcon, XIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
-} from '@shopify/polaris-icons';
+  ChevronDownIcon,
+  XIcon,
+  MinusIcon,
+  SearchIcon,
+  ExternalIcon,
+  CalendarIcon,
+  AlertCircleIcon,
+  ArrowRightIcon,
+} from "@shopify/polaris-icons";
 import {
   SvgIcon1,
   SvgIcon10,
@@ -60,8 +66,8 @@ import {
   SvgIcon9,
 } from "./components/Icons";
 export const loader = async ({ request }) => {
-  const { session,admin } = await authenticate.admin(request);
-    const response = await admin.graphql(`query {
+  const { session, admin } = await authenticate.admin(request);
+  const response = await admin.graphql(`query {
         currentAppInstallation {
           id
           metafields(first: 3) {
@@ -75,63 +81,64 @@ export const loader = async ({ request }) => {
           }
         }
 
-      }`)
-      const result = await response.json();
+      }`);
+  const result = await response.json();
+
+  const appId = result.data.currentAppInstallation.id;
+  const metafielData = result.data.currentAppInstallation.metafields.edges;
+  const defaultSettings = {
+    app_name: "ScrollTopToBottom",
+    app_status: false,
+    button_color: "#888888",
+    show_on_desktop: 1,
+    show_on_mobile: 1,
     
-      const appId = result.data.currentAppInstallation.id;
-      const metafielData = result.data.currentAppInstallation.metafields.edges;
-      const defaultSettings = {
-        app_name: "ScrollTopToBottom",
-        app_status: false,
-        show_on_desktop: 1,
-        show_on_mobile:  1,
-        fill_animation: 0,
-        theme_icon:  "SvgIcon1",
-      };
-     
-     
-      const appName =
+    theme_icon: "SvgIcon1",
+  };
+
+  const appName =
     metafielData.length > 0
-      ? metafielData.filter((item) => item.node.namespace === "ScrollTopToBottom")
+      ? metafielData.filter(
+          (item) => item.node.namespace === "ScrollTopToBottom",
+        )
       : [];
 
   let appSettings =
     appName.length > 0 ? appName[0].node.value : defaultSettings;
-     
-      let data;
-      if (typeof appSettings === 'string') {
-          try {
-              data = JSON.parse(appSettings);
-          } catch (error) {
-              console.error('Error parsing appSettings:', error);
-              data = {}; // or handle the error as needed
-          }
-      } else {
-          data = appSettings;
-      }
-      
-  
-     return {data};
+
+  let data;
+  if (typeof appSettings === "string") {
+    try {
+      data = JSON.parse(appSettings);
+    } catch (error) {
+      console.error("Error parsing appSettings:", error);
+      data = {}; // or handle the error as needed
+    }
+  } else {
+    data = appSettings;
+  }
+
+  return { data };
 };
 
 export default function ScrollToTop() {
   const navigate = useNavigate();
   const shopify = useAppBridge();
- 
+
   const { data } = useLoaderData();
-  const [status, setStatus] = useState(data.app_status); 
+  const [status, setStatus] = useState(data.app_status);
   const [activeField, setActiveField] = useState(null);
   const [formData, setFormData] = useState(data);
 
-  const[buttonloading,setButtonLoading] = useState(false);
+  const [buttonloading, setButtonLoading] = useState(false);
   const [activeIcon, setActiveIcon] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("");
-  const[error, setError] =useState('');
+  const [error, setError] = useState("");
   const [active, setActive] = useState(false);
   const [msgData, setMsgData] = useState("");
- 
+
   const handleFocus = (fieldName) => {
-     setActiveField(fieldName);
+    setActiveField(fieldName);
   };
 
   const toggleActive = useCallback(
@@ -158,8 +165,6 @@ export default function ScrollToTop() {
     { name: "SvgIcon16", imgSrc: <SvgIcon16 color={formData.button_color} /> },
   ];
 
-
-  
   const handleColorChange = (e) => {
     const colorValue = e.target.value;
     setFormData({
@@ -169,7 +174,6 @@ export default function ScrollToTop() {
   };
 
   const handleImageClick = (id) => {
-    console.log(id, "llll");
     setActiveIcon(id);
     const selected = svgIcons.find((icon) => icon.name === id);
     setFormData({
@@ -179,38 +183,23 @@ export default function ScrollToTop() {
   };
 
   const ScrollArrowsIcon = svgIcons.map((box) => (
-    <Box
+    <div
+    className={`aios_scroll_images ${
+      formData.theme_icon === box.name || activeIcon === box.name ? "aios_scroll_active" : "aios_scroll_inactive"
+    }`}
       key={box.name}
-      borderColor={
-        activeIcon === box.name
-          ? "var(--p-color-border-emphasis)"
-          : "transparent"
-      }
-      borderWidth="var(--p-border-width-050)"
-      paddingInlineEnd="200"
-      paddingInlineStart="200"
-      borderRadius="100"
-      paddingBlockEnd="200"
-      style={{
-        border:
-          activeIcon === box.name
-            ? "2px solid var(--p-color-border-emphasis)"
-            : "1px solid transparent",
-        padding: "10px",
-        borderRadius: "0.25rem",
-      }}
       onClick={() => handleImageClick(box.name)}
       onFocus={() => handleFocus(box.name)}
       tabIndex={0}
     >
       <div className="All_app_scroll_icon">{box.imgSrc}</div>
-    </Box>
+    </div>
   ));
 
   const handleInputChange = (value, property) => {
     setFormData((formData) => ({
       ...formData,
-     [property]: value,
+      [property]: value,
     }));
   };
 
@@ -219,78 +208,93 @@ export default function ScrollToTop() {
     icon = icon ? icon.imgSrc : <SvgIcon1 />;
     return icon;
   };
-  
 
-  
   function PopoverContentExample() {
     const [popoverActive, setPopoverActive] = useState(false);
     const [isActivated, setIsActivated] = useState(false);
 
     const togglePopoverActive = useCallback(
-        () => setPopoverActive((popoverActive) => !popoverActive),
-        [],
+      () => setPopoverActive((popoverActive) => !popoverActive),
+      [],
     );
 
-    const handleDeactivateClick= useCallback(() => {
-      console.log("Hello deactivated successfully")
-        setIsActivated(false);
-        setPopoverActive(true);
+    const handleDeactivateClick = useCallback(() => {
+      console.log("Hello deactivated successfully");
+      setIsActivated(false);
+      setPopoverActive(true);
     }, []);
 
     const handleActivateClickAgain = useCallback(() => {
-        setIsActivated(true);
-        setPopoverActive(false);
+      setIsActivated(true);
+      setPopoverActive(false);
     }, []);
 
     const activator = (
-        <>
-            {isActivated ? (
-                <Button onClick={togglePopoverActive} disclosure>
-                    Active
-                </Button>
-            ) : (
-
-                <Button className="activate_button" tone="success" onClick={handleActivateClickAgain}>
-                    Activate
-                </Button>
-            )}
-        </>
+      <>
+        {isActivated ? (
+          <Button onClick={togglePopoverActive} disclosure>
+            Active
+          </Button>
+        ) : (
+          <Button
+            className="activate_button"
+            tone="success"
+            onClick={handleActivateClickAgain}
+          >
+            Activate
+          </Button>
+        )}
+      </>
     );
 
     return (
-        <div>
-            {
-                isActivated ? <>
-                    <Popover
-                        active={popoverActive}
-                        activator={activator}
-                        autofocusTarget="first-node"
-                        onClose={togglePopoverActive}
+      <div>
+        {isActivated ? (
+          <>
+            <Popover
+              active={popoverActive}
+              activator={activator}
+              autofocusTarget="first-node"
+              onClose={togglePopoverActive}
+            >
+              <Card>
+                <Button onClick={handleDeactivateClick} tone="critical">
+                  Deactivate Scroll To Top Button
+                </Button>
+              </Card>
+            </Popover>
+          </>
+        ) : (
+          <>
+            <Popover
+              active={popoverActive}
+              activator={activator}
+              autofocusTarget="first-node"
+              onClose={togglePopoverActive}
+            >
+              <Popover.Pane fixed>
+                <Popover.Section>
+                  <InlineStack>
+                    <Text
+                      alignment="center"
+                      as="p"
+                      fontWeight="regular"
+                      variant="headingMd"
                     >
-                        <Card>
-                            <Button onClick={handleDeactivateClick} tone="critical">Deactivate Scroll To Top Button</Button>
-                        </Card>
-                    </Popover>
-                </> : <>
-
-                    <Popover
-                        active={popoverActive}
-                        activator={activator}
-                        autofocusTarget="first-node"
-                        onClose={togglePopoverActive}
-                    >
-                        <Popover.Pane fixed>
-                            <Popover.Section>
-                                <InlineStack><Text alignment='center' as="p" fontWeight="regular" variant="headingMd">What went wrong? </Text>
-                                    <div><Icon source={XIcon}></Icon></div></InlineStack>
-                            </Popover.Section>
-                        </Popover.Pane>
-                    </Popover>
-                </>
-            }
-        </div>
+                      What went wrong?{" "}
+                    </Text>
+                    <div>
+                      <Icon source={XIcon}></Icon>
+                    </div>
+                  </InlineStack>
+                </Popover.Section>
+              </Popover.Pane>
+            </Popover>
+          </>
+        )}
+      </div>
     );
-}
+  }
   const toastMarkup = active ? (
     <Frame>
       <Toast content={msgData} onDismiss={toggleActive} error={error} />
@@ -301,9 +305,9 @@ export default function ScrollToTop() {
     setButtonLoading(true);
     const dataToSend = {
       actionType: "save",
-      data:formData
-      };
-   
+      data: formData,
+    };
+
     console.log(formData, "formData--");
     const response = await fetch("/api/save", {
       method: "POST",
@@ -317,21 +321,19 @@ export default function ScrollToTop() {
     if (data.success) {
       setActive(true);
       setActiveField(false);
-      setButtonLoading(false)
+      setButtonLoading(false);
       setMsgData("Settings Updated");
     } else {
-      setButtonLoading(false)
+      setButtonLoading(false);
       setActive(true);
       setActiveField(false);
       setError(true);
       setMsgData("There is some error while update");
- 
     }
   };
   const handleDiscard = () => {
     setActiveField(false);
   };
-
 
   const handleToggleStatus = async () => {
     setButtonLoading(true);
@@ -378,8 +380,6 @@ export default function ScrollToTop() {
     }
   };
 
-
-  
   return (
     <Page
       backAction={{ content: "Back", onAction: () => navigate("/app") }}
@@ -392,7 +392,10 @@ export default function ScrollToTop() {
       }
       primaryAction={
         status ? (
-          <DeactivatePopover handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
+          <DeactivatePopover
+            handleToggleStatus={handleToggleStatus}
+            buttonLoading={buttonloading}
+          />
         ) : (
           {
             content: "Activate App",
@@ -402,7 +405,6 @@ export default function ScrollToTop() {
           }
         )
       }
-    
     >
       <Layout>
         <Layout.Section variant="oneHalf">
@@ -453,17 +455,7 @@ export default function ScrollToTop() {
                             }
                           />
                         </div>
-                        <div className="lower_checkbox">
-                          <Checkbox
-                            onFocus={() => handleFocus("field4")}
-                            label="Fill Animation"
-                            onChange={(e) =>
-                              handleInputChange(e, "fill_animation")
-                            }
-                            checked={formData.fill_animation}
-                            helpText="Displays an interactive, scroll dependent fill-animation."
-                          />
-                        </div>
+                       
                       </BlockStack>
                     </div>
                   </Box>
@@ -478,9 +470,9 @@ export default function ScrollToTop() {
                 <Box paddingBlockStart="200">
                   <div className="theme_image_icons">
                     <BlockStack gap="300">
-                      <InlineGrid gap="500" columns={5}>
+                      <InlineStack wrap={true} gap="300" alignItems="center">
                         {ScrollArrowsIcon}
-                      </InlineGrid>
+                      </InlineStack>
                     </BlockStack>
                   </div>
                 </Box>

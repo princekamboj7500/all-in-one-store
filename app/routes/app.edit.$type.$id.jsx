@@ -30,7 +30,9 @@ import {
   Divider,
   InlineError,
   Thumbnail,
+  Modal,
 } from "@shopify/polaris";
+import db from "../db.server";
 
 import { authenticate } from "../shopify.server";
 import "./assets/style.css";
@@ -39,83 +41,200 @@ import {
   PlusCircleIcon,
   SearchIcon,
   ChevronDownIcon,
-  EditIcon,
   DeleteIcon,
+  EditIcon,
   ImageIcon,
 } from "@shopify/polaris-icons";
 import DiscardModal from "./components/DiscardModal";
-
+import BundleProducts from "./components/BundleProducts";
 export const loader = async ({ request, params }) => {
-  const type = params.id;
+  const upsellId = params.id;
 
-  const { session } = await authenticate.admin(request);
+  const upsellType = params.type;
+  const { session, admin } = await authenticate.admin(request);
   const store = session.shop;
-  let data;
-  if (type === "bogo") {
-    data = {
-      discount_type: "BOGO",
-      offer_status: "Draft",
-      internal_name: "New BOGO",
-      cart_label: "Discount",
 
-      rules: {
-        customer_buy: {
-          products: [],
-          chosen_type: "any",
-          collections: [],
-          qty: 1,
-        },
-        discount: {
-          discount_amount: 10,
-          discount_type: "percent",
-          discount_symbol: "%",
-        },
-        product_page: {
-          status: "Active",
-          offer_title: "Buy One, Get One",
-          button_text: "Add to Cart",
-          badge_text: "Get {{ value }} off",
-          accent_color: "#d83b3b",
-          text_color: "#ffffff",
-          badge_size: "12",
-          show_shadow: 1,
-          show_border: 1,
-          border_color: "#eaeaea",
-        },
-        cart_page: {
-          status: "Inactive",
-          format:
-            "You are eligible to get {{ quantity }} x {{ product }} with {{ value }} OFF!",
-          button_style: "custom",
-        },
-        popup_cart: {
-          status: "Inactive",
-          title: "Get {{ value }} OFF for {{ quantity }}x",
-          text: "Add to Cart",
-          overlay_bgColor: "#ffffff",
-          overlay_textColor: "#000000",
-          button_bgColor: "#d83b3b",
-          button_textColor: "#ffffff",
-          variant_bgColor: "#ffffff",
-          variant_textColor: "#4f4f4f",
-        },
-        customer_get: {
-          products: [],
-          chosen_type: "any",
-          collections: [],
-          qty: 1,
-        },
+  const getData = await db.UpsellBuilder.findFirst({
+    where: {
+      id: upsellId,
+      store: store,
+    },
+    select: {
+      discount_type: true,
+      rules: true,
+      offer_status: true,
+      internal_name: true,
+      cart_label: true,
+      created_at: true,
+    },
+  });
+
+  const buyIds = getData.rules.customer_buy.products;
+  const getIds = getData.rules.customer_get.products;
+  const buyCollectionsIds = getData.rules.customer_buy.collections;
+  const ids = buyCollectionsIds?.map((url) => url.split("/").pop());
+
+  const query = ids?.map((id) => `id:${id}`).join(" OR ");
+
+  const getCollectionsIds = getData.rules.customer_get.collections;
+  const getCollIds = getCollectionsIds?.map((url) => url.split("/").pop());
+  const getquery = getCollIds?.map((id) => `id:${id}`).join(" OR ");
+  let buyCustomerProducts = [],
+    getCustomerProducts = [],
+    buyCustomerCollections = [],
+    getCustomerCollections = [];
+  if (buyIds.length > 0) {
+    const query = `
+    query getProductsByIds($ids: [ID!]!) {
+      nodes(ids: $ids) {
+        ... on Product {
+          id
+          title
+          featuredImage {
+          originalSrc
+          }
+        }
+      }
+    }
+  `;
+    const response = await admin.graphql(query, {
+      variables: {
+        ids: buyIds,
       },
-    };
+    });
+
+    const data = await response.json();
+    const buyProductsIds = data.data.nodes;
+    buyCustomerProducts = buyProductsIds.map((products) => {
+      const { id, title, featuredImage } = products;
+
+      return {
+        productId: id,
+        productTitle: title,
+        productImage: featuredImage?.originalSrc,
+      };
+    });
+  }
+  if (getIds.length > 0) {
+    const query = `
+    query getProductsByIds($ids: [ID!]!) {
+      nodes(ids: $ids) {
+        ... on Product {
+          id
+          title
+          featuredImage {
+          originalSrc
+          }
+        }
+      }
+    }
+  `;
+    const response = await admin.graphql(query, {
+      variables: {
+        ids: getIds,
+      },
+    });
+
+    const data = await response.json();
+    const getProductIds = data.data.nodes;
+    getCustomerProducts = getProductIds.map((product) => {
+      const { id, title, featuredImage } = product;
+
+      return {
+        productId: id,
+        productTitle: title,
+        productImage: featuredImage?.originalSrc,
+      };
+    });
+  }
+  if (buyCollectionsIds.length > 0) {
+    const response = await admin.graphql(
+      `#graphql
+      query {
+        collections(first:250, query: "${query}") {
+          edges {
+            node {
+              id
+              title
+              handle
+              updatedAt
+              sortOrder
+              image{
+              url
+              }
+            }
+          }
+        }
+      }`,
+    );
+    const data = await response.json();
+    const collections = data.data.collections.edges;
+
+    buyCustomerCollections = collections.map(
+      ({ node: { id, title, image } }) => ({
+        productId: id,
+        productTitle: title,
+        productImage: image.url,
+      }),
+    );
+  }
+  if (getCollectionsIds.length > 0) {
+    const response = await admin.graphql(
+      `#graphql
+      query {
+        collections(first:250, query: "${getquery}") {
+          edges {
+            node {
+              id
+              title
+              handle
+              updatedAt
+              sortOrder
+              image{
+              url
+              }
+            }
+          }
+        }
+      }`,
+    );
+    const data = await response.json();
+    const collections = data.data.collections.edges;
+    console.log(collections,"collections____")
+
+    getCustomerCollections = collections.map(
+      ({ node: { id, title, image } }) => ({
+        productId: id,
+        productTitle: title,
+        productImage: image?.url,
+      }),
+    );
   }
 
-  return { data, store, type };
+  return {
+    getData,
+    upsellType,
+    upsellId,
+    getCustomerProducts,
+    buyCustomerProducts,
+    buyCustomerCollections,
+    getCustomerCollections
+  };
 };
-
-function BuilderCreate() {
+const EditDiscountType = () => {
+  const navigate = useNavigate();
+  const {
+    getData,
+    upsellType,
+    upsellId,
+    getCustomerProducts,
+    buyCustomerProducts,
+    buyCustomerCollections,
+    getCustomerCollections
+  } = useLoaderData();
+  const [formData, setFormData] = useState(getData);
   const [activeTab, setActiveTab] = useState(1);
-  const { data, store, type } = useLoaderData();
-  const [formData, setFormData] = useState(data);
+  const [editUpsellId, seteditUpsellId] = useState(upsellId);
   const [openStates, setOpenStates] = useState({
     generalDesignSettings: false,
     cookiesettings: false,
@@ -123,9 +242,10 @@ function BuilderCreate() {
     thankubanner: false,
     addCart: false,
   });
-  const nav = useNavigate();
+  const [lastSavedData, setLastSavedData] = useState(getData);
   const [buttonloading, setButtonLoading] = useState(false);
   const [activemodal, setActivemodal] = useState(false);
+  const [activeDiscardModal, setactiveDiscardModal] = useState(false);
   const handleToggle = (section) => {
     setOpenStates((prevOpenStates) => ({
       ...prevOpenStates,
@@ -140,14 +260,253 @@ function BuilderCreate() {
     () => setActivemodal((activemodal) => !activemodal),
     [],
   );
-  const [lastSavedData, setLastSavedData] = useState(data);
-  const [buyProduct, setBuyProduct] = useState([]);
-  const [getProduct, setGetProduct] = useState([]);
-  const [buyCollections, setBuyCollections] = useState([]);
-  const [getCollections, setGetCollections] = useState([]);
+  const toggleDiscardModal = useCallback(
+    () => setactiveDiscardModal((activeDiscardModal) => !activeDiscardModal),
+    [],
+  );
+  const [buyProduct, setBuyProduct] = useState(buyCustomerProducts);
+  const [getProduct, setGetProduct] = useState(getCustomerProducts);
+
+  const [buyCollections, setBuyCollections] = useState(buyCustomerCollections);
+  const [getCollections, setGetCollections] = useState(getCustomerCollections);
 
   const handleTab = (tabIndex) => {
     setActiveTab(tabIndex);
+  };
+  const handleChange = (value, field, nestedField) => {
+    if (nestedField) {
+      setFormData((prevState) => ({
+        ...prevState,
+        rules: {
+          ...prevState.rules,
+          [field]: {
+            ...prevState.rules[field],
+            [nestedField]: value,
+          },
+        },
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+    }
+  };
+
+  const handleFocus = (fieldName) => {
+    setActiveField(fieldName);
+  };
+  const handleColorChange = (e, fieldName, field, nestedField) => {
+    const value = e.target.value;
+    handleChange(value, field, nestedField);
+  };
+  const handleSave = async () => {
+    setButtonLoading(true);
+    const dataToSend = {
+      actionType: "update",
+      data: formData,
+      id: editUpsellId,
+    };
+    const response = await fetch("/api/upsell-save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      setActive(true);
+      setActiveField(false);
+      setButtonLoading(false);
+      setMsgData("Settings Updated");
+      setLastSavedData(formData);
+      setFormData(data.data);
+    } else {
+      setButtonLoading(false);
+      setActive(true);
+      setActiveField(false);
+      setError(true);
+      setMsgData("There is some error while update");
+    }
+  };
+
+  const toggleActive = useCallback(
+    () => setActive((prevActive) => !prevActive),
+    [],
+  );
+
+  useEffect(() => {
+    shopify.loading(false);
+  }, []);
+  const handleDiscard = () => {
+    setFormData(lastSavedData);
+    setActiveField(false);
+    toggleDiscardModal();
+  };
+  const toastMarkup = active ? (
+    <Frame>
+      <Toast content={msgData} onDismiss={toggleActive} error={error} />
+    </Frame>
+  ) : null;
+  const addProducts = async (selectedProducts, type) => {
+    if (type === "customer_buy") {
+      setBuyProduct((prevBuyProduct) => [
+        ...prevBuyProduct,
+        ...selectedProducts.filter(
+          (product) =>
+            !prevBuyProduct.some((p) => p.productId === product.productId),
+        ),
+      ]);
+    } else {
+      setGetProduct((prevGetProduct) => [
+        ...prevGetProduct,
+        ...selectedProducts.filter(
+          (product) =>
+            !prevGetProduct.some((p) => p.productId === product.productId),
+        ),
+      ]);
+    }
+  };
+  const addCollections = async (selectedCollections, type) => {
+    if (type === "customer_buy") {
+     
+      setBuyCollections((prevBuyProduct) => [
+        ...prevBuyProduct,
+        ...selectedCollections.filter(
+          (product) =>
+            !prevBuyProduct.some((p) => p.productId === product.productId),
+        ),
+      ]);
+    } else {
+      
+      setGetCollections((prevGetProduct) => [
+        ...prevGetProduct,
+        ...selectedCollections.filter(
+          (product) =>
+            !prevGetProduct.some((p) => p.productId === product.productId),
+        ),
+      ]);
+    }
+  };
+  async function selectCollection(type) {
+
+    const selectedIds = buyCollections.map((product) => ({
+      id: product.productId,
+    }));
+
+    const getproductSelected = getCollections.map((product) => product.productId);
+    let ids;
+    if (type === "customer_buy") {
+      ids = selectedIds;
+    } else {
+      ids = getproductSelected;
+    }
+    const collections = await window.shopify.resourcePicker({
+      type: "collection",
+      action: "select",
+      multiple: true,
+      selectionIds: ids,
+
+      filter: {
+        hidden: true,
+        variants: false,
+        draft: false,
+        archived: false,
+      },
+    });
+    if (collections) {
+      console.log(collections, "products_____________");
+      const allSelectedProducts = collections.map((product) => {
+        const { image, id, title, handle } = product;
+
+        return {
+          productId: id,
+          productTitle: title,
+          productImage: image?.originalSrc,
+        };
+      });
+      const collectionIds = collections.map((coll) => coll.id);
+
+      setFormData((prevState) => {
+        const newRules = { ...prevState.rules };
+
+        if (type == "customer_buy") {
+          newRules.customer_buy.collections = collectionIds;
+        } else if (type == "customer_get") {
+          newRules.customer_get.collections = collectionIds;
+        }
+
+        return {
+          ...prevState,
+          rules: newRules,
+        };
+      });
+
+      await addCollections(allSelectedProducts, type);
+    }
+  }
+
+  async function selectProduct(type) {
+    const selectedIds = buyProduct.map((product) => ({
+      id: product.productId,
+    }));
+
+    const getproductSelected = getProduct.map((product) => product.productId);
+
+    let ids;
+    if (type === "customer_buy") {
+      ids = selectedIds;
+    } else {
+      ids = getproductSelected;
+    }
+
+    const products = await window.shopify.resourcePicker({
+      type: "product",
+      action: "select",
+      multiple: true,
+      selectionIds: ids,
+
+      filter: {
+        hidden: true,
+        variants: false,
+        draft: false,
+        archived: false,
+      },
+    });
+    if (products) {
+      const allSelectedProducts = products.map((product) => {
+        const { images, id, title, handle } = product;
+
+        return {
+          productId: id,
+          productTitle: title,
+          productImage: images[0]?.originalSrc,
+        };
+      });
+      const productIds = products.map((product) => product.id);
+
+      setFormData((prevState) => {
+        const newRules = { ...prevState.rules };
+
+        if (type == "customer_buy") {
+          newRules.customer_buy.products = productIds;
+        } else if (type == "customer_get") {
+          newRules.customer_get.products = productIds;
+        }
+
+        return {
+          ...prevState,
+          rules: newRules,
+        };
+      });
+      await addProducts(allSelectedProducts, type);
+    }
+  }
+
+  const handleContinueClick = () => {
+    handleTab(activeTab + 1);
   };
 
   const leftPreviewLayout = (
@@ -233,220 +592,13 @@ function BuilderCreate() {
       </div>
     </div>
   );
-  const addProducts = async (selectedProducts, type) => {
-    if (type === "customer_buy") {
-      setBuyProduct((prevBuyProduct) => [
-        ...prevBuyProduct,
-        ...selectedProducts,
-      ]);
-    } else {
-      setGetProduct((prevBuyProduct) => [
-        ...prevBuyProduct,
-        ...selectedProducts,
-      ]);
-    }
-  };
-
-  const addCollections = async (selectedCollections, type) => {
-    if (type === "customer_buy") {
-      setBuyCollections((prevBuyProduct) => [
-        ...prevBuyProduct,
-        ...selectedCollections,
-      ]);
-    } else {
-      setGetCollections((prevBuyProduct) => [
-        ...prevBuyProduct,
-        ...selectedCollections,
-      ]);
-    }
-  };
-  async function selectCollection(type) {
-    const collections = await window.shopify.resourcePicker({
-      type: "collection",
-      action: "select",
-      multiple: true,
-
-      filter: {
-        hidden: true,
-        variants: false,
-        draft: false,
-        archived: false,
-      },
-    });
-    if (collections) {
-      console.log(collections, "products_____________");
-      const allSelectedProducts = collections.map((product) => {
-        const { image, id, title, handle } = product;
-
-        return {
-          productId: id,
-          productTitle: title,
-          productImage: image?.originalSrc,
-        };
-      });
-      const collectionIds = collections.map((coll) => coll.id);
-
-      setFormData((prevState) => {
-        const newRules = { ...prevState.rules };
-
-        if (type == "customer_buy") {
-          newRules.customer_buy.collections = collectionIds;
-        } else if (type == "customer_get") {
-          newRules.customer_get.collections = collectionIds;
-        }
-
-        return {
-          ...prevState,
-          rules: newRules,
-        };
-      });
-
-      await addCollections(allSelectedProducts, type);
-    }
-  }
-
-  async function selectProduct(type) {
-    const products = await window.shopify.resourcePicker({
-      type: "product",
-      action: "select",
-      multiple: true,
-
-      filter: {
-        hidden: true,
-        variants: false,
-        draft: false,
-        archived: false,
-      },
-    });
-    if (products) {
-      const allSelectedProducts = products.map((product) => {
-        const { images, id, title, handle } = product;
-
-        return {
-          productId: id,
-          productTitle: title,
-          productImage: images[0]?.originalSrc,
-        };
-      });
-      const productIds = products.map((product) => product.id);
-      console.log(productIds,"productIds________")
-
-      setFormData((prevState) => {
-        const newRules = { ...prevState.rules };
-
-        if (type == "customer_buy") {
-          newRules.customer_buy.products = productIds;
-        } else if (type == "customer_get") {
-          newRules.customer_get.products = productIds;
-        }
-
-        return {
-          ...prevState,
-          rules: newRules,
-        };
-      });
-
-      await addProducts(allSelectedProducts, type);
-    }
-  }
-
-  useEffect(() => {
-    shopify.loading(false);
-  }, []);
-  const getCustomerBuysText = () => {
-    const { chosen_type, qty } = formData?.rules?.customer_buy || {};
-    const eligibleProductsCount = buyProduct.length;
-
-    return chosen_type === "specific"
-      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
-      : "any product";
-  };
-
-  const getCustomerGetsText = () => {
-    const { chosen_type, qty } = formData?.rules?.customer_get || {};
-    const eligibleProductsCount = getProduct.length;
-
-    return chosen_type === "specific"
-      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
-      : "any product";
-  };
-  const toggleActive = useCallback(
-    () => setActive((prevActive) => !prevActive),
-    [],
-  );
-  const toastMarkup = active ? (
-    <Frame>
-      <Toast content={msgData} onDismiss={toggleActive} error={error} />
-    </Frame>
-  ) : null;
-
-  const handleSave = async () => {
-    const updatedFormData = {
-      ...formData,
-      store: store,
-    };
-    setButtonLoading(true);
-    const dataToSend = {
-      actionType: "save",
-      data: updatedFormData,
-    };
-    const response = await fetch("/api/upsell-save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-    });
-    const result = await response.json();
-
-    if (result.success) {
-      setActive(true);
-      const data = result.data;
-      console.log(result);
-      setButtonLoading(false);
-      nav(`/app/edit/${type}/${data.id}`);
-    } else {
-      setButtonLoading(false);
-      setActive(true);
-
-      setError(true);
-      setMsgData("There is some error while update");
-    }
-  };
-
-  const handleChange = (value, field, nestedField) => {
-    if (nestedField) {
-      setFormData((prevState) => ({
-        ...prevState,
-        rules: {
-          ...prevState.rules,
-          [field]: {
-            ...prevState.rules[field],
-            [nestedField]: value,
-          },
-        },
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [field]: value,
-      }));
-    }
-  };
-
-  const handleColorChange = (e, fieldName, field, nestedField) => {
-    const value = e.target.value;
-    handleChange(value, field, nestedField);
-  };
-
-  const handleContinueClick = () => {
-    handleTab(activeTab + 1);
-  };
   const handleDelete = (id, type) => {
     if (type === "customer_buy") {
+      console.log(buyProduct,"buyProduct____")
       setBuyProduct((prevBuyProduct) =>
         prevBuyProduct.filter((product, index) => index !== id),
       );
+      console.log(id,"id_____")
       setFormData((prevState) => {
         const newRules = { ...prevState.rules };
         newRules.customer_buy.products = newRules.customer_buy.products.filter(
@@ -454,6 +606,7 @@ function BuilderCreate() {
         );
         return { ...prevState, rules: newRules };
       });
+      console.log(formData, "formData__________");
     } else {
       setGetProduct((prevGetProduct) =>
         prevGetProduct.filter((product, index) => index !== id),
@@ -467,7 +620,6 @@ function BuilderCreate() {
       });
     }
   };
-
   const handleCollectionDelete = (id, type) => {
     if (type === "customer_buy") {
       setBuyCollections((prevBuyProduct) =>
@@ -495,7 +647,65 @@ function BuilderCreate() {
       });
     }
   };
-  const AllCustomer = () => {
+  const deleteUpsell = async () => {
+    setButtonLoading(true);
+    const dataToSend = {
+      actionType: "delete",
+      data: formData,
+      id: editUpsellId,
+    };
+    const response = await fetch("/api/upsell-save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      setActive(true);
+      setActiveField(false);
+      setButtonLoading(false);
+      setMsgData("Deleted Successfully Updated");
+      setLastSavedData(formData);
+      navigate("/app/upsell_builder");
+    } else {
+      setButtonLoading(false);
+      setActive(true);
+      setActiveField(false);
+      setError(true);
+      setMsgData("There is some error while update");
+    }
+  };
+
+  const DeleteModal = () => {
+    return (
+      <div className="discard-modal">
+        <Modal
+          open={activemodal}
+          onClose={toggleModal}
+          title="Are you sure you want to delete New BOGO?"
+          primaryAction={{
+            destructive: true,
+            content: "Delete",
+            laoding: buttonloading,
+            onAction: deleteUpsell,
+          }}
+          secondaryActions={[
+            {
+              content: "Close",
+              onAction: toggleModal,
+            },
+          ]}
+        >
+          <Modal.Section>This can't be undone.</Modal.Section>
+        </Modal>
+      </div>
+    );
+  };
+
+  const BogoProducts = () => {
     return (
       <>
         <Grid>
@@ -514,9 +724,10 @@ function BuilderCreate() {
                       checked={
                         formData.rules.customer_buy.chosen_type === "any"
                       }
-                      onChange={(e) =>
-                        handleChange("any", "customer_buy", "chosen_type")
-                      }
+                      onChange={(e) => {
+                        handleFocus("any");
+                        handleChange("any", "customer_buy", "chosen_type");
+                      }}
                     />
 
                     <RadioButton
@@ -526,41 +737,40 @@ function BuilderCreate() {
                       checked={
                         formData.rules.customer_buy.chosen_type === "specific"
                       }
-                      onChange={(e) =>
-                        handleChange("specific", "customer_buy", "chosen_type")
-                      }
+                      onChange={(e) => {
+                        handleFocus("specific");
+                        handleChange("specific", "customer_buy", "chosen_type");
+                      }}
                     />
 
                     {formData.rules.customer_buy.chosen_type === "specific" ? (
                       <>
-                        <InlineStack wrap={false} gap="200">
-                          <div style={{ width: "100%" }}>
-                            <TextField
-                              placeholder="Search Products"
-                              type="text"
-                              prefix={<Icon source={SearchIcon} tone="base" />}
-                              autoComplete="off"
-                            />
-                          </div>
-                          <Button onClick={() => selectProduct("customer_buy")}>
-                            Browse
-                          </Button>
-                        </InlineStack>
-                        <InlineStack wrap={false} gap="200">
-                          <div style={{ width: "100%" }}>
-                            <TextField
-                              placeholder="Search  Collections"
-                              type="text"
-                              prefix={<Icon source={SearchIcon} tone="base" />}
-                              autoComplete="off"
-                            />
-                          </div>
-                          <Button
-                            onClick={() => selectCollection("customer_buy")}
-                          >
-                            Browse
-                          </Button>
-                        </InlineStack>
+                      <InlineStack wrap={false} gap="200">
+                        <div style={{ width: "100%" }}>
+                          <TextField
+                            placeholder="Search Products"
+                            type="text"
+                            prefix={<Icon source={SearchIcon} tone="base" />}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <Button onClick={() => selectProduct("customer_buy")}>
+                          Browse
+                        </Button>
+                      </InlineStack>
+                      <InlineStack wrap={false} gap="200">
+                        <div style={{ width: "100%" }}>
+                          <TextField
+                            placeholder="Search  Collections"
+                            type="text"
+                            prefix={<Icon source={SearchIcon} tone="base" />}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <Button onClick={() => selectCollection("customer_buy")}>
+                          Browse
+                        </Button>
+                      </InlineStack>
                       </>
                     ) : (
                       ""
@@ -571,18 +781,21 @@ function BuilderCreate() {
                       type="number"
                       value={formData.rules.customer_buy.qty}
                       autoComplete="off"
-                      onChange={(e) => handleChange(e, "customer_buy", "qty")}
+                      onChange={(e) => {
+                        handleFocus("qty");
+                        handleChange(e, "customer_buy", "qty");
+                      }}
                     />
                     {formData.rules.customer_buy.chosen_type === "specific" && (
                       <>
-                        {buyProduct.length === 0 &&
-                        buyCollections.length === 0 ? (
+                        {buyProduct.length === 0  && buyCollections.length ===0 ? (
                           <InlineError
                             message="A product or collection selection is required"
                             fieldID="myFieldID"
                           />
                         ) : (
-                          <>
+
+                       <>
                             {buyProduct.length > 0 && (
                               <BlockStack gap="200">
                                 <Text as="p" fontWeight="bold">
@@ -710,36 +923,42 @@ function BuilderCreate() {
               </Layout.Section>
               <Layout.Section>
                 <Card>
-                  <BlockStack gap={200}>
+                  <BlockStack gap={300}>
                     <Text variant="headingMd" as="h6" fontWeight="semibold">
                       Customer gets
                     </Text>
-
-                    <RadioButton
-                      label="Any product"
-                      id="any-products-slotB"
-                      name="products-slotB"
-                      checked={
-                        formData.rules.customer_get.chosen_type === "any"
-                      }
-                      onChange={(e) =>
-                        handleChange("any", "customer_get", "chosen_type")
-                      }
-                    />
-                    <RadioButton
-                      label="Specific Products or Collections"
-                      id="same-collection-slotB"
-                      name="products-slotB"
-                      checked={
-                        formData.rules.customer_get.chosen_type === "specific"
-                      }
-                      onChange={(e) =>
-                        handleChange("specific", "customer_get", "chosen_type")
-                      }
-                    />
-
-                    {formData.rules.customer_get.chosen_type === "specific" ? (
-                      <>
+                    <BlockStack>
+                      <RadioButton
+                        label="Any product"
+                        id="any-products-slotB"
+                        name="products-slotB"
+                        checked={
+                          formData.rules.customer_get.chosen_type === "any"
+                        }
+                        onChange={(e) => {
+                          handleFocus("any");
+                          handleChange("any", "customer_get", "chosen_type");
+                        }}
+                      />
+                      <RadioButton
+                        label="Specific product or Collection"
+                        id="same-collection-slotB"
+                        name="products-slotB"
+                        checked={
+                          formData.rules.customer_get.chosen_type === "specific"
+                        }
+                        onChange={(e) => {
+                          handleFocus("specific");
+                          handleChange(
+                            "specific",
+                            "customer_get",
+                            "chosen_type",
+                          );
+                        }}
+                      />
+                      {formData.rules.customer_get.chosen_type ===
+                      "specific" ? (
+                        <>
                         <InlineStack wrap={false} gap="200">
                           <div style={{ width: "100%" }}>
                             <TextField
@@ -756,40 +975,38 @@ function BuilderCreate() {
                         <InlineStack wrap={false} gap="200">
                           <div style={{ width: "100%" }}>
                             <TextField
-                              placeholder="Search  Collections"
+                              placeholder="Search Products or Collections"
                               type="text"
                               prefix={<Icon source={SearchIcon} tone="base" />}
                               autoComplete="off"
                             />
                           </div>
-                          <Button
-                            onClick={() => selectCollection("customer_get")}
-                          >
-                            Browse
-                          </Button>
+                          <Button onClick={() => selectCollection("customer_get")}>Browse</Button>
                         </InlineStack>
-                      </>
-                    ) : (
-                      ""
-                    )}
-
-                    <TextField
-                      label="Quantity"
-                      type="number"
-                      onChange={(e) => handleChange(e, "customer_get", "qty")}
-                      autoComplete="off"
-                      value={formData.rules.customer_get.qty}
-                    />
-                    {formData.rules.customer_get.chosen_type === "specific" && (
-                      <>
-                        {getProduct.length === 0 &&
-                        getCollections.length === 0 ? (
-                          <InlineError
-                            message="A product or collection selection is required"
-                            fieldID="myFieldID"
-                          />
-                        ) : (
-                          <>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      <TextField
+                        label="Quantity"
+                        type="number"
+                        onChange={(e) => {
+                          handleFocus("qty");
+                          handleChange(e, "customer_get", "qty");
+                        }}
+                        autoComplete="off"
+                        value={formData.rules.customer_get.qty}
+                      />{" "}
+                      {formData.rules.customer_get.chosen_type ===
+                        "specific" && (
+                        <>
+                          {getProduct.length === 0  && getCollections.length === 0 ? (
+                            <InlineError
+                              message="A product or collection selection is required"
+                              fieldID="myFieldID"
+                            />
+                          ) : (
+                            <>
                             {getProduct.length > 0 && (
                               <BlockStack gap="200">
                                 <Text as="p" fontWeight="bold">
@@ -909,9 +1126,10 @@ function BuilderCreate() {
                               </BlockStack>
                             )}
                           </>
-                        )}
-                      </>
-                    )}
+                          )}
+                        </>
+                      )}
+                    </BlockStack>
                   </BlockStack>
                 </Card>
               </Layout.Section>
@@ -929,6 +1147,11 @@ function BuilderCreate() {
             content: "Continue to discount",
             onClick: handleContinueClick,
           }}
+          secondaryActions={
+            <Button onClick={toggleModal} variant="primary" tone="critical">
+              Delete
+            </Button>
+          }
         />
       </>
     );
@@ -1003,9 +1226,12 @@ function BuilderCreate() {
                               type="number"
                               value={formData.rules.discount.discount_amount}
                               suffix={formData.rules.discount.discount_symbol}
-                              onChange={(e) =>
-                                handleChange(e, "discount", "discount_amount")
-                              }
+                              onChange={(e) => {
+                                handleFocus("discount_amount");
+                                handleChange(e, "discount", "discount_amount");
+                              }}
+                              placeholder="Min Value : 0"
+                              min={0}
                             />
                           </InlineStack>
                         </BlockStack>
@@ -1025,6 +1251,11 @@ function BuilderCreate() {
             content: "Continue to Appearance",
             onClick: handleContinueClick,
           }}
+          secondaryActions={
+            <Button onClick={toggleModal} variant="primary" tone="critical">
+              Delete
+            </Button>
+          }
         />
       </>
     );
@@ -1104,6 +1335,7 @@ function BuilderCreate() {
                   label="Status"
                   options={Status_options}
                   onChange={(e) => {
+                    handleFocus("status");
                     handleChange(e, "product_page", "status");
                   }}
                   value={formData.rules.product_page.status}
@@ -1112,6 +1344,7 @@ function BuilderCreate() {
                   label="Offer title"
                   autoComplete="off"
                   onChange={(e) => {
+                    handleFocus("offer_title");
                     handleChange(e, "product_page", "offer_title");
                   }}
                   value={formData.rules.product_page.offer_title}
@@ -1120,6 +1353,7 @@ function BuilderCreate() {
                   label={`Button text`}
                   autoComplete="off"
                   onChange={(e) => {
+                    handleFocus("button_text");
                     handleChange(e, "product_page", "button_text");
                   }}
                   value={formData.rules.product_page.button_text}
@@ -1128,6 +1362,7 @@ function BuilderCreate() {
                   label={`Badge text`}
                   autoComplete="off"
                   onChange={(e) => {
+                    handleFocus("badge_text");
                     handleChange(e, "product_page", "badge_text");
                   }}
                   value={formData.rules.product_page.badge_text}
@@ -1161,6 +1396,7 @@ function BuilderCreate() {
                           label={`Accent color`}
                           type="text"
                           onChange={(e) => {
+                            handleFocus("accent_color");
                             handleChange(e, "product_page", "accent_color");
                           }}
                           value={formData.rules.product_page.accent_color}
@@ -1207,6 +1443,7 @@ function BuilderCreate() {
                           label={`Text color`}
                           type="text"
                           onChange={(e) => {
+                            handleFocus("text_color");
                             handleChange(e, "product_page", "text_color");
                           }}
                           value={formData.rules.product_page.text_color}
@@ -1262,6 +1499,7 @@ function BuilderCreate() {
                     suffix="16px"
                     value={formData.rules.product_page.badge_size}
                     onChange={(e) => {
+                      handleFocus("badge_size");
                       handleChange(e, "product_page", "badge_size");
                     }}
                   />
@@ -1288,6 +1526,7 @@ function BuilderCreate() {
                     label="Show shadow"
                     checked={formData.rules.product_page.show_shadow}
                     onChange={(e) => {
+                      handleFocus("show_shadow");
                       handleChange(e, "product_page", "show_shadow");
                     }}
                   />
@@ -1295,6 +1534,7 @@ function BuilderCreate() {
                     label="Show border"
                     checked={formData.rules.product_page.show_border}
                     onChange={(e) => {
+                      handleFocus("show_border");
                       handleChange(e, "product_page", "show_border");
                     }}
                   />
@@ -1308,6 +1548,7 @@ function BuilderCreate() {
                           label={`Border color`}
                           type="text"
                           onChange={(e) => {
+                            handleFocus("border_color");
                             handleChange(e, "product_page", " border_color");
                           }}
                           value={formData.rules.product_page.border_color}
@@ -1419,6 +1660,7 @@ function BuilderCreate() {
                   label="Status"
                   options={informative_Status_options}
                   onChange={(e) => {
+                    handleFocus("status");
                     handleChange(e, "cart_page", "status");
                   }}
                   value={formData.rules.cart_page.status}
@@ -1426,6 +1668,7 @@ function BuilderCreate() {
                 <TextField
                   label="Product suggestion format when there is a discount"
                   onChange={(e) => {
+                    handleFocus("format");
                     handleChange(e, "cart_page", "format");
                   }}
                   value={formData.rules.cart_page.format}
@@ -1446,18 +1689,20 @@ function BuilderCreate() {
                    Auto-detect theme style"
                     id="disabled"
                     name="accounts"
-                    onChange={(e) =>
-                      handleChange("auto-detect", "cart_page", "button_style")
-                    }
+                    onChange={(e) => {
+                      handleFocus("button_style");
+                      handleChange("auto-detect", "cart_page", "button_style");
+                    }}
                     checked={
                       formData.rules.cart_page.button_style === "auto-detect"
                     }
                   />
                   <RadioButton
                     label="Custom"
-                    onChange={(e) =>
-                      handleChange("custom", "cart_page", "button_style")
-                    }
+                    onChange={(e) => {
+                      handleFocus("button_style");
+                      handleChange("custom", "cart_page", "button_style");
+                    }}
                     checked={formData.rules.cart_page.button_style === "custom"}
                     id="optional"
                     name="accounts"
@@ -1691,6 +1936,7 @@ function BuilderCreate() {
                   label="Status"
                   options={informative_Status_options}
                   onChange={(e) => {
+                    handleFocus("status");
                     handleChange(e, "popup_cart", "status");
                   }}
                   value={formData.rules.popup_cart.status}
@@ -1698,6 +1944,7 @@ function BuilderCreate() {
                 <TextField
                   label="Pop-up title"
                   onChange={(e) => {
+                    handleFocus("title");
                     handleChange(e, "popup_cart", "title");
                   }}
                   value={formData.rules.popup_cart.title}
@@ -1706,6 +1953,7 @@ function BuilderCreate() {
                 <TextField
                   label="Button text"
                   onChange={(e) => {
+                    handleFocus("text");
                     handleChange(e, "popup_cart", "text");
                   }}
                   value={formData.rules.popup_cart.text}
@@ -1727,6 +1975,7 @@ function BuilderCreate() {
                         label="Background"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("overlay_bgColor");
                           handleChange(e, "popup_cart", "overlay_bgColor");
                         }}
                         value={formData.rules.popup_cart.overlay_bgColor}
@@ -1771,6 +2020,7 @@ function BuilderCreate() {
                         label="Text"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("overlay_textColor");
                           handleChange(e, "popup_cart", "overlay_textColor");
                         }}
                         value={formData.rules.popup_cart.overlay_textColor}
@@ -1820,6 +2070,7 @@ function BuilderCreate() {
                         label="Background"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("button_bgColor");
                           handleChange(e, "popup_cart", "button_bgColor");
                         }}
                         value={formData.rules.popup_cart.button_bgColor}
@@ -1864,6 +2115,7 @@ function BuilderCreate() {
                         label="Text"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("button_textColor");
                           handleChange(e, "popup_cart", "button_textColor");
                         }}
                         value={formData.rules.popup_cart.button_textColor}
@@ -1913,6 +2165,7 @@ function BuilderCreate() {
                         label="Background"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("variant_bgColor");
                           handleChange(e, "popup_cart", "variant_bgColor");
                         }}
                         value={formData.rules.popup_cart.variant_bgColor}
@@ -1957,6 +2210,7 @@ function BuilderCreate() {
                         label="Text"
                         type="text"
                         onChange={(e) => {
+                          handleFocus("variant_textColor");
                           handleChange(e, "popup_cart", " variant_textColor");
                         }}
                         value={formData.rules.popup_cart.variant_textColor}
@@ -2031,14 +2285,35 @@ function BuilderCreate() {
         </Layout>
         <PageActions
           primaryAction={{
-            content: "Continue to Review",
+            content: "Continue to Reviews",
             onClick: handleContinueClick,
           }}
+          secondaryActions={
+            <Button onClick={toggleModal} variant="primary" tone="critical">
+              Delete
+            </Button>
+          }
         />
       </div>
     );
   };
 
+  const getCustomerBuysText = () => {
+    const { chosen_type, qty } = formData?.rules?.customer_buy || {};
+    const eligibleProductsCount = buyProduct.length;
+
+    return chosen_type === "specific"
+      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
+      : "any product";
+  };
+  const getCustomerGetsText = () => {
+    const { chosen_type, qty } = formData?.rules?.customer_get || {};
+    const eligibleProductsCount = getProduct.length;
+
+    return chosen_type === "specific"
+      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
+      : "any product";
+  };
   const ReviewsLayout = () => {
     const options = [
       { label: "Draft", value: "Draft" },
@@ -2203,7 +2478,10 @@ function BuilderCreate() {
                   <Select
                     options={options}
                     value={formData.offer_status}
-                    onChange={(value) => handleChange(value, "offer_status")}
+                    onChange={(value) => {
+                      handleFocus("offer_status");
+                      handleChange(value, "offer_status");
+                    }}
                   />
                 </Card>
               </Layout.Section>
@@ -2213,7 +2491,10 @@ function BuilderCreate() {
                     Internal name
                   </Text>
                   <TextField
-                    onChange={(e) => handleChange(e, "internal_name")}
+                    onChange={(e) => {
+                      handleFocus("internal_name");
+                      handleChange(e, "internal_name");
+                    }}
                     value={formData.internal_name}
                     autoComplete="off"
                   />
@@ -2225,7 +2506,10 @@ function BuilderCreate() {
                     Cart Label
                   </Text>
                   <TextField
-                    onChange={(e) => handleChange(e, "cart_label")}
+                    onChange={(e) => {
+                      handleFocus("cart_label");
+                      handleChange(e, "cart_label");
+                    }}
                     value={formData.cart_label}
                     helpText="Customize the text that shows up near the discount on the Cart page."
                     autoComplete="off"
@@ -2245,36 +2529,104 @@ function BuilderCreate() {
       </div>
     );
   };
-  const handleDiscard = () => {
-    setFormData(lastSavedData);
 
-    toggleModal();
+  const getPrimaryActionContent = () => {
+    let content;
+    let disabled = false;
+    switch (activeTab) {
+      case 1:
+        content = "Continue to Discount";
+      case 2:
+        content = "Continue to Appearance";
+      case 3:
+        content = "Continue to Review";
+      default:
+        content =
+          formData?.offer_status === "Active" ? "Save" : "Publish Buy X Get Y";
+        disabled = formData?.offer_status === "Active";
+    }
+    return { content, disabled };
+  };
+  const handleUpsellPublish = async () => {
+    setButtonLoading(true);
+    const updateddata = {
+      offer_status: "Active",
+    };
+    const dataToSend = {
+      actionType: "publish",
+      id: editUpsellId,
+      data: updateddata,
+    };
+    const response = await fetch("/api/upsell-save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      setActive(true);
+      setActiveField(false);
+      setButtonLoading(false);
+      setMsgData("Settings Updated");
+      setLastSavedData(formData);
+      navigate("/app/upsell_builder");
+    } else {
+      setButtonLoading(false);
+      setActive(true);
+      setActiveField(false);
+      setError(true);
+      setMsgData("There is some error while update");
+    }
+  };
+  const handlePrimaryAction = () => {
+    if (activeTab >= 1 && activeTab <= 3) {
+      // Handle continue actions here
+      handleContinueClick();
+    } else {
+      handleUpsellPublish();
+    }
   };
 
+  const handleClick = () => {
+    navigate("/app/upsell_builder");
+    shopify.loading(true);
+  };
+  const { content, disabled } = getPrimaryActionContent();
   return (
-    <Page>
-      <div className="contextual-frame">
-        <Frame
-          logo={{
-            width: 86,
-            contextualSaveBarSource:
-              "https://cdn.shopify.com/s/files/1/2376/3301/files/Shopify_Secondary_Inverted.png",
-          }}
-        >
-          <ContextualSaveBar
-            message="Unsaved changes"
-            saveAction={{
-              onAction: handleSave,
-              loading: buttonloading,
-              disabled: false,
-            }}
-            discardAction={{
-              onAction: toggleModal,
-            }}
-          />
-        </Frame>
-      </div>
-
+    <Page
+      backAction={{
+        content: "Back",
+        onAction: handleClick,
+      }}
+      title={getData.internal_name}
+      titleMetadata={
+        formData.offer_status === "Active" ? (
+          <Badge tone="success">Active</Badge>
+        ) : (
+          <Badge tone="info">Draft</Badge>
+        )
+      }
+      primaryAction={{
+        content: content,
+        disabled: disabled,
+        onAction: handlePrimaryAction,
+        loading: buttonloading,
+      }}
+      secondaryActions={[
+        {
+          content: "Duplicate",
+          accessibilityLabel: "Secondary action label",
+          onAction: () => alert("Duplicate action"),
+        },
+        {
+          content: "View on your store",
+          onAction: () => alert("View on your store action"),
+        },
+      ]}
+    >
       <Box background="bg-surface" borderRadius="200" shadow="300">
         <InlineGrid columns={4}>
           <a
@@ -2341,24 +2693,62 @@ function BuilderCreate() {
           </a>
         </InlineGrid>
       </Box>
-
       {activeTab === 1 && (
         <div>
-          {type === "bogo" && <AllCustomer />}
+          {upsellType === "bogo" && (
+            <BogoProducts />
+            // <BundleProducts
+            //   formData={formData}
+            //   handleChange={handleChange}
+            //   handleFocus={handleFocus}
+            //   handleColorChange={handleColorChange}
+            //   leftPreviewLayout={leftPreviewLayout}
+            //   handleContinueClick={handleContinueClick}
+            //   handleDelete={handleDelete}
+            //   selectProduct={selectProduct}
+            //   product={product}
+            // />
+          )}
           {/* {type === "other" && <AllCustomer />} */}
         </div>
       )}
-      {activeTab === 2 && <div>{type === "bogo" && <Discount />}</div>}
-      {activeTab === 3 && <div>{type === "bogo" && <Apperance />}</div>}
-      {activeTab === 4 && <div>{type === "bogo" && <ReviewsLayout />}</div>}
+      {activeTab === 2 && <div>{upsellType === "bogo" && <Discount />}</div>}
+      {activeTab === 3 && <div>{upsellType === "bogo" && <Apperance />}</div>}
+      {activeTab === 4 && (
+        <div>{upsellType === "bogo" && <ReviewsLayout />}</div>
+      )}
+      {activeField && (
+        <div className="contextual-frame">
+          <Frame
+            logo={{
+              width: 86,
+              contextualSaveBarSource:
+                "https://cdn.shopify.com/s/files/1/2376/3301/files/Shopify_Secondary_Inverted.png",
+            }}
+          >
+            <ContextualSaveBar
+              message="Unsaved changes"
+              saveAction={{
+                onAction: handleSave,
+                loading: buttonloading,
+                disabled: false,
+              }}
+              discardAction={{
+                onAction: toggleDiscardModal,
+              }}
+            />
+          </Frame>
+        </div>
+      )}
       {toastMarkup}
       <DiscardModal
-        toggleModal={toggleModal}
+        toggleModal={toggleDiscardModal}
         handleDiscard={handleDiscard}
-        activemodal={activemodal}
+        activemodal={activeDiscardModal}
       />
+      <DeleteModal />
     </Page>
   );
-}
+};
 
-export default BuilderCreate;
+export default EditDiscountType;

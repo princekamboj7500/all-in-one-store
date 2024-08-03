@@ -19,7 +19,14 @@ export default function App() {
         />
         <Meta />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({env: {NODE_DEBUG: false}})}`,
+          }}
+        />
+      
       </head>
+     
       <body>
         <Outlet />
         <ScrollRestoration />
