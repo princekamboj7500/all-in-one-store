@@ -1518,6 +1518,7 @@ function UpsellBuilder() {
       console.log(selectedProductIds,"selectedProductIds----")
   const datasend={
    offer_status:"Draft"
+   
   }
       const data = {
         actionType,
