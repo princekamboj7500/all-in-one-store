@@ -7,6 +7,7 @@ function PublishingSeo({ formData, handleFocus, handleChange, handleColorChange 
         { label: "Don't auto Publish", value: "Don't auto Publish",  },
          { label: "Publish automatically", value: 'Publish automatically',  },
     ]
+  
    
     return (
         <>
@@ -19,10 +20,10 @@ function PublishingSeo({ formData, handleFocus, handleChange, handleColorChange 
                             label="Auto-publish new reviews"
                             options={pubishOptions}
                             onChange={(e) => {
-                                handleFocus("reviewer_name_display")
-                                handleChange(e, "reviewer_name_display")
+                                handleFocus("autopublish_reviews")
+                                handleChange(e, "autopublish_reviews")
                             }}
-                         
+                            value={formData.autopublish_reviews}
                         />
                             
                         </BlockStack>

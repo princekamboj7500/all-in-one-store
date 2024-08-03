@@ -4,12 +4,10 @@ import { authenticate } from "../shopify.server";
 import { renderToString } from "react-dom/server";
 import HappyCustomers from "./components/HappyCustomers";
 export let loader = async ({ request }) => {
-  const { storefront, admin, session } =
+  const { admin, session } =
     await authenticate.public.appProxy(request);
 
-  if (!storefront) {
-    return new Response();
-  }
+ 
 
   const response = await admin.graphql(`query {
       currentAppInstallation {

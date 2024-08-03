@@ -51,3 +51,14 @@ model ReviewAnalytics {
 
 
 
+model UpsellBuilder{
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  store          String 
+  discount_type   String
+  shopify_discount_id  String?
+  rules            Json
+  offer_status     String 
+   internal_name   String
+   cart_label    String
+  created_at        DateTime @default(now())
+}

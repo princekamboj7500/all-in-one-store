@@ -12,11 +12,10 @@ const s3 = new AWS.S3({
 export const action = async ({ request }) => {
 
   const formData = await request.formData();
-  console.log(formData,"formData_q---")
+
   const files_q = formData.getAll('files');
   const exist_files = formData.getAll('exist');
-  console.log(files_q,"files_q-----");
-  console.log(exist_files,"exist_files-----")
+
   if(files_q){
     const uploadPromises = files_q.map(async (file) => {
       const arrayBuffer = await file.arrayBuffer();
@@ -35,7 +34,7 @@ export const action = async ({ request }) => {
     try {
       const uploaded = await Promise.all(uploadPromises);
       const locations = uploaded.map(item => item.Location);
-      console.log(locations,"locations-----")
+   
       const combinedArray = [...exist_files, ...locations];
       const proId = formData.get("product_id");
       const shop = formData.get("store_name");

@@ -5,11 +5,11 @@ import db from "../db.server";
 
 
 export const loader = async ({ request }) => {
-    const { admin, session } = await authenticate.admin(request);
+    const {  session } = await authenticate.admin(request);
    const url = new URL(request.url);
   const typeParam = url.searchParams.get('type');
   const queryParam = `%${typeParam}%`;
-  console.log(queryParam,"queryParam---")
+  
  try {
     const searchQuery = await db.Reviews.findMany({
         where: {
@@ -20,7 +20,7 @@ export const loader = async ({ request }) => {
           
         }
       });
-      console.log(searchQuery,"queryParam---")
+      
    if (searchQuery.length === 0) {
     return json({ success: false, message: "No data Exists" }, 200);
   } else {
@@ -35,6 +35,4 @@ export const loader = async ({ request }) => {
 }
   }
 
-export const action = async ({ request }) => {
 
-};

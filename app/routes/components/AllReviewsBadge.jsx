@@ -30,17 +30,7 @@ function AllreviewsBadge({ formData, handleFocus, handleChange, handleColorChang
                 <Card roundedAbove="sm">
                     <BlockStack gap="300">
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text>
-                        <Box background="bg-surface-secondary" padding="200" borderRadius="200">
-                            <Checkbox
-                                label="Display All Reviews Badge automatically on homepage"
-                                checked={formData.display_badge_automatically}
-                                onChange={(e) => {
-                                    handleFocus("display_badge_automatically")
-                                    handleChange(e, "display_badge_automatically")
-                                }}
-                                helpText="This places the All Reviews Badge automatically near the end of the homepage. If you want a specific position on the page or you want to place it on other pages, use the editor instead."
-                            />
-                        </Box>
+                       
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='regular'>Display manually</Text>

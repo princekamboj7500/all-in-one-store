@@ -35,6 +35,17 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
         { id: 'arrow6', imgSrc: arrow6 },
         { id: 'arrow7', imgSrc: arrow7 },
     ]
+
+    const handleCarouselClick = () => {
+        window.open(
+            `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/themes/${selectedTheme.id}/editor${URL}`,
+            "__blank"
+        );
+        // window.open(
+        //     `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/themes/current/editor?context=apps&activateAppId=apps&activateAppId=43a095cf-fbea-48e6-adab-28c9d62cab23%2Fstar_rating`,
+        //     "__blank"
+        //   );
+    }
     return (
         <>
             <Layout.Section>
@@ -70,24 +81,14 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
                             </BlockStack>
                         </Box>
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text>
-                        <Box background="bg-surface-secondary" padding="200" borderRadius="200">
-                            <Checkbox
-                                label="Display a Reviews Carousel automatically on your homepage"
-                                checked={formData.display_carousel_homepage}
-                                onChange={(e) => {
-                                    handleFocus("display_carousel_homepage")
-                                    handleChange(e, "display_carousel_homepage")
-                                }}
-                                helpText="This places the Reviews carousel automatically near the end of the homepage. If you want a specific position on the page or you want to place it on other pages, use the editor instead."
-                            />
-                        </Box>
+                      
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='regular'>Display manually</Text>
                                 <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Place the Reviews Carousel manually on your homepage or other pages using the Shopify editor or Vitals Editor.</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
-                                        <Button onClick={() => { }} accessibilityLabel="Go to editor"> Go to Shopify Editor</Button>
+                                        <Button onClick={handleCarouselClick} accessibilityLabel="Go to editor"> Go to Shopify Editor</Button>
                                     </ButtonGroup>
                                 </InlineStack>
                             </BlockStack>

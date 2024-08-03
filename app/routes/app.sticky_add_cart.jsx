@@ -1042,6 +1042,12 @@ export default function StickyAddToCart() {
                                                         onChange={(e) =>
                                                             handleColorChange(e, "background_color")
                                                         }
+                                                        style={{
+                                                            boxShadow: formData.background_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                            width:formData.background_color === '#ffffff' ? '34px':'38px',
+                                                               height:formData.background_color === '#ffffff' ? '34px':'38px'
+                                                          }}
+                                                        
                                                     />
                                                 }
                                             />
@@ -1065,6 +1071,11 @@ export default function StickyAddToCart() {
                                                         onChange={(e) =>
                                                             handleColorChange(e, "text_color")
                                                         }
+                                                        style={{
+                                                            boxShadow: formData.text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                            width:formData.text_color === '#ffffff' ? '34px':'38px',
+                                                               height:formData.text_color === '#ffffff' ? '34px':'38px'
+                                                          }}
                                                     />
                                                 }
                                             />
@@ -1087,6 +1098,11 @@ export default function StickyAddToCart() {
                                                         onChange={(e) =>
                                                             handleColorChange(e, "button_color")
                                                         }
+                                                        style={{
+                                                            boxShadow: formData.button_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                            width:formData.button_color === '#ffffff' ? '34px':'38px',
+                                                               height:formData.button_color === '#ffffff' ? '34px':'38px'
+                                                          }}
                                                     />
                                                 }
                                             />
@@ -1109,6 +1125,11 @@ export default function StickyAddToCart() {
                                                             onChange={(e) =>
                                                                 handleColorChange(e, "button_text_color")
                                                             }
+                                                            style={{
+                                                                boxShadow: formData.button_text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                                width:formData.button_text_color === '#ffffff' ? '34px':'38px',
+                                                                   height:formData.button_text_color === '#ffffff' ? '34px':'38px'
+                                                              }}
                                                         />
                                                     }
                                                 />
@@ -1147,6 +1168,11 @@ export default function StickyAddToCart() {
                                                         onChange={(e) =>
                                                             handleColorChange(e, "border_colors")
                                                         }
+                                                        style={{
+                                                            boxShadow: formData.border_colors === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                            width:formData.border_colors === '#ffffff' ? '34px':'38px',
+                                                               height:formData.border_colors === '#ffffff' ? '34px':'38px'
+                                                          }}
                                                     />
                                                 }
                                             />
@@ -1182,14 +1208,14 @@ export default function StickyAddToCart() {
                 <Layout.Section>
                     <BlockStack gap="300">
                         <Box paddingBlockStart="200">
-                            <ModulefiltersCollapsibleExample />
+                            {/* <ModulefiltersCollapsibleExample /> */}
                         </Box>
                     </BlockStack>
                 </Layout.Section>
             </Layout>
         </InlineGrid>
 
-        <div className='lower_section'>
+        {/* <div className='lower_section'>
             <Grid>
                 <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
                     <Card roundedAbove="sm">
@@ -1238,7 +1264,7 @@ export default function StickyAddToCart() {
                     </Card>
                 </Grid.Cell>
             </Grid>
-        </div>
+        </div> */}
     </BlockStack> 
     )
 

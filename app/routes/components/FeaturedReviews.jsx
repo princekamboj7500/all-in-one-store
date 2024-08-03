@@ -19,17 +19,17 @@ function FeaturedReviews({ formData, handleFocus, handleChange, handleColorChang
                             title="Reviews layout"
                             choices={review_layout_options.map(option => ({
                                 label: (
-                                    <span className={formData.reviews_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
+                                    <span className={formData.featured_reviews_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
                                         {option.label}
                                         <img src={option.imgSrc} alt={option.label} />
                                     </span>
                                 ),
                                 value: option.id,
                             }))}
-                            selected={formData.reviews_layout}
+                            selected={formData.featured_reviews_layout}
                             onChange={(selected) => {
-                                handleFocus("reviews_layout");
-                                handleChange(selected, "reviews_layout")
+                                handleFocus("featured_reviews_layout");
+                                handleChange(selected, "featured_reviews_layout")
                             }}
                             helpText="You can change the design settings for this layout in the Layout design settings section below."
                         />

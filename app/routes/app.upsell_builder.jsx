@@ -44,12 +44,13 @@ import {
   CalendarIcon,
   ExportIcon,
   ArrowDownIcon,
+  DeleteIcon
 } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css";
-import { product_bundle } from "./assets";
+import { product_bundle, bogo } from "./assets";
 import ReviewsWidget from "./components/ReviewsWidget";
 import StarRatings from "./components/StarRatings";
 import HappyCustomers from "./components/HappyCustomersPage";
@@ -322,10 +323,17 @@ export const loader = async ({ request }) => {
       createdAt: true,
     },
   });
-  console.log(collectionData, "collectionData--");
+
+  const getUpsells = await db.UpsellBuilder.findMany({
+    where: {
+      store: session.shop,
+    },
+  });
+
 
   return {
     data,
+    getUpsells,
     shopName,
     totalReviews,
     publishReviews,
@@ -1326,10 +1334,10 @@ function UpsellBuilder() {
     collectionData,
     averageRating,
     productReviews,
+    getUpsells,
   } = useLoaderData();
-  const [Analyticsdata, setAnalyticsdata] = useState();
-  const [Reviewdata, setReviewdata] = useState(collectionData);
-  const [Filterdata, setFilterData] = useState([]);
+  const [upsellList, setUpsellList] = useState(getUpsells);
+
   const [analyticsChartData, setAnalyticsChartData] = useState([]);
   const [formData, setFormData] = useState(data);
   const [status, setStatus] = useState(data.app_status);
@@ -1344,6 +1352,7 @@ function UpsellBuilder() {
     () => setActivemodal((activemodal) => !activemodal),
     [],
   );
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState("ReviewsWidget");
 
   const handleOptionChange = (selected) => {
@@ -1483,20 +1492,67 @@ function UpsellBuilder() {
     }));
   }, []);
 
+
+  useEffect(()=>{
+    shopify.loading(false);
+  })
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
+  const handleLinkClick = () => {
+    shopify.loading(true);
+  };
+ 
 
+
+  
   const Offers = () => {
     const resourceName = {
       singular: "bundle",
       plural: "bundles",
     };
-    // const handleBundle = (id)=>{
+
+    const handleAction = async (actionType,  store) => {
+      const selectedProductIds = selectedResources;
+      // setButtonLoader(true);
+      console.log(selectedProductIds,"selectedProductIds----")
+  const datasend={
+   offer_status:"Draft"
+   
+  }
+      const data = {
+        actionType,
+         store: store,
+        ids: selectedProductIds,
+        data:datasend
+      };
+  
+  
+      const response = await fetch("/api/upsell-save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const result = await response.json();
+      if (result.success) {
+        setActive(true);
+      
+        setButtonLoader(false);
+        setUpsellList(result.data);
+        setMsgData(` ${actionType.toUpperCase()} Successfully`);
+      } else {
+        setButtonLoader(false);
+        setActive(true);
         
-    //     const url = "/app/upsell_builder/create/"
-    //     navigate(`${url}${id}`)
-    // }
+        setError(true);
+        setMsgData("There is some error while update");
+      }
+    };
 
     const bundles = [
       {
@@ -1515,50 +1571,189 @@ function UpsellBuilder() {
         image: product_bundle,
       },
     ];
+
+    const bulkActions = [
+      {
+        content: 'Activate',
+        loading: buttonLoader,
+        onAction: () => handleAction("activated", shopName),
+      },
+      {
+        content: 'Deactivate',
+        loading: buttonLoader,
+        onAction: () => handleAction("deactivated", shopName),
+      },
+      {
+        icon: DeleteIcon,
+        destructive: true,
+        content: 'Delete ',
+        loading: buttonLoader,
+        onAction: () => handleAction("deleted",  shopName),
+      },
+    ];
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
-      useIndexResourceState(bundles);
-    const rowMarkup = bundles.map(({ id, title, image }, index) => (
-      <IndexTable.Row
-        id={id}
-        key={id}
-        selected={selectedResources.includes(id)}
-        position={index}
-      >
-        <div className="aios-upsell-grid">
-          <Box borderColor="border" borderRadius="100" borderWidth="025">
-            <Box padding="400">
-              <Text variant="headingSm" as="h6" alignment="center">
-                {title}
+      useIndexResourceState(upsellList);
+    // const rowMarkup = bundles.map(({ id,discount_type, internal_name, rules, offer_status}, index) => (
+    //   <IndexTable.Row
+    //     id={id}
+    //     key={id}
+    //     selected={selectedResources.includes(id)}
+    //     position={index}
+    //   >
+    //     <div className="aios-upsells-list">
+    //       <div className="aios_upsell_name">
+
+    //       </div>
+    //       <Text variant="headingSm" as="h6" alignment="center">
+    //             {internal_name}
+    //           </Text>
+
+    //     </div>
+    //   </IndexTable.Row>
+    // ));
+
+    const rowMarkup = upsellList.map(
+      ({ id, discount_type, internal_name, rules, offer_status }, index) => {
+        let bundleName;
+        if (discount_type === "BOGO") {
+          bundleName = "XY";
+        }
+        const buy_products = rules.customer_buy.products;
+        const get_products = rules.customer_get.products;
+        const customerBuySelectType = rules.customer_buy.chosen_type;
+        const customerGetSelectType = rules.customer_get.chosen_type;
+        const renderCustomerBuyContent = () => {
+          if (customerBuySelectType === "any") {
+            return (
+              <div className="upsell_buy_bundles">
+                <div className="">AnyProduct</div>
+              </div>
+            );
+          } else if (customerBuySelectType === "specific") {
+            return (
+              <div className="upsell_buy_bundles">
+                <div className="">{buy_products.length} Products Selected</div>
+              </div>
+            );
+          }
+        };
+        const renderCustomerGetContent = () => {
+          if (customerGetSelectType === "any") {
+            return (
+              <div className="upsell_buy_bundles">
+                <div className="">AnyProduct</div>
+              </div>
+            );
+          } else if (customerGetSelectType === "specific") {
+            return (
+              <div className="upsell_buy_bundles">
+                <div className="">{get_products.length} Products Selected</div>
+              </div>
+            );
+          }
+        };
+        console.log(selectedResources,"selectedResources--")
+
+        return (
+          <IndexTable.Row
+            id={id}
+            key={id}
+            selected={selectedResources.includes(id)}
+            position={index}
+          >
+            <IndexTable.Cell>
+            <Link
+            removeUnderline
+            monochrome
+            dataPrimaryLink
+            url={`/app/edit/bogo/${id}`}
+            onClick={handleLinkClick}
+          >
+              <div className="aios_upsell_list_name">
+                <div
+                  className={`upsell_bundle_name ${offer_status === "Active" ? `upsell_active_bundle` : ""} `}
+                >
+                  <span className="upsell_bundle_name_type">{bundleName}</span>
+                </div>
+              </div>
+              </Link>
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              <BlockStack gap="200">
+                <InlineStack wrap="false" gap="200" blockAlign="center">
+                  <Text variant="headingMd" as="h5">
+                    {internal_name}
+                  </Text>
+                  {offer_status === "Active" ? (
+                    <Badge tone="warning">
+                      -{rules?.discount?.discount_amount}
+                      {rules?.discount?.discount_symbol}
+                    </Badge>
+                  ) : (
+                    <Badge>
+                      -{rules?.discount?.discount_amount}
+                      {rules?.discount?.discount_symbol}
+                    </Badge>
+                  )}
+                </InlineStack>
+                <InlineStack wrap="false" gap="200" blockAlign="center">
+                  {renderCustomerBuyContent()} + {renderCustomerGetContent()}
+                </InlineStack>
+              </BlockStack>
+            </IndexTable.Cell>
+            <IndexTable.Cell>{}</IndexTable.Cell>
+            <IndexTable.Cell>
+              <Text as="span" alignment="end" numeric>
+                {discount_type}
               </Text>
-            </Box>
-            <Link url="/app/create/1">
-            <Box padding="400">
-             <img src={image} className="upsell_bundle_images" />
-          </Box>
-            </Link>
-          </Box>
-        </div>
-      </IndexTable.Row>
-    ));
+            </IndexTable.Cell>
+            <IndexTable.Cell>{}</IndexTable.Cell>
+            <IndexTable.Cell>{}</IndexTable.Cell>
+          </IndexTable.Row>
+        );
+      },
+    );
+
     return (
       <div style={{ padding: "10px" }} className="upsell-Offers">
         <Card>
-        <Button  onClick={()=>{ console.log("hhhhhh");navigate("/app/create/1")}} >Add product</Button>
-          <div className="aios-upsell-grid">
-            <Box borderColor="border" borderRadius="100" borderWidth="025">
-              <Box padding="400">
-                <Text variant="headingSm" as="h6" alignment="center">
-                  Product Bundle
-                </Text>
+          {upsellList.length > 0 ? (
+            <IndexTable
+              resourceName={resourceName}
+              itemCount={upsellList.length}
+              selectedItemsCount={
+                allResourcesSelected ? "All" : selectedResources.length
+              }
+              onSelectionChange={handleSelectionChange}
+              headings={[
+                { title: "" },
+                { title: "Name" },
+                { title: "Impressions" },
+                { title: "Clicks" },
+                { title: "Click Rate" },
+                { title: "Orders" },
+                { title: "Revenue" },
+              ]}
+              bulkActions={bulkActions}
+            >
+              {rowMarkup}
+            </IndexTable>
+          ) : (
+            <div className="aios-upsell-grid">
+              <Box borderColor="border" borderRadius="100" borderWidth="025">
+                <Box padding="400">
+                  <Text variant="headingSm" as="h6" alignment="center">
+                    Buy X, Get Y
+                  </Text>
+                </Box>
+                <Link url="/app/create/bogo" onClick={handleLinkClick}>
+                  <Box padding="400">
+                    <img src={bogo} className="upsell_bundle_images" />
+                  </Box>
+                </Link>
               </Box>
-              <Link url="/app/create/1">
-              <Box padding="400">
-             <img src={product_bundle} className="upsell_bundle_images" />
-               </Box>
-               </Link>
-            </Box>
-          </div>
-         
+            </div>
+          )}
         </Card>
       </div>
     );

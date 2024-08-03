@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { json } from "@remix-run/node";
 import {
   useActionData,
@@ -16,6 +16,7 @@ import {
   Box,
   List,
   Link,
+  Banner,
   InlineStack,
   LegacyStack,
   Icon,
@@ -31,91 +32,70 @@ import {
 } from "@shopify/polaris-icons";
 
 import "./assets/style.css";
-import { upsell, scroll, search,external, visitor,reviews, sticky } from "./assets";
+import {
+  upsell,
+  scroll,
+  search,
+  external,
+  visitor,
+  reviews,
+  sticky,
+} from "./assets";
 
 export const loader = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
-console.log(session,"session")
+
   let storeName = session.shop.split(".")[0];
-
-  return { storeName };
-};
-
-export const action = async ({ request }) => {
-  const { admin } = await authenticate.admin(request);
-  const color = ["Red", "Orange", "Yellow", "Green"][
-    Math.floor(Math.random() * 4)
-  ];
-  const response = await admin.graphql(
-    `#graphql
-      mutation populateProduct($input: ProductInput!) {
-        productCreate(input: $input) {
-          product {
-            id
-            title
-            handle
-            status
-            variants(first: 10) {
-              edges {
-                node {
-                  id
-                  price
-                  barcode
-                  createdAt
-                }
-              }
-            }
-          }
-        }
-      }`,
-    {
-      variables: {
-        input: {
-          title: `${color} Snowboard`,
-        },
-      },
-    },
-  );
-  const responseJson = await response.json();
-  const variantId =
-    responseJson.data.productCreate.product.variants.edges[0].node.id;
-  const variantResponse = await admin.graphql(
-    `#graphql
-      mutation shopifyRemixTemplateUpdateVariant($input: ProductVariantInput!) {
-        productVariantUpdate(input: $input) {
-          productVariant {
-            id
-            price
-            barcode
-            createdAt
-          }
-        }
-      }`,
-    {
-      variables: {
-        input: {
-          id: variantId,
-          price: Math.random() * 100,
-        },
-      },
-    },
-  );
-  const variantResponseJson = await variantResponse.json();
-
-  return json({
-    product: responseJson.data.productCreate.product,
-    variant: variantResponseJson.data.productVariantUpdate.productVariant,
+  const getThemes = await admin.rest.resources.Theme.all({
+    session: session,
   });
+
+  var currentTheme = getThemes?.data?.find(
+    (themes) => themes.role === "main",
+  )?.id;
+ 
+
+  const checkStatus = await admin.rest.resources.Asset.all({
+    session: session,
+    theme_id: currentTheme,
+    asset: { key: "config/settings_data.json" },
+  });
+
+  function findAppStatus(data) {
+    for (const key in data) {
+      if (data[key].type && data[key].type.includes("all-in-one-store")) {
+        return !data[key].disabled;
+      }
+    }
+    return null;
+  }
+
+  const data = JSON.parse(checkStatus.data[0].value);
+  const themeBlock = data.current.blocks;
+  const status = findAppStatus(themeBlock);
+
+  return { storeName, status, currentTheme };
 };
 
 export default function Index() {
   const nav = useNavigation();
-  const { storeName } = useLoaderData();
+  const { storeName, status, currentTheme } = useLoaderData();
   const actionData = useActionData();
   const submit = useSubmit();
-  const shopify = useAppBridge();
+  const [isBannerVisible, setIsBannerVisible] = useState(status === false);
 
-  const generateProduct = () => submit({}, { replace: true, method: "POST" });
+  const activateApp = () => {
+ 
+    window.open(
+      "https://admin.shopify.com/store/" +
+        storeName.replace(".myshopify.com", "") +
+        "/themes/current/editor?context=apps&activateAppId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/all-in-one-store",
+      "__blank",
+    );
+  };
+  const handleDismiss = () => {
+    setIsBannerVisible(false);
+  };
 
   return (
     <Page>
@@ -144,6 +124,21 @@ export default function Index() {
             </InlineStack>
           </InlineStack>
         </Card>
+
+        {isBannerVisible  === false && (
+          <Banner
+            title="Please Enable the app"
+            action={{
+              content: "Activate the app",
+              variant: "primary",
+              onAction: activateApp,
+            }}
+            tone="info"
+            onDismiss={handleDismiss}
+          >
+            <p>Activate All-in-one Store  widget in your theme</p>
+          </Banner>
+        )}
         <Box>
           <Text variant="bodySm" as="p">
             Last 7 Days
@@ -383,200 +378,220 @@ export default function Index() {
                 My Apps
               </Text>
               <div className="apps_name">
-                <InlineStack  blockAlign="center" rows="5">
+                <InlineStack blockAlign="center" rows="5">
                   <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/cart_favicon"
-                  >
-                    <InlineStack    gap="200" blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                        Favicon Cart Count
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/cart_favicon">
+                      <InlineStack gap="200" blockAlign="center">
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Favicon Cart Count
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/scroll_to_top">
-                    <InlineStack gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={scroll} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                          Scroll to Top Button
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/scroll_to_top">
+                      <InlineStack gap="200" blockAlign="center">
+                        <div className="app_icon">
+                          <img src={scroll} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Scroll to Top Button
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/sticky_add_cart">
-                    <InlineStack gap="200" blockAlign="center">
-                      <div className="app_icon">
-                        <img src={sticky} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                          Sticky Add to Cart
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/sticky_add_cart">
+                      <InlineStack gap="200" blockAlign="center">
+                        <div className="app_icon">
+                          <img src={sticky} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Sticky Add to Cart
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
-               
+
                   <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/auto_external_links"
-                  >
-                    <InlineStack align="space-between"   gap="200" blockAlign="center">
-                      <div className="app_icon">
-                        <img src={external} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                        Auto external links
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
-                  </div>
-                  <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/instant_search"
-                  >
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={search} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                          Instant Search
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link
+                      monochrome
+                      removeUnderline
+                      url="/app/auto_external_links"
+                    >
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={external} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Auto external links
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/inactive_tab_message"
-                  >
-                    <InlineStack align="space-between"   gap="200" blockAlign="center">
-                      <div className="app_icon">
-                        <img src={reviews} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                       Inactive Tab Message
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
-                  </div>
-               
-                  <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/cart_notice"
-                  >
-                    <InlineStack align="space-between" blockAlign="center">
-                      <div className="app_icon">
-                        <img src={visitor} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                          Cart Notice
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/instant_search">
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={search} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Instant Search
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link
-                    monochrome
-                    removeUnderline
-                    url="/app/hide_dynamic_checkout_buttons"
-                  >
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                          Hide Dynamic Checkout Button
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link
+                      monochrome
+                      removeUnderline
+                      url="/app/inactive_tab_message"
+                    >
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={reviews} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Inactive Tab Message
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
+                  </div>
+
+                  <div className="all_in_apps_Card">
+                    <Link monochrome removeUnderline url="/app/cart_notice">
+                      <InlineStack align="space-between" blockAlign="center">
+                        <div className="app_icon">
+                          <img src={visitor} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Cart Notice
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/cookie_banner">
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                       Cookie Banner
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link
+                      monochrome
+                      removeUnderline
+                      url="/app/hide_dynamic_checkout_buttons"
+                    >
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Hide Dynamic Checkout Button
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/product_reviews">
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                        Product Reviews
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/cookie_banner">
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Cookie Banner
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/sticky_add_cart">
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                        Inactive tab massage
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/product_reviews">
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Product Reviews
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                  <Link monochrome removeUnderline url="/app/upsell_builder">
-                    <InlineStack align="space-between"  gap="200"  blockAlign="center">
-                      <div className="app_icon">
-                        <img src={upsell} style={{ width: "100%" }} />
-                      </div>
-                      <div className="app_name">
-                        <Text variant="bodyMd" as="h3">
-                       Upsell Builder
-                        </Text>
-                      </div>
-                    </InlineStack>
-                  </Link>
+                    <Link monochrome removeUnderline url="/app/sticky_add_cart">
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Inactive tab massage
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
+                  </div>
+                  <div className="all_in_apps_Card">
+                    <Link monochrome removeUnderline url="/app/upsell_builder">
+                      <InlineStack
+                        align="space-between"
+                        gap="200"
+                        blockAlign="center"
+                      >
+                        <div className="app_icon">
+                          <img src={upsell} style={{ width: "100%" }} />
+                        </div>
+                        <div className="app_name">
+                          <Text variant="bodyMd" as="h3">
+                            Upsell Builder
+                          </Text>
+                        </div>
+                      </InlineStack>
+                    </Link>
                   </div>
                 </InlineStack>
               </div>

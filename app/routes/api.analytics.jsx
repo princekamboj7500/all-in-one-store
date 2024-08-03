@@ -4,24 +4,23 @@ import { json } from "@remix-run/node";
 
 
 
-export const action = async ({request})=>{
+export const loader = async ({request})=>{
 
-  const reqData = await request.json();
-  const  shopName = new URL(request.url).searchParams.get("shop");
 
-  const date = new Date();
+  const shopName = new URL(request.url).searchParams.get("shop");
+const analytType = new URL(request.url).searchParams.get("type");
 
-  const dateString = date.toISOString();
+const date = new Date();
+const dateString = date.toISOString();
 
-  try {
-    // Find existing ReviewAnalytics entry
-    const existingEntry = await db.ReviewAnalytics.findFirst({
-      where: {
-        store_name: shopName,
-      },
-    });
-  
+const existingEntry = await db.ReviewAnalytics.findFirst({
+  where: {
+    store_name: shopName,
+  },
+});
 
+try {
+  if (analytType === "buttonClick") {
     if (existingEntry) {
       const updatedEntry = await db.ReviewAnalytics.update({
         where: {
@@ -31,8 +30,9 @@ export const action = async ({request})=>{
           count: [...existingEntry.count, dateString],
         },
       });
-     } else {
-    const newEntry = await db.ReviewAnalytics.create({
+      console.log('Updated ReviewAnalytics:', updatedEntry);
+    } else {
+      const newEntry = await db.ReviewAnalytics.create({
         data: {
           store_name: shopName,
           count: [dateString],
@@ -40,8 +40,33 @@ export const action = async ({request})=>{
       });
       console.log('Created ReviewAnalytics:', newEntry);
     }
-  } catch (error) {
-    console.error('Error:', error);
+  } else if (analytType === "starClick") {
+
+    if (existingEntry) {
+      const updatedEntry = await db.ReviewAnalytics.update({
+        where: {
+          id: existingEntry.id,
+        },
+        data: {
+          starclick: [...existingEntry.count, dateString],
+        },
+      });
+     
+    } else {
+      const newEntry = await db.ReviewAnalytics.create({
+        data: {
+          store_name: shopName,
+          starclick: [dateString],
+        },
+      });
+     
+    }
+  } else {
+    console.log('Unknown analytType:', analytType);
   }
- return json({success:true})
+  return json({ success:true});
+} catch (error) {
+  console.error('Error handling ReviewAnalytics:', error);
+  return json({ success:false});
+}
 }

@@ -223,8 +223,12 @@ function CartNotice(props) {
                                                                 onChange={(e) => {
                                                                     handleFocus("notice_bg_color")
                                                                     handleColorChange(e, "notice_bg_color")
-                                                                }
-                                                                }
+                                                                }}
+                                                                style={{
+                                                                    boxShadow: formData.notice_bg_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                                    width:formData.notice_bg_color === '#ffffff' ? '34px':'38px',
+                                                                       height:formData.notice_bg_color === '#ffffff' ? '34px':'38px'
+                                                                  }}
                                                             />
                                                         }
                                                     />
@@ -249,6 +253,11 @@ function CartNotice(props) {
                                                                     handleColorChange(e, "notice_text_color")
                                                                 }
                                                                 }
+                                                                style={{
+                                                                    boxShadow: formData.notice_text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
+                                                                    width:formData.notice_text_color === '#ffffff' ? '34px':'38px',
+                                                                       height:formData.notice_text_color === '#ffffff' ? '34px':'38px'
+                                                                  }}
                                                             />
                                                         }
                                                     />
