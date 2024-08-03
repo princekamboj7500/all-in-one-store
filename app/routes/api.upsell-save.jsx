@@ -5,7 +5,7 @@ export const action = async ({ request }) => {
   const reqData = await request.json();
   const { actionType, data, id, ids, store } = reqData;
 
-   console.log(data,"data__________")
+
   const { admin } = await authenticate.admin(request);
   function generateUniqueString() {
     const randomString = Math.random().toString(36).substring(2, 12);
