@@ -73,6 +73,7 @@ export const loader = async ({ request }) => {
   const data = JSON.parse(checkStatus.data[0].value);
   const themeBlock = data.current.blocks;
   const status = findAppStatus(themeBlock);
+  console.log(status,"status______")
 
   return { storeName, status, currentTheme };
 };
@@ -82,7 +83,7 @@ export default function Index() {
   const { storeName, status, currentTheme } = useLoaderData();
   const actionData = useActionData();
   const submit = useSubmit();
-  const [isBannerVisible, setIsBannerVisible] = useState(status === false);
+  const [isBannerVisible, setIsBannerVisible] = useState(status);
 
   const activateApp = () => {
  
