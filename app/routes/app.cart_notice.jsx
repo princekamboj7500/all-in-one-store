@@ -1,5 +1,5 @@
 import { ActionList, Banner, BlockStack, Box, Button, ButtonGroup, Frame, ContextualSaveBar, Toast, Card, Checkbox, Collapsible, DatePicker, Form, FormLayout, Grid, Icon, InlineGrid, InlineStack, Layout, LegacyCard, LegacyStack, Link, OptionList, Page, Popover, Scrollable, Select, Tabs, Text, TextContainer, TextField, Tooltip, useBreakpoints } from '@shopify/polaris';
-import React, { useCallback, useState, } from 'react';
+import React, { useCallback, useState,useEffect } from 'react';
 import {
     ChevronDownIcon, XIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
@@ -9,9 +9,10 @@ import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css"
-
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
+    let storeName = session.shop.split(".")[0];
     const response = await admin.graphql(`query {
           currentAppInstallation {
             id
@@ -34,7 +35,7 @@ export const loader = async ({ request }) => {
     const defaultSettings = {
         app_name: "CartNotice",
         app_status: false,
-        notice_bg_color: "#0000000",
+        notice_bg_color: "#000000",
         notice_text_color: "#ffffff",
         cart_notice_title: "An item in your cart is in high demand.",
         cart_notice_secondary: "Complete the order to make sure it’s yours!",
@@ -60,13 +61,13 @@ export const loader = async ({ request }) => {
     } else {
         data = appSettings;
     }
-    console.log(data, "data")
-    return { data };
+    
+    return { data, storeName };
 };
 
 function CartNotice(props) {
     const navigate = useNavigate();
-    const { data } = useLoaderData();
+    const { data, storeName } = useLoaderData();
     const [formData, setFormData] = useState(data);
     const [status, setStatus] = useState(data.app_status);
     const [active, setActive] = useState(false);
@@ -74,7 +75,8 @@ function CartNotice(props) {
     const [msgData, setMsgData] = useState("");
     const [buttonloading, setButtonLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
-
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
 
     const handleSave = async () => {
         setButtonLoading(true);
@@ -105,9 +107,11 @@ function CartNotice(props) {
 
         }
     };
-
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
 
     const handleToggleStatus = async () => {
@@ -183,16 +187,13 @@ function CartNotice(props) {
         setActiveField(fieldName);
     };
     const [showBanner, setShowBanner] = useState(true);
-
+    const [isBannerVisible, setIsBannerVisible] = useState(status);
+    const [isDismissed, setIsDismissed] = useState(false);
+  
     const SettingsDataTab = (
             <div className='Cart_notice_page_SettingsDataTab_container'>
                 <BlockStack gap="400">
-                    {showBanner && <Banner onDismiss={() => { setShowBanner(false) }}>
-                        <p>
-                            If your store utilizes a cookie banner to collect visitor consent, some app settings might not apply until the user agrees to cookies.{' '}
-                            <Link url="">Learn more</Link>
-                        </p>
-                    </Banner>}
+                   
                     <InlineGrid columns={['oneThird', 'twoThirds']}>
                         <Text variant="headingMd" as="h6">
                             Settings
@@ -305,7 +306,7 @@ function CartNotice(props) {
                         </Layout>
                     </InlineGrid>
 
-                    <div className='lower_section'>
+                    {/* <div className='lower_section'>
                         <Grid>
                             <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
                                 <Card roundedAbove="sm">
@@ -377,17 +378,29 @@ function CartNotice(props) {
                                 </Card>
                             </Grid.Cell>
                         </Grid>
-                    </div>
+                    </div> */}
 
                 </BlockStack>
             </div>
      );
 
+     
+  useEffect(()=>{
+   shopify.loading(false)
+  },[])
+  const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?template=cart&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/cartnotice&target=newAppsSection`;
 
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
+  const handleDismiss = () => {
+    setIsDismissed(true);
+  };
     return (
         <div className='Cart_notice_page_page'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction:handleClick }}
                 title="Cart Notice"
                 subtitle="Create urgency in the cart page with a custom message shown on top of the cart line items."
                 primaryAction={
@@ -404,6 +417,16 @@ function CartNotice(props) {
                 }
             >
                 <div className='intant_search'>
+                { !isDismissed  && (
+          <Banner
+            title="Please add the cart widget in cart page to view"
+            tone="warning"
+            onDismiss={handleDismiss}
+          >
+            <p>Add Cart Notice  widget in your theme. <a href={url} target="_blank">Here</a>
+            </p>
+          </Banner>
+        )}
                     <div className='intant_search_TabsField'>
                         <BlockStack gap='200'>
                             {SettingsDataTab}
@@ -432,6 +455,7 @@ function CartNotice(props) {
                     </Frame>
                 )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
         </div>
     );

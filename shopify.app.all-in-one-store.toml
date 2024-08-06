@@ -3,7 +3,7 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://eddie-belief-walnut-calculated.trycloudflare.com"
+application_url = "https://copying-wrapped-egyptian-verify.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,16 +17,16 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://eddie-belief-walnut-calculated.trycloudflare.com/auth/callback",
-  "https://eddie-belief-walnut-calculated.trycloudflare.com/auth/shopify/callback",
-  "https://eddie-belief-walnut-calculated.trycloudflare.com/api/auth/callback"
+  "https://copying-wrapped-egyptian-verify.trycloudflare.com/auth/callback",
+  "https://copying-wrapped-egyptian-verify.trycloudflare.com/auth/shopify/callback",
+  "https://copying-wrapped-egyptian-verify.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2024-04"
 
 [app_proxy]
-url = "https://eddie-belief-walnut-calculated.trycloudflare.com/api"
+url = "https://copying-wrapped-egyptian-verify.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

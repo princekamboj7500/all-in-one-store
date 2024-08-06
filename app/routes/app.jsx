@@ -4,14 +4,22 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { NavMenu } from "@shopify/app-bridge-react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
-// import { authenticate } from "../shopify.server";
+import { authenticate ,MONTHLY_PLAN} from "../shopify.server";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }) => {
-  // await authenticate.admin(request);
+  const { admin, billing, session  } = await authenticate.admin(request);
+  const appTest = true;
+
+  await billing.require({
+    plans: [MONTHLY_PLAN],
+    isTest: appTest,
+    onFailure: async () => billing.request({ plan: MONTHLY_PLAN, isTest: appTest, returnUrl: 'https://'+ session.shop+'/admin/apps/' + process.env.SHOPIFY_API_KEY + '/app/billing' }),
+  });
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY || "" });
+ 
 };
 
 export default function App() {

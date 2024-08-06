@@ -1,5 +1,5 @@
 import { BlockStack, Button, ButtonGroup, Card, Text, Page, Tabs, List, Box, InlineGrid, ContextualSaveBar,Layout, Checkbox, TextField, Toast, Grid, Frame, InlineStack, Link, Popover, ActionList, Icon } from '@shopify/polaris';
-import { useState, useCallback } from "react";
+import { useState, useCallback , useEffect} from "react";
 import DateRangePicker from './components/DateRangePicker';
 import GraphCard from './components/GraphCard';
 import {
@@ -9,6 +9,7 @@ import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css"
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
     const response = await admin.graphql(`query {
@@ -34,7 +35,7 @@ export const loader = async ({ request }) => {
         app_name: "InstantSearch",
         app_status: false,
         show_popular_search: 1,
-        product_bg_color: "#0000000",
+        product_bg_color: "#000000",
         include_out_stock: 0,
         show_reviews_snippet: 0,
         see_more_results: "See more results",
@@ -77,7 +78,8 @@ function Instantsearchapp(props) {
     const [msgData, setMsgData] = useState("");
     const [buttonloading, setButtonLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
-
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
     const handleToggleStatus = async () => {
         setButtonLoading(true);
         const updatedFormData = {
@@ -127,7 +129,7 @@ function Instantsearchapp(props) {
         () => setActive((prevActive) => !prevActive),
         [],
     );
-
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const toastMarkup = active ? (
         <Frame>
             <Toast content={msgData} onDismiss={toggleActive} error={error} />
@@ -164,9 +166,7 @@ function Instantsearchapp(props) {
         }
     };
 
-    const handleDiscard = () => {
-        setActiveField(false);
-    };
+  
 
     const handleChange = (value, property) => {
         setFormData((formData) => ({
@@ -184,13 +184,20 @@ function Instantsearchapp(props) {
     const handleFocus = (fieldName) => {
         setActiveField(fieldName);
     };
+    useEffect(()=>{
+    shopify.loading(false);
+    },[])
 
     const [selected, setSelected] = useState(0);
     const handleTabChange = useCallback(
         (selectedTabIndex) => setSelected(selectedTabIndex),
         [],
     );
-
+    const handleDiscard = () => {
+        setFormData(lastSavedData)
+        setActiveField(false);
+        toggleModal();
+    };
     const SettingsDataTab = (
         <div style={{ padding: "10px" }} className='instant_search_SettingsDataTab_container'>
             <BlockStack gap="400">
@@ -238,23 +245,23 @@ function Instantsearchapp(props) {
                                                     />
                                                 </div>
 
-                                                <Checkbox
+                                                {/* <Checkbox
                                                     label="Include Out of Stock Products"
                                                     onFocus={() => handleFocus("include_out_stock")}
                                                     checked={formData.include_out_stock}
                                                     onChange={(e) =>
                                                         handleChange(e, "include_out_stock")
                                                     }
-                                                />
+                                                /> */}
 
-                                                <Checkbox
+                                                {/* <Checkbox
                                                     label="Show reviews snippet"
                                                     onFocus={() => handleFocus("show_reviews_snippet")}
                                                     checked={formData.show_reviews_snippet}
                                                     onChange={(e) =>
                                                         handleChange(e, "show_reviews_snippet")
                                                     }
-                                                />
+                                                /> */}
                                             </BlockStack>
                                         </div>
                                     </Box>
@@ -455,21 +462,21 @@ function Instantsearchapp(props) {
             panelID: 'Settings-customers-content-1',
             component: <>{SettingsDataTab}</>,
             dummy: ''
-        },
-        {
-            id: 'Popular terms- marketing - 1',
-            content: 'Popular terms',
-            panelID: 'Popular terms- marketing - content - 1',
-            component: < AnalyticsPaymentsTab />,
-            dummy: ''
-        },
-        {
-            id: 'Analytics-marketing-1',
-            content: 'Analytics',
-            panelID: 'Analytics-marketing-content-1',
-            component: <AnalyticsPaymentsTab />,
-            dummy: ''
-        },
+        }
+        // {
+        //     id: 'Popular terms- marketing - 1',
+        //     content: 'Popular terms',
+        //     panelID: 'Popular terms- marketing - content - 1',
+        //     component: < AnalyticsPaymentsTab />,
+        //     dummy: ''
+        // },
+        // {
+        //     id: 'Analytics-marketing-1',
+        //     content: 'Analytics',
+        //     panelID: 'Analytics-marketing-content-1',
+        //     component: <AnalyticsPaymentsTab />,
+        //     dummy: ''
+        // },
 
     ];
 
@@ -554,11 +561,14 @@ function Instantsearchapp(props) {
             </div>
         );
     }
-
+    const handleClick = () => {
+        navigate("/app");
+        shopify.loading(true);
+      };
     return (
         <div className='Hide_Dynamic_Checkout_Buttons'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick}}
                 title="Instant Search"
                 subtitle="Help visitors instantly find the products they're looking for by using predictive search and displaying frequent searches."
                 primaryAction={
@@ -615,6 +625,7 @@ function Instantsearchapp(props) {
                         </Frame>
                     )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
         </div>
     );

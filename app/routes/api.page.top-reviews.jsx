@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
-import { renderToString } from "react-dom/server";
+import ReactDOMServer from 'react-dom/server';
 import HappyCustomers from "./components/HappyCustomers";
 export let loader = async ({ request }) => {
   const { admin, session } =
@@ -130,8 +130,10 @@ export let loader = async ({ request }) => {
     },
   });
 
-  const htmlContent =<HappyCustomers data={data} reviews={featuredReviews} />
-  ;
+ 
+  const htmlContent = ReactDOMServer.renderToString(
+    <HappyCustomers data={data} reviews={featuredReviews} />
+  );
   return new Response(htmlContent, {
     headers: {
       "Content-Type": "application/liquid",

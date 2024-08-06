@@ -65,12 +65,13 @@ import {
   SvgIcon8,
   SvgIcon9,
 } from "./components/Icons";
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   const response = await admin.graphql(`query {
         currentAppInstallation {
           id
-          metafields(first: 3) {
+          metafields(first: 20) {
             edges {
               node {
                 namespace
@@ -136,11 +137,12 @@ export default function ScrollToTop() {
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
   const [msgData, setMsgData] = useState("");
-
+  const [lastSavedData, setLastSavedData] = useState(data);
+  const [activemodal, setActivemodal] = useState(false);
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
-
+  const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
   const toggleActive = useCallback(
     () => setActive((prevActive) => !prevActive),
     [],
@@ -202,6 +204,9 @@ export default function ScrollToTop() {
       [property]: value,
     }));
   };
+  useEffect(()=>{
+    shopify.loading(false);
+  },[])
 
   const SelectedIcon = () => {
     var icon = svgIcons.find((i) => i.name == formData.theme_icon);
@@ -332,8 +337,10 @@ export default function ScrollToTop() {
     }
   };
   const handleDiscard = () => {
+    setFormData(lastSavedData)
     setActiveField(false);
-  };
+    toggleModal();
+};
 
   const handleToggleStatus = async () => {
     setButtonLoading(true);
@@ -379,10 +386,14 @@ export default function ScrollToTop() {
       setActiveField(false);
     }
   };
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
 
   return (
     <Page
-      backAction={{ content: "Back", onAction: () => navigate("/app") }}
+      backAction={{ content: "Back", onAction: handleClick }}
       title="Scroll to Top Button"
       subtitle={
         <Text variant="bodyLg" as="h6">
@@ -449,6 +460,21 @@ export default function ScrollToTop() {
                             connectedLeft={
                               <input
                                 type="color"
+                                style={{
+                                  boxShadow:
+                                    formData.text_color === "#ffffff"
+                                      ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                      : "none",
+                                  width:
+                                    formData.text_color === "#ffffff"
+                                      ? "34px"
+                                      : "38px",
+                                  height:
+                                    formData.text_color === "#ffffff"
+                                      ? "34px"
+                                      : "38px",
+                                }}
+                                onFocus={() => handleFocus("field3")}
                                 value={formData.button_color}
                                 onChange={handleColorChange}
                               />
@@ -547,6 +573,7 @@ export default function ScrollToTop() {
       )}
 
       {toastMarkup}
+      <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
     </Page>
   );
 }

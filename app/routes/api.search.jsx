@@ -18,7 +18,7 @@ export const loader = async ({ request }) => {
         accessToken: true,
       },
     });
-    console.log(sessions,"sessions0--")
+
 
     const myHeaders = new Headers();
     myHeaders.append("X-Shopify-Access-Token", sessions.accessToken);
@@ -47,7 +47,7 @@ export const loader = async ({ request }) => {
       requestOptions,
     );
     const response = await result.json();
-    console.log(response,"response--")
+
     const responsedata = response.data.products.edges
     const data = responsedata.map(item => {
       const pId = item.node.id.split("/").pop();

@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 
 const updateReview = async (product_id, store_name, updateData, ids) => {
   try {
+    console.log(updateData, product_id, store_name,ids, "lllll" )
     const reviews = await db.Reviews.updateMany({
       where: {
         store_name: store_name,
@@ -13,7 +14,7 @@ const updateReview = async (product_id, store_name, updateData, ids) => {
       },
       data: updateData,
     });
-  
+   console.log(reviews,"reviews____")
     const updateddata = await db.Reviews.findMany({
       where: {
         store_name: store_name,

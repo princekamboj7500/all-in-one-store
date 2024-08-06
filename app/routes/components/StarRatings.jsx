@@ -1,11 +1,21 @@
 import { BlockStack, Button, ButtonGroup, Card, RadioButton, ContextualSaveBar, ChoiceList, Text, Page, InlineGrid, Listbox, Select, Tooltip, Checkbox, TextField, Tabs, Box, Layout, Toast, Grid, Frame, InlineStack, Link, Popover, ActionList, Icon } from '@shopify/polaris';
-
+import React, { useState } from 'react';
 function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange }) {
     const star_alignment_options = [
         { id: 'Left', label: 'Left' },
         { id: 'Center', label: 'Center' },
         { id: 'Right', label: 'Right' },
     ]
+    const [copied, setCopied] = useState(false);
+    const codeSnippet = '<div class="aios_star_rating" data_id="{{ product.id }}"></div>';
+    const handleCopy = () => {
+        navigator.clipboard.writeText(codeSnippet).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000); // Reset the copied state after 2 seconds
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      };
 
     return (
         <div className=''>
@@ -13,7 +23,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Star rating on product page</Text>
-                        <Checkbox
+                        {/* <Checkbox
                             label="Display stars under the product name"
                             checked={formData.display_star_productpage}
                             onChange={(e) => {
@@ -21,7 +31,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                                 handleChange(e, "display_star_productpage")
                             }}
                             helpText="Display your review count and rating under the product name on the product page. This snippet will not appear if the product doesn't have any reviews."
-                        />
+                        /> */}
                         <TextField
                             type='number'
                             label={`Star size`}
@@ -88,7 +98,17 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Star rating on homepage and collection pages</Text>
-                        <Checkbox
+                        <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '4px', width: 'fit-content' }}>
+      <p>To display star rating on the home and collection pages, place the following code in your file wherever you want to display the star rating:</p>
+      <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '4px', whiteSpace: 'pre-wrap' }}>
+        {codeSnippet}
+      </pre>
+      <Button onClick={handleCopy} style={{ marginTop: '10px', padding: '8px 12px', cursor: 'pointer' }}>
+        {copied ? 'Copied!' : 'Copy Code'}
+      </Button>
+    </div>
+                       
+                        {/* <Checkbox
                             label="Display stars on homepage and collection pages"
                             checked={formData.display_star_homepage}
                             onChange={(e) => {
@@ -96,7 +116,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                                 handleChange(e, "display_star_homepage")
                             }}
                             helpText="Display your products review count and rating under the product name on the homepage and collection pages. This snippet will not appear if the product doesn't have any reviews."
-                        />
+                        /> */}
                         <TextField
                             type='number'
                             label={`Star size`}
@@ -160,7 +180,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                 </Card>
             </Layout.Section>
             <Layout.Section>
-                <Card roundedAbove="sm">
+                {/* <Card roundedAbove="sm">
                     <BlockStack gap="400">
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Position</Text>
                         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
@@ -176,7 +196,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                             </BlockStack>
                         </Box>
                     </BlockStack>
-                </Card>
+                </Card> */}
             </Layout.Section>
 
         </div>

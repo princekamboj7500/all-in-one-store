@@ -27,6 +27,8 @@ import {
   Layout,
   Toast,
   Grid,
+  ChoiceList,
+  Filters,
   Frame,
   InlineStack,
   Link,
@@ -44,7 +46,7 @@ import {
   CalendarIcon,
   ExportIcon,
   ArrowDownIcon,
-  DeleteIcon
+  DeleteIcon,
 } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
@@ -330,7 +332,6 @@ export const loader = async ({ request }) => {
     },
   });
 
-
   return {
     data,
     getUpsells,
@@ -543,7 +544,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
     setInputValues((prevState) => {
       return { ...prevState, since: value };
     });
-    console.log("handleStartInputValueChange, validDate", value);
+
     if (isValidDate(value)) {
       const newSince = parseYearMonthDayDateString(value);
       setActiveDateRange((prevState) => {
@@ -1324,6 +1325,7 @@ function UpsellBuilder() {
     const params = new URLSearchParams(location.search);
     return params.get("tab");
   };
+
   const {
     data,
     shopName,
@@ -1348,6 +1350,225 @@ function UpsellBuilder() {
   const [buttonloading, setButtonLoading] = useState(false);
   const [lastSavedData, setLastSavedData] = useState(data);
   const [activemodal, setActivemodal] = useState(false);
+  const [availability, setAvailability] = useState([]);
+  const [productType, setProductType] = useState([]);
+  const [taggedWith, setTaggedWith] = useState("");
+  const [queryValue, setQueryValue] = useState("");
+  const handleAvailabilityChange = useCallback(async (value) => {
+    setAvailability(value);
+    setButtonLoader(true);
+    const payload = {
+      action: "Rating",
+      type: value,
+      id: productId,
+    };
+    try {
+      const response = await fetch("/api/get-filter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setFilteredReviews(data.data);
+      setButtonLoader(false);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+  }, []);
+
+  const handleProductTypeChange = useCallback(async (value) => {
+    setProductType(value);
+    setButtonLoader(true);
+    const payload = {
+      action: "Source",
+      type: value,
+      id: productId,
+    };
+    try {
+      const response = await fetch("/api/get-filter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setButtonLoader(false);
+      setFilteredReviews(data.data);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+  }, []);
+
+  const handleTaggedWithChange = useCallback(async (value) => {
+    setTaggedWith(value);
+    setButtonLoader(true);
+    const payload = {
+      action: "Status",
+      type: value,
+      id: productId,
+    };
+    try {
+      const response = await fetch("/api/get-filter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setButtonLoader(false);
+      setFilteredReviews(data.data);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+  }, []);
+
+  const handleFiltersQueryChange = useCallback(async (value) => {
+    setQueryValue(value);
+    setButtonLoader(true);
+    try {
+      const response = await fetch(`/api/getfilter?type=${value}`);
+      const data = await response.json();
+      if (data.success) {
+        setFilteredReviews(data.data);
+        setButtonLoader(false);
+      } else {
+        setFilteredReviews([]);
+        setButtonLoader(false);
+      }
+    } catch (error) {
+      setButtonLoader(false);
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+  const handleAvailabilityRemove = useCallback(() => {
+    setAvailability([]);
+    setFilteredReviews(getReviews);
+  }, []);
+  const handleProductTypeRemove = useCallback(() => {
+    setProductType([]);
+    setFilteredReviews(getReviews);
+  }, []);
+  const filters = [
+    {
+      key: "rating",
+      label: "Rating",
+      filter: (
+        <ChoiceList
+          title="Rating"
+          titleHidden
+          choices={[
+            { label: "5 Stars", value: "5" },
+            { label: "4 Stars", value: "4" },
+            { label: "3 Stars", value: "3" },
+            { label: "2 Stars", value: "2" },
+            { label: "1 Stars", value: "1" },
+          ]}
+          selected={availability || []}
+          onChange={handleAvailabilityChange}
+          allowMultiple
+        />
+      ),
+      shortcut: true,
+    },
+    {
+      key: "source",
+      label: "Source",
+      filter: (
+        <ChoiceList
+          title="Source"
+          titleHidden
+          choices={[
+            { label: "AIOS", value: "AIOS" },
+            { label: "Aliexpress", value: "Aliexpress" },
+          ]}
+          selected={productType || []}
+          onChange={handleProductTypeChange}
+          allowMultiple
+        />
+      ),
+    },
+    {
+      key: "status",
+      label: "Status ",
+      filter: (
+        <ChoiceList
+          title="Status"
+          titleHidden
+          choices={[
+            { label: "Unpublished", value: "Unpublished" },
+            { label: "Published", value: "Published" },
+          ]}
+          selected={taggedWith || []}
+          onChange={handleTaggedWithChange}
+          allowMultiple
+        />
+      ),
+    },
+  ];
+  const handleTaggedWithRemove = useCallback(() => {
+    setTaggedWith("");
+    setFilteredReviews(getReviews);
+  }, []);
+  const handleQueryValueRemove = useCallback(() => {
+    setQueryValue("");
+    setFilteredReviews(getReviews);
+  }, []);
+  const handleFiltersClearAll = useCallback(() => {
+    handleAvailabilityRemove();
+    handleProductTypeRemove();
+    handleTaggedWithRemove();
+    handleQueryValueRemove();
+  }, [
+    handleAvailabilityRemove,
+    handleQueryValueRemove,
+    handleProductTypeRemove,
+    handleTaggedWithRemove,
+  ]);
+    const appliedFilters = [];
+  if (!isEmpty(availability)) {
+    const key = "rating";
+    appliedFilters.push({
+      key,
+      label: disambiguateLabel(key, availability),
+      onRemove: handleAvailabilityRemove,
+    });
+  }
+  if (!isEmpty(productType)) {
+    const key = "source";
+    appliedFilters.push({
+      key,
+      label: disambiguateLabel(key, productType),
+      onRemove: handleProductTypeRemove,
+    });
+  }
+  if (!isEmpty(taggedWith)) {
+    const key = "status";
+    appliedFilters.push({
+      key,
+      label: disambiguateLabel(key, taggedWith),
+      onRemove: handleTaggedWithRemove,
+    });
+  }
+
+
+ 
+
   const toggleModal = useCallback(
     () => setActivemodal((activemodal) => !activemodal),
     [],
@@ -1383,7 +1604,6 @@ function UpsellBuilder() {
     };
 
     try {
-      console.log(dataToSend, "dataToSend");
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -1492,42 +1712,36 @@ function UpsellBuilder() {
     }));
   }, []);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     shopify.loading(false);
-  })
+  });
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
   const handleLinkClick = () => {
     shopify.loading(true);
   };
- 
 
-
-  
   const Offers = () => {
     const resourceName = {
       singular: "bundle",
       plural: "bundles",
     };
 
-    const handleAction = async (actionType,  store) => {
+    const handleAction = async (actionType, store) => {
       const selectedProductIds = selectedResources;
       // setButtonLoader(true);
-      console.log(selectedProductIds,"selectedProductIds----")
-  const datasend={
-   offer_status:"Draft"
-   
-  }
+
+      const datasend = {
+        offer_status: "Draft",
+      };
       const data = {
         actionType,
-         store: store,
+        store: store,
         ids: selectedProductIds,
-        data:datasend
+        data: datasend,
       };
-  
-  
+
       const response = await fetch("/api/upsell-save", {
         method: "POST",
         headers: {
@@ -1541,14 +1755,14 @@ function UpsellBuilder() {
       const result = await response.json();
       if (result.success) {
         setActive(true);
-      
+
         setButtonLoader(false);
         setUpsellList(result.data);
         setMsgData(` ${actionType.toUpperCase()} Successfully`);
       } else {
         setButtonLoader(false);
         setActive(true);
-        
+
         setError(true);
         setMsgData("There is some error while update");
       }
@@ -1574,21 +1788,21 @@ function UpsellBuilder() {
 
     const bulkActions = [
       {
-        content: 'Activate',
+        content: "Activate",
         loading: buttonLoader,
         onAction: () => handleAction("activated", shopName),
       },
       {
-        content: 'Deactivate',
+        content: "Deactivate",
         loading: buttonLoader,
         onAction: () => handleAction("deactivated", shopName),
       },
       {
         icon: DeleteIcon,
         destructive: true,
-        content: 'Delete ',
+        content: "Delete ",
         loading: buttonLoader,
-        onAction: () => handleAction("deleted",  shopName),
+        onAction: () => handleAction("deleted", shopName),
       },
     ];
     const { selectedResources, allResourcesSelected, handleSelectionChange } =
@@ -1652,7 +1866,6 @@ function UpsellBuilder() {
             );
           }
         };
-        console.log(selectedResources,"selectedResources--")
 
         return (
           <IndexTable.Row
@@ -1662,20 +1875,22 @@ function UpsellBuilder() {
             position={index}
           >
             <IndexTable.Cell>
-            <Link
-            removeUnderline
-            monochrome
-            dataPrimaryLink
-            url={`/app/edit/bogo/${id}`}
-            onClick={handleLinkClick}
-          >
-              <div className="aios_upsell_list_name">
-                <div
-                  className={`upsell_bundle_name ${offer_status === "Active" ? `upsell_active_bundle` : ""} `}
-                >
-                  <span className="upsell_bundle_name_type">{bundleName}</span>
+              <Link
+                removeUnderline
+                monochrome
+                dataPrimaryLink
+                url={`/app/edit/bogo/${id}`}
+                onClick={handleLinkClick}
+              >
+                <div className="aios_upsell_list_name">
+                  <div
+                    className={`upsell_bundle_name ${offer_status === "Active" ? `upsell_active_bundle` : ""} `}
+                  >
+                    <span className="upsell_bundle_name_type">
+                      {bundleName}
+                    </span>
+                  </div>
                 </div>
-              </div>
               </Link>
             </IndexTable.Cell>
             <IndexTable.Cell>
@@ -1718,26 +1933,40 @@ function UpsellBuilder() {
       <div style={{ padding: "10px" }} className="upsell-Offers">
         <Card>
           {upsellList.length > 0 ? (
-            <IndexTable
-              resourceName={resourceName}
-              itemCount={upsellList.length}
-              selectedItemsCount={
-                allResourcesSelected ? "All" : selectedResources.length
-              }
-              onSelectionChange={handleSelectionChange}
-              headings={[
-                { title: "" },
-                { title: "Name" },
-                { title: "Impressions" },
-                { title: "Clicks" },
-                { title: "Click Rate" },
-                { title: "Orders" },
-                { title: "Revenue" },
-              ]}
-              bulkActions={bulkActions}
-            >
-              {rowMarkup}
-            </IndexTable>
+            <>
+           <InlineStack wrap={false}>
+              <Filters
+                queryValue={queryValue}
+                queryPlaceholder="Search items"
+              
+                onQueryChange={handleFiltersQueryChange}
+                onQueryClear={handleQueryValueRemove}
+                onClearAll={handleFiltersClearAll}
+                loading={buttonLoader}
+              />
+            <Button variant="primary">Create Offer</Button>
+              </InlineStack>
+              <IndexTable
+                resourceName={resourceName}
+                itemCount={upsellList.length}
+                selectedItemsCount={
+                  allResourcesSelected ? "All" : selectedResources.length
+                }
+                onSelectionChange={handleSelectionChange}
+                headings={[
+                  { title: "" },
+                  { title: "Name" },
+                  { title: "Impressions" },
+                  { title: "Clicks" },
+                  { title: "Click Rate" },
+                  { title: "Orders" },
+                  { title: "Revenue" },
+                ]}
+                bulkActions={bulkActions}
+              >
+                {rowMarkup}
+              </IndexTable>
+            </>
           ) : (
             <div className="aios-upsell-grid">
               <Box borderColor="border" borderRadius="100" borderWidth="025">
@@ -2065,5 +2294,26 @@ function UpsellBuilder() {
       </Page>
     </div>
   );
+  function disambiguateLabel(key, value) {
+    switch (key) {
+      case "rating":
+        return `Rating is  ${value}`;
+      case "source":
+        return `Source is is  ${value}`;
+      // return value.map((val) => `Source is   ${val}`).join(", ");
+      case "status":
+        return `Status is  ${value}`;
+      default:
+        return value.toString();
+    }
+  }
+
+  function isEmpty(value) {
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    } else {
+      return value === "" || value == null;
+    }
+  }
 }
 export default UpsellBuilder;

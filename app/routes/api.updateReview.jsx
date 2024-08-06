@@ -19,7 +19,7 @@ const updateReview = async (product_id, store_name, updateData) => {
         data: updateData,
       });
 
-      console.log("Updated Review:", updatedReview);
+      
       return { success: true, data: updatedReview };
     } else {
       return { success: false, error: "Review not found" };

@@ -1,5 +1,5 @@
 import { ActionList, Badge, Banner, BlockStack, Box,ContextualSaveBar , Button, ButtonGroup, Card, Toast, Frame, Checkbox, Collapsible, DatePicker, Form, FormLayout, Grid, Icon, InlineGrid, InlineStack, Layout, LegacyCard, LegacyStack, Link, OptionList, Page, Popover, Scrollable, Select, Tabs, Text, TextContainer, TextField, Tooltip, useBreakpoints } from '@shopify/polaris';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
     ChevronDownIcon, BookOpenIcon, ExternalIcon, XIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
@@ -12,6 +12,7 @@ import DiscardModal from './components/DiscardModal';
 
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
+    let storeName = session.shop.split(".")[0];
     const response = await admin.graphql(`query {
           currentAppInstallation {
             id
@@ -80,12 +81,12 @@ export const loader = async ({ request }) => {
     } else {
         data = appSettings;
     }
-    return { data };
+    return { data, storeName };
 };
 
 function CookieBanner(props) {
     const navigate = useNavigate();
-    const { data } = useLoaderData();
+    const { data, storeName } = useLoaderData();
     const [formData, setFormData] = useState(data);
     const [status, setStatus] = useState(data.app_status);
     const [active, setActive] = useState(false);
@@ -153,6 +154,13 @@ function CookieBanner(props) {
         () => setActive((prevActive) => !prevActive),
         [],
     );
+   const  handleNavigate = () =>{
+    console.log("helloo___")
+    window.open(
+        `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/settings/privacy/consent-banner`,
+        "__blank"
+    );
+   }
 
     const handleSave = async () => {
         setButtonLoading(true);
@@ -220,6 +228,14 @@ function CookieBanner(props) {
         }));
     };
 
+    useEffect(()=>{
+        shopify.loading(false)
+       },[])
+     
+       const handleClick = () => {
+         navigate("/app");
+         shopify.loading(true);
+       };
 
     const theme_options = [
         { label: 'Select an option', value: 'Select an option' ,disabled:"true"},
@@ -428,7 +444,7 @@ function CookieBanner(props) {
                                     autoComplete="off"
                                     helpText={
                                         <Text as='p' variant='bodySm'>
-                                            Every site needs to have a privacy policy, you can use <a href='#'>Shopify's Free Privacy Policy Generator</a> to quickly get one. Until you add a link to that page, the "Learn more" message will not be shown.
+                                            Every site needs to have a privacy policy, you can use <a target='_blank' href='https://www.shopify.com/tools/policy-generator?_gl=1*1l5buzj*_ga*MzI4MTA0NjUxLjE3MTk1NjA0MDU.*_ga_JPZEV67G7G*MTcyMjkyMTE2MC4xMjguMS4xNzIyOTIxMTcxLjQ5LjAuMA..'>Shopify's Free Privacy Policy Generator</a> to quickly get one. Until you add a link to that page, the "Learn more" message will not be shown.
                                         </Text>
                                     }
                                 />
@@ -549,8 +565,8 @@ function CookieBanner(props) {
                                             </Text>
 
                                             <ButtonGroup>
-                                                <Button>
-                                                    <Text as='h6' variant='headingXs'> Go to Cookie Banner setting</Text>
+                                                <Button onClick={handleNavigate}>
+                                                    <Text as='h6'  variant='headingXs'> Go to Cookie Banner setting</Text>
                                                 </Button>
 
                                                 <Button variant="plain">
@@ -1009,7 +1025,7 @@ function CookieBanner(props) {
     return (
         <div className='Cookies_Banner_page'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Cookies Banner"
                 subtitle="Inform your visitors that the site uses cookies to improve the user experience and track the visitors activity."
                 primaryAction={

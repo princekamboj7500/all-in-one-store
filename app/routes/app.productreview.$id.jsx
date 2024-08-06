@@ -38,6 +38,7 @@ import {
   DeleteIcon,
   ReplayIcon,
   EditIcon,
+  SendIcon,
   StarFilledIcon,
   SearchIcon,
   ImageIcon,
@@ -84,6 +85,9 @@ const ProductReview = () => {
     "Local delivery",
     "Local pickup",
   ]);
+  useEffect(()=>{
+   shopify.loading(false)
+  },[])
 
   const tabs = itemStrings.map((item, index) => ({
     content: item,
@@ -444,6 +448,7 @@ const ProductReview = () => {
 
       if (result.success) {
         setActive(true);
+        setError(false);
         setActiveField(false);
         setButtonLoader(false);
         setMsgData("Reviews Published Successfully");
@@ -493,6 +498,7 @@ const ProductReview = () => {
     const result = await response.json();
     if (result.success) {
       setActive(true);
+      setError(false);
       setActiveField(false);
       setButtonLoader(false);
       setFilteredReviews(result.data);
@@ -1027,6 +1033,42 @@ const ProductReview = () => {
     </div>
   );
 
+  const handlePublishReviews = async (review, id, action) =>{
+    console.log(id,review,"kkkkkk")
+    console.log(productId,"productId___")
+    const data = {
+      action,
+      product_id: productId,
+      store_name: store,
+      ids: [id],
+    };
+    const response = await fetch("/api/publish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const result = await response.json();
+    if (result.success) {
+      setActive(true);
+      setError(false);
+      setActiveField(false);
+      setButtonLoader(false);
+      setFilteredReviews(result.data);
+      setMsgData(`Published Successfully`);
+    } else {
+      setButtonLoader(false);
+      setActive(true);
+      setActiveField(false);
+      setError(true);
+      setMsgData("There is some error while update");
+    }
+
+  }
   const rowMarkup =
     filteredReviews.length > 0 ? (
       filteredReviews.map(
@@ -1160,7 +1202,20 @@ const ProductReview = () => {
                       variant="tertiary"
                     />
                   </Tooltip>
+                  <Tooltip content="Publish the reviews">
+                    <Button
+                    icon={ SendIcon}
+                      accessibilityLabel="Publish "
+                      onClick={() =>
+                        handlePublishReviews(filteredReviews[index], id,"publish")
+                        
+                      }
+                      loading= {buttonloading}
+                      variant="tertiary"
+                    />
+                  </Tooltip>
                 </ButtonGroup>
+              
               </IndexTable.Cell>
             </IndexTable.Row>
           );
@@ -1183,13 +1238,21 @@ const ProductReview = () => {
       ? `${filteredReviews[0].product_title}`
       : "No reviews";
 
+
+      const handlePageNavigate = () =>{
+        shopify.loading(true)
+      navigate("/app/product_reviews?tab=reviews")
+      }
+
+
+
   return (
     <Page
       fullWidth
       title={`${title} · reviews`}
       backAction={{
         content: "Back",
-        onAction: () => navigate("/app/product_reviews?tab=reviews"),
+        onAction: handlePageNavigate,
       }}
       actionGroups={[
         {

@@ -8,7 +8,7 @@ import "./assets/style.css"
 import {
     ChevronDownIcon, EditIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
-
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
     const response = await admin.graphql(`query {
@@ -71,14 +71,15 @@ function InactiveTabMessage() {
     const [error, setError] = useState('');
     const [msgData, setMsgData] = useState("");
     const [buttonloading, setButtonLoading] = useState(false);
-
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
     const handleChange = (value, property) => {
         setFormData((formData) => ({
             ...formData,
             [property]: value,
         }));
     };
-
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const handleFocus = (fieldName) => {
         setActiveField(fieldName);
     };
@@ -113,8 +114,10 @@ function InactiveTabMessage() {
         }
       };
       
-    const handleDiscard = () => {
+      const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
 
 
@@ -174,11 +177,18 @@ function InactiveTabMessage() {
             <Toast content={msgData} onDismiss={toggleActive} error={error} />
         </Frame>
     ) : null;
+    useEffect(()=>{
+    shopify.loading(false)
+    },[])
+    const handleClick = () => {
+        navigate("/app");
+        shopify.loading(true);
+      };
 
     return (
         <div className='Inactivetab-message'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Inactive Tab Message"
                 subtitle="Reduce cart abandonment by dynamically modifying the browser tab's title when the visitor navigates away from your store."
                 primaryAction={
@@ -219,9 +229,9 @@ function InactiveTabMessage() {
                                 <Text tone='subdue' as='p'>
                                     The message that will show in the browser tab's title when the visitor changes to another tab.
                                     <br/><br/>
-                                    You can use emojis as well, copy them from  <Link url="https://getemoji.com/" >
+                                    You can use emojis as well, copy them from  <a target="_blank" href="https://getemoji.com/" >
                                         this page
-                                    </Link>.
+                                    </a>.
                                 </Text>
                         </Card>
                     </Layout.AnnotatedSection>
@@ -319,6 +329,7 @@ function InactiveTabMessage() {
                         </Frame>
                     )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
 
         </div>

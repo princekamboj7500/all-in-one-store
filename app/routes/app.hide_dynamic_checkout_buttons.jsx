@@ -1,5 +1,5 @@
 import { BlockStack, Button, ButtonGroup, Card, Text, Page, List, Toast,Grid,   Frame,InlineStack, Link, Popover, ActionList, Icon } from '@shopify/polaris';
-import { useState, useCallback } from "react";
+import { useState, useCallback , useEffect} from "react";
 import {
     ExternalIcon, XIcon
 } from '@shopify/polaris-icons';
@@ -300,11 +300,19 @@ function Hide_Dynamic_Checkout_Buttons(props) {
             </div>
         );
     }
+    useEffect(()=>{
+        shopify.loading(false)
+       },[])
+     
+       const handleClick = () => {
+         navigate("/app");
+         shopify.loading(true);
+       };
 
     return (
         <div className='Hide_Dynamic_Checkout_Buttons'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Hide Dynamic Checkout Buttons"
                 subtitle="Create a smooth checkout flow by hiding the dynamic checkout buttons (PayPal, Apple Pay) from your cart and product pages."
 

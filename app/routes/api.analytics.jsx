@@ -30,7 +30,7 @@ try {
           count: [...existingEntry.count, dateString],
         },
       });
-      console.log('Updated ReviewAnalytics:', updatedEntry);
+      
     } else {
       const newEntry = await db.ReviewAnalytics.create({
         data: {
@@ -38,7 +38,7 @@ try {
           count: [dateString],
         },
       });
-      console.log('Created ReviewAnalytics:', newEntry);
+    
     }
   } else if (analytType === "starClick") {
 
@@ -62,7 +62,7 @@ try {
      
     }
   } else {
-    console.log('Unknown analytType:', analytType);
+  
   }
   return json({ success:true});
 } catch (error) {

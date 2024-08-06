@@ -10,28 +10,95 @@
           <faviconcart></faviconcart>
  <stickycart></stickycart> 
  <starrating></starrating>
- 
  <instantsearch></instantsearch>
+ <script>
+var scrollTop={{ app.metafields.ScrollTopToBottom |json  }};
 
-<script>
-window.money =  "{{ cart.currency.symbol }}" ;
-window.Scrolltop = {{ app.metafields.ScrollTopToBottom.items }}
+if(scrollTop == undefined){
+    window.Scrolltop ={}
+}else{
+   window.Scrolltop   = scrollTop.items ;
+}
+var stickyCart ={{ app.metafields.StickyAddCart |json  }};
 
- 
-window.FavIcon = {{app.metafields.CartFavicon.items}}
+if(scrollTop == undefined){
+    window.StickyCart ={}
+}else{
+   window.StickyCart   = stickyCart.items ;
+}
 
-window.StickyCart = {{app.metafields.StickyAddCart.items}}
-window.CartNotice = {{app.metafields.CartNotice.items }}
-window.InstantSearch = {{app.metafields.CartNotice.items}}
-window.AutoExternalLinks = {{app.metafields.AutoExternalLinks.items}}
-window.InActiveTab = {{app.metafields.InactiveTabMessage.items}}
-window.cookieBanner = {{ app.metafields.cookiebanner.items}}
-window.HideDynamicCheckout = {{ app.metafields.HideDynamicCheckout.items}}
-window.currency = "{{ cart.currency.symbol }}"
+var FavIcon ={{ app.metafields.CartFavicon |json  }};
+
+if(FavIcon == undefined){
+    window.FavIcon ={}
+}else{
+   window.FavIcon   = FavIcon.items ;
+}
+
+var cartNotice ={{ app.metafields.CartNotice |json  }};
+
+if(cartNotice == undefined){
+    window.CartNotice  ={}
+}else{
+   window.CartNotice   = cartNotice.items ;
+}
+
+var InstantSearch ={{ app.metafields.InstantSearch |json  }};
+
+if(InstantSearch == undefined){
+   window.InstantSearch  ={}
+}else{
+   window.InstantSearch  = InstantSearch.items ;
+}
+
+var AutoExternalLinks ={{ app.metafields.AutoExternalLinks |json  }};
+
+if(AutoExternalLinks == undefined){
+  window.AutoExternalLinks  ={}
+}else{
+  window.AutoExternalLinks = AutoExternalLinks.items ;
+}
+
+var InActiveTab ={{ app.metafields.InactiveTabMessage |json  }};
+
+if(AutoExternalLinks == undefined){
+  window.InActiveTab  ={}
+}else{
+  window.InActiveTab = InActiveTab.items ;
+}
+
+var cookieBanner ={{ app.metafields.cookiebanner |json  }};
+
+if(cookieBanner == undefined){
+  window.cookieBanner  ={}
+}else{
+  window.cookieBanner = cookieBanner.items ;
+}
+
+var HideDynamicCheckout ={{ app.metafields.HideDynamicCheckout |json  }};
+
+if(HideDynamicCheckout == undefined){
+  window.HideDynamicCheckout  ={}
+}else{
+  window.HideDynamicCheckout = HideDynamicCheckout.items ;
+}
+
+var productReviews ={{ app.metafields.ProductReviews |json  }};
+
+if(productReviews == undefined){
+  window.productReviews  ={}
+}else{
+  window.productReviews = productReviews.items ;
+}
+
+window.status = "{{ app.metafields.AllInOneStore.status}}"
+window.money =  "{{  shop.money_format }}" 
+
 window.shop =  "{{ shop.permanent_domain  }}"
-window.apiEndPoint = "https://create-sp-desire-driven.trycloudflare.com/"
-window.productReviews = {{ app.metafields.ProductReviews.items}}
+
+
 window.currentProduct = {{ product  |  json}}
+
 </script>
   
     
@@ -42,6 +109,7 @@ window.currentProduct = {{ product  |  json}}
  "name": "All in One store",
  "javascript": "bundle.js",
  "target": "body",
+  "available_if":"{{ app.metafields.AllInOneStore.status }}",
  "settings":[]
 }
 

@@ -7,9 +7,7 @@ import {
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import DeactivatePopover from "./components/DeactivatePopover";
-import {
-    useAppBridge,
-} from "@shopify/app-bridge-react";
+import DiscardModal from './components/DiscardModal';
 import "./assets/style.css";
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
@@ -32,7 +30,7 @@ export const loader = async ({ request }) => {
 
     const appId = result.data.currentAppInstallation.id;
     const metafielData = result.data.currentAppInstallation.metafields.edges;
-    console.log(metafielData,"metafielData0---")
+   
     const defaultSettings = {
         app_name: "StickyAddCart",
         app_status: false,
@@ -71,7 +69,7 @@ export const loader = async ({ request }) => {
             : [];
 
     let appSettings =appName.length > 0 ? appName[0].node.value : defaultSettings;
-       console.log(appSettings,"appSettings---");
+      
     let data;
     if (typeof appSettings === 'string') {
         try {
@@ -98,11 +96,16 @@ export default function StickyAddToCart() {
 
     const [msgData, setMsgData] = useState("");
     const [active, setActive] = useState(false);
-
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
     const toggleActive = useCallback(
         () => setActive((prevActive) => !prevActive),
         [],
     );
+    useEffect(()=>{
+shopify.loading(false);
+    },[])
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
 
     const handleColorChange = useCallback((e, fieldName) => {
         setFormData((prevFormData) => ({
@@ -127,7 +130,10 @@ export default function StickyAddToCart() {
             <Toast content={msgData} onDismiss={toggleActive} error={error} />
         </Frame>
     ) : null;
-
+    const handleClick = () => {
+        navigate("/app");
+        shopify.loading(true);
+      };
 
     const handleSave = async () => {
         setButtonLoading(true);
@@ -159,7 +165,9 @@ export default function StickyAddToCart() {
         }
     };
     const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
 
     const handleToggleStatus = async () => {
@@ -1042,6 +1050,7 @@ export default function StickyAddToCart() {
                                                         onChange={(e) =>
                                                             handleColorChange(e, "background_color")
                                                         }
+                                                        
                                                         style={{
                                                             boxShadow: formData.background_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
                                                             width:formData.background_color === '#ffffff' ? '34px':'38px',
@@ -1309,7 +1318,7 @@ export default function StickyAddToCart() {
     return (
         <div className='Sticky_Add_to_Cart_page'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate(("/app")) }}
+                backAction={{ content: "Back",  onAction: handleClick }}
                 title="Sticky Add to Cart"
                 subtitle={"Improve conversion rate by displaying a sticky add to cart bar when the visitors are scrolling down."}
                 // compactTitle
@@ -1366,6 +1375,7 @@ export default function StickyAddToCart() {
                         </Frame>
                     )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
         </div>
     );

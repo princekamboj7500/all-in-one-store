@@ -153,12 +153,12 @@ export const loader = async ({ request }) => {
     badge_margin_bottom: 24,
 
     //happy customers
-    activate_happy_customer_page: 1,
+    activate_happy_customer_page: 0,
     happy_customer_page_title: "Happy Customers",
     happy_customer_page_description:
       "Customers from all over the world love our products!",
     happy_customer_reviews_layout: "Grid_view",
-    happy_customer_show_filterbar: 1,
+    happy_customer_show_filterbar: 0,
     happy_customer_min_reviews_desktop: 20,
     happy_customer_min_reviews_mobile: 10,
 
@@ -364,6 +364,11 @@ export function ReviewList({ reviews }) {
     ) : undefined;
 
   const resourceName = { singular: "product", plural: "products" };
+  const handleReviewNavigate = (url, id) =>{
+    shopify.loading(true)
+    navigate(`${url}${id}`)
+  
+  }
 
   return (
     <Card padding={0}>
@@ -384,7 +389,7 @@ export function ReviewList({ reviews }) {
             <ResourceItem
               id={id}
               key={id}
-              onClick={() => navigate(`${url}${id}`)}
+              onClick={() =>handleReviewNavigate(url, id)}
               media={media}
               accessibilityLabel={`View details for ${title}`}
             >
@@ -1816,10 +1821,19 @@ function ProductReviews() {
     },
   ];
 
+  useEffect(()=>{
+    shopify.loading(false)
+  },[])
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
+
+
   return (
     <div className="Produyct-reviews">
       <Page
-        backAction={{ content: "Back", onAction: () => navigate("/app") }}
+        backAction={{ content: "Back", onAction: handleClick }}
         title="Product Reviews"
         subtitle="Easily collect, import and display reviews with photos and boost trust and conversion rates with social proof."
         primaryAction={

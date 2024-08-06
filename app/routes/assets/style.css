@@ -187,12 +187,14 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
 border:2px solid var(--p-color-border-emphasis)
 }
 
-.Favicon_cart_count_page .color_section {
+/* .Favicon_cart_count_page .color_section {
   display: flex;
+} */
+.SettingsDataTab_container{
+  margin-top:20px;
 }
-
-.Favicon_cart_count_page .color_section input[type="color"]::-webkit-color-swatch {
-  border-radius: 10px;
+.intant_search_TabsField{
+  margin-top:10px;
 }
 
 .vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack {
@@ -420,19 +422,8 @@ gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Tit
 
 
 
-.Favicon_cart_count_page .color_section input[type="color"]::-webkit-color-swatch {
-  border-radius: 10px;
-}
 
-.Favicon_cart_count_page .color_section input[type="color"] {
-  height: 42px;
-  background-color: transparent;
-  width: 38px;
-  border: none;
-  padding: 0%;
-  border-radius: 6px;
-  margin: -4px;
-}
+
 
 
 .no-spinner input[type=number]::-webkit-outer-spin-button,

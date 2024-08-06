@@ -356,7 +356,7 @@ export const action = async ({ request }) => {
     );
 
     const result = await response.json();
-    console.log(result.data.discountAutomaticBxgyCreate, "hleoooo______");
+  
     return result.data.discountAutomaticBxgyCreate.automaticDiscountNode.id;
   };
 
@@ -646,7 +646,7 @@ export const action = async ({ request }) => {
       data: updateddata,
     });
   } else if (actionType == "deleted") {
-      console.log(ids,"ids___________")
+      
     const updateDiscounts = await prisma.UpsellBuilder.deleteMany({
       where: {
         id: {

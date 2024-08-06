@@ -8,7 +8,9 @@
  "name": "Upsell Builder",
   "javascript": "bundle.js",
  "target": "section",
+    "available_if":"{{ app.metafields.AllInOneStore.status }}",
  "settings":[]
+ 
 }
 
 {% endschema %}

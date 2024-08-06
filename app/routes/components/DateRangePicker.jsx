@@ -72,7 +72,7 @@ export default function DateRangePicker() {
 
 
     useEffect(() => {
-        console.log("activeDateRange_____", activeDateRange);
+       
         //setCustom(activeDateRange)
     }, [activeDateRange])
 
@@ -132,7 +132,7 @@ export default function DateRangePicker() {
         setInputValues((prevState) => {
             return { ...prevState, since: value };
         });
-        console.log("handleStartInputValueChange, validDate", value);
+       
         if (isValidDate(value)) {
             const newSince = parseYearMonthDayDateString(value);
             setActiveDateRange((prevState) => {
@@ -193,7 +193,7 @@ export default function DateRangePicker() {
         setActiveDateRange(newDateRange);
     }
     function apply() {
-        console.log(inputValues,"inputValues---")
+        
         setPopoverActive(false);
     }
     function cancel() {

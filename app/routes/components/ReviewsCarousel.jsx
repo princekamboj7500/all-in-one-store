@@ -48,11 +48,11 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
     }
     return (
         <>
-            <Layout.Section>
-                <Card roundedAbove="sm">
-                    <BlockStack gap="300">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish a Reviews Carousel</Text>
-                        <Box background="bg-surface-secondary" padding="200" borderRadius="200">
+            {/* <Layout.Section> */}
+                {/* <Card roundedAbove="sm"> */}
+                    {/* <BlockStack gap="300"> */}
+                        {/* <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish a Reviews Carousel</Text> */}
+                        {/* <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='semibold'> Send reviews to carousel</Text>
                                 <BlockStack>
@@ -79,9 +79,9 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
                                     />
                                 </BlockStack>
                             </BlockStack>
-                        </Box>
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text>
-                      
+                        </Box> */}
+                        {/* <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text> */}
+{/*                       
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='regular'>Display manually</Text>
@@ -92,10 +92,10 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
                                     </ButtonGroup>
                                 </InlineStack>
                             </BlockStack>
-                        </Box>
-                    </BlockStack>
-                </Card>
-            </Layout.Section>
+                        </Box> */}
+                    {/* </BlockStack> */}
+                {/* </Card> */}
+            {/* </Layout.Section> */}
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
