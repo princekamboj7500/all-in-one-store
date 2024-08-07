@@ -1,17 +1,15 @@
 import { authenticate } from "../shopify.server";
 import { json } from "@remix-run/node";
 
-import db from "../db.server";
-
 export const action = async ({ request }) => {
   try {
     const { session, admin } = await authenticate.admin(request);
 
     const reqData = await request.json();
-    
+
 
     if (reqData && reqData.actionType === "deactivate") {
-    
+
       const response = await admin.graphql(`query {
                 currentAppInstallation {
                   id
@@ -25,7 +23,7 @@ export const action = async ({ request }) => {
                     }
                   }
                 }
-      
+
               }`);
       const result = await response.json();
 
@@ -39,7 +37,7 @@ export const action = async ({ request }) => {
     } else if (reqData && reqData.actionType === "save") {
 
         console.log(reqData.data,"reqData.data---")
-   
+
       const response = await admin.graphql(`query {
             currentAppInstallation {
               id
@@ -53,7 +51,7 @@ export const action = async ({ request }) => {
                 }
               }
             }
-  
+
           }`);
       const result = await response.json();
       const dataId = result.data.currentAppInstallation.metafields.edges;
@@ -115,11 +113,11 @@ export const action = async ({ request }) => {
 
         }`);
       const result = await response.json();
-   
+
       const dataId = result.data.currentAppInstallation.metafields.edges;
-   
+
       const appId = result.data.currentAppInstallation.id;
-    
+
 
       try {
         const createMetafield = await admin.graphql(

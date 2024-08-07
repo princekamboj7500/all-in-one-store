@@ -51,15 +51,7 @@ import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css";
 import { product_bundle, bogo } from "./assets";
-import ReviewsWidget from "./components/ReviewsWidget";
-import StarRatings from "./components/StarRatings";
-import HappyCustomers from "./components/HappyCustomersPage";
-import FeaturedReviews from "./components/FeaturedReviews";
-import Translations from "./components/Translations";
-import AllreviewsBadge from "./components/AllReviewsBadge";
-import ReviewsCarousel from "./components/ReviewsCarousel";
 import DiscardModal from "./components/DiscardModal";
-import PublishingSeo from "./components/PublishingSeo";
 import db from "../db.server";
 import {
   LineChart,
@@ -71,7 +63,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import DateRangePicker from "./components/DateRangePicker";
 
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
@@ -90,7 +81,7 @@ export const loader = async ({ request }) => {
                 }
               }
             }
-    
+
           }`);
   const result = await response.json();
   const appId = result.data.currentAppInstallation.id;
@@ -1502,10 +1493,10 @@ function UpsellBuilder() {
   const handleLinkClick = () => {
     shopify.loading(true);
   };
- 
 
 
-  
+
+
   const Offers = () => {
     const resourceName = {
       singular: "bundle",
@@ -1518,7 +1509,7 @@ function UpsellBuilder() {
       console.log(selectedProductIds,"selectedProductIds----")
   const datasend={
    offer_status:"Draft"
-   
+
   }
       const data = {
         actionType,
@@ -1526,8 +1517,8 @@ function UpsellBuilder() {
         ids: selectedProductIds,
         data:datasend
       };
-  
-  
+
+
       const response = await fetch("/api/upsell-save", {
         method: "POST",
         headers: {
@@ -1541,14 +1532,14 @@ function UpsellBuilder() {
       const result = await response.json();
       if (result.success) {
         setActive(true);
-      
+
         setButtonLoader(false);
         setUpsellList(result.data);
         setMsgData(` ${actionType.toUpperCase()} Successfully`);
       } else {
         setButtonLoader(false);
         setActive(true);
-        
+
         setError(true);
         setMsgData("There is some error while update");
       }

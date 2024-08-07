@@ -1,8 +1,5 @@
 import db from "../db.server";
-import { unstable_composeUploadHandlers, unstable_createFileUploadHandler, unstable_createMemoryUploadHandler, unstable_parseMultipartFormData } from '@remix-run/node';
 import { json } from "@remix-run/node";
-import path from 'path';
-import fs from "fs";
 import AWS from "aws-sdk";
 const spacesEndpoint = new AWS.Endpoint("nyc3.digitaloceanspaces.com");
 const s3 = new AWS.S3({
@@ -19,7 +16,7 @@ export const action = async ({ request }) => {
   const  shopName = new URL(request.url).searchParams.get("shop");
    const formData = await request.formData();
   const files_q = formData.getAll('file');
- 
+
   const uploadPromises = files_q.map(async (file) => {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

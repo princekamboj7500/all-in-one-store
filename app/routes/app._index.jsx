@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { json } from "@remix-run/node";
 import {
   useActionData,
   useLoaderData,
@@ -22,7 +21,6 @@ import {
   Icon,
   InlineGrid,
 } from "@shopify/polaris";
-import { TitleBar, useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 
 import {
@@ -53,7 +51,7 @@ export const loader = async ({ request }) => {
   var currentTheme = getThemes?.data?.find(
     (themes) => themes.role === "main",
   )?.id;
- 
+
 
   const checkStatus = await admin.rest.resources.Asset.all({
     session: session,
@@ -86,7 +84,7 @@ export default function Index() {
   const [isBannerVisible, setIsBannerVisible] = useState(status);
 
   const activateApp = () => {
- 
+
     window.open(
       "https://admin.shopify.com/store/" +
         storeName.replace(".myshopify.com", "") +
