@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = "mongodb+srv://doadmin:7Le8D013O9vg42ku@db-mongodb-nyc3-03213-594d4f98.mongo.ondigitalocean.com/admin"
+  url      = env("DATABASE_URL")
 }
 model Session {
    session_id     String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -20,8 +20,8 @@ model Session {
 
 model Reviews{
    id      String @id @default(auto()) @map("_id") @db.ObjectId
-  store_name           String 
-  product_id         String    
+  store_name           String
+  product_id         String
   product_handle     String
   product_image      String?
   product_title      String?
@@ -53,11 +53,11 @@ model ReviewAnalytics {
 
 model UpsellBuilder{
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  store          String 
+  store          String
   discount_type   String
   shopify_discount_id  String?
   rules            Json
-  offer_status     String 
+  offer_status     String
    internal_name   String
    cart_label    String
   created_at        DateTime @default(now())
