@@ -1,7 +1,4 @@
-import { json } from "@remix-run/node";
-import polarisStyles from "@shopify/polaris/build/esm/styles.css";
-import { authenticate, MONTHLY_PLAN } from "../shopify.server";
-export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
+import { authenticate } from "../shopify.server";
 export const loader = async ({ request }) => {
 
     const { session, admin, redirect } = await authenticate.admin(request);
@@ -12,8 +9,6 @@ export const loader = async ({ request }) => {
       session: session,
       id: chargeId,
     });
-
-    
     if (reoccuringplan.status == "active") {
 
     }
