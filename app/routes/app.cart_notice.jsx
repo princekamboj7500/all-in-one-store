@@ -3,8 +3,7 @@ import React, { useCallback, useState, } from 'react';
 import {
     ChevronDownIcon, XIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
-import DateRangePicker from './components/DateRangePicker';
-import GraphCard from './components/GraphCard';
+
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
@@ -25,7 +24,7 @@ export const loader = async ({ request }) => {
               }
             }
           }
-  
+
         }`)
     const result = await response.json();
 

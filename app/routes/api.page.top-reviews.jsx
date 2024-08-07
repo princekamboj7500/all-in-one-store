@@ -1,13 +1,11 @@
-import { json } from "@remix-run/node";
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
-import { renderToString } from "react-dom/server";
 import HappyCustomers from "./components/HappyCustomers";
 export let loader = async ({ request }) => {
   const { admin, session } =
     await authenticate.public.appProxy(request);
 
- 
+
 
   const response = await admin.graphql(`query {
       currentAppInstallation {
@@ -25,7 +23,7 @@ export let loader = async ({ request }) => {
 
     }`);
   const result = await response.json();
-  
+
   const metafielData = result.data.currentAppInstallation.metafields.edges;
   const defaultSettings = {
     app_name: "ProductReviews",
@@ -65,7 +63,7 @@ export let loader = async ({ request }) => {
     form_btn_text: "#ffffff",
     form_btn_bg: "#000000",
 
-   
+
 
     //happy customers
     activate_happy_customer_page: 1,
@@ -77,9 +75,9 @@ export let loader = async ({ request }) => {
     happy_customer_min_reviews_desktop: 20,
     happy_customer_min_reviews_mobile: 10,
 
-   
 
-   
+
+
     // translation
     translation_reviews: "reviews",
     translation_see_more_reviews: "See more reviews",

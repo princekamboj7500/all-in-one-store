@@ -42,7 +42,6 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { ExternalIcon } from "@shopify/polaris-icons";
 import "./assets/style.css";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
@@ -140,7 +139,7 @@ function Favicon_cart_count(props) {
   };
 
 
-  
+
 
   const toggleActive = useCallback(
     () => setActive((prevActive) => !prevActive),
@@ -229,7 +228,7 @@ function Favicon_cart_count(props) {
       setActiveField(false);
     }
   };
- 
+
 
   return (
     <div className="Favicon_cart_count_page">
@@ -346,7 +345,7 @@ function Favicon_cart_count(props) {
                                 }
                               />
                             </div>
-                         
+
                             {/* <Select
                           label="Animation repetition interval"
                           options={Button_Size_options}

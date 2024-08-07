@@ -46,7 +46,6 @@ import {
   ImageIcon,
 } from "@shopify/polaris-icons";
 import DiscardModal from "./components/DiscardModal";
-import BundleProducts from "./components/BundleProducts";
 export const loader = async ({ request, params }) => {
   const upsellId = params.id;
 
@@ -371,7 +370,7 @@ const EditDiscountType = () => {
   };
   const addCollections = async (selectedCollections, type) => {
     if (type === "customer_buy") {
-     
+
       setBuyCollections((prevBuyProduct) => [
         ...prevBuyProduct,
         ...selectedCollections.filter(
@@ -380,7 +379,7 @@ const EditDiscountType = () => {
         ),
       ]);
     } else {
-      
+
       setGetCollections((prevGetProduct) => [
         ...prevGetProduct,
         ...selectedCollections.filter(

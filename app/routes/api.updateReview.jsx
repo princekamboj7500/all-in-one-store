@@ -1,5 +1,4 @@
 import db from "../db.server";
-import { json } from "@remix-run/node";
 
 const updateReview = async (product_id, store_name, updateData) => {
   try {
@@ -9,7 +8,7 @@ const updateReview = async (product_id, store_name, updateData) => {
         store_name,
       },
     });
- 
+
 
     if (review) {
       const updatedReview = await db.Reviews.update({
@@ -33,7 +32,7 @@ const updateReview = async (product_id, store_name, updateData) => {
 export const action = async ({ request }) => {
   const reqData = await request.json();
   const { product_id, store_name, id, editReview, action } = reqData;
- 
+
   if(action == "SaveReply"){
     let updateData1 = {
       storeReply:reqData.reply_content
@@ -44,7 +43,7 @@ export const action = async ({ request }) => {
         store_name:store_name,
         product_id:product_id
       },
-      data:updateData1 
+      data:updateData1
     });
   }else{
     const convertToISO = (dateString) => {
@@ -78,7 +77,7 @@ export const action = async ({ request }) => {
     where: {
       store_name:store_name,
       product_id:product_id,
-      
+
     },
   });
 

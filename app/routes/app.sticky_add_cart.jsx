@@ -7,9 +7,7 @@ import {
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import DeactivatePopover from "./components/DeactivatePopover";
-import {
-    useAppBridge,
-} from "@shopify/app-bridge-react";
+
 import "./assets/style.css";
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
@@ -26,7 +24,7 @@ export const loader = async ({ request }) => {
               }
             }
           }
-  
+
         }`)
     const result = await response.json();
 
@@ -64,7 +62,7 @@ export const loader = async ({ request }) => {
         inventory_start:0,
         inventory_end:0,
     };
- 
+
     const appName =
         metafielData.length > 0
             ? metafielData.filter((item) => item.node.namespace === "StickyAddCart")
@@ -78,7 +76,7 @@ export const loader = async ({ request }) => {
             data = JSON.parse(appSettings);
         } catch (error) {
             console.error('Error parsing appSettings:', error);
-            data = {}; 
+            data = {};
         }
     } else {
         data = appSettings;
@@ -607,7 +605,7 @@ export default function StickyAddToCart() {
                 [property]: value,
             }));
         };
-    
+
         return (
             <div >
                 <Card sectioned>
@@ -1047,7 +1045,7 @@ export default function StickyAddToCart() {
                                                             width:formData.background_color === '#ffffff' ? '34px':'38px',
                                                                height:formData.background_color === '#ffffff' ? '34px':'38px'
                                                           }}
-                                                        
+
                                                     />
                                                 }
                                             />
@@ -1134,9 +1132,9 @@ export default function StickyAddToCart() {
                                                     }
                                                 />
                                             </div>
-                                       
-                                      
-                                        
+
+
+
                                          <TextField
                                             label={<InlineStack >Border Radius <Tooltip  content={`This controls the border radius for the "Add to cart" button and the selectors.`}><Icon source={AlertCircleIcon} tone='base'></Icon></Tooltip></InlineStack>}
                                             type="number"
@@ -1149,7 +1147,7 @@ export default function StickyAddToCart() {
                                             suffix="px"
                                             autoComplete="off"
                                         />
-                                       
+
                                         <div className='color_section'>
                                             <TextField
                                                 label={<InlineStack >Selectors Border-color <Tooltip  content={`This controls the color of variants and quantity selectors.`}><Icon source={AlertCircleIcon} tone='base'></Icon></Tooltip></InlineStack>}
@@ -1177,7 +1175,7 @@ export default function StickyAddToCart() {
                                                 }
                                             />
                                         </div>
-                                        
+
                                     </BlockStack>
                                 </div>
                             </Box>
@@ -1265,7 +1263,7 @@ export default function StickyAddToCart() {
                 </Grid.Cell>
             </Grid>
         </div> */}
-    </BlockStack> 
+    </BlockStack>
     )
 
     const AnalyticsPaymentsTab = () => {
