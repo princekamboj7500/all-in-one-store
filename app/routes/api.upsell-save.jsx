@@ -207,7 +207,7 @@ export const action = async ({ request }) => {
             collection.node.products.edges.map((product) => product.node),
         );
         const collIds = productsArray.map((item) => item.id);
-        console.log(collIds, "collIds___________");
+     
         let uniqueCollections = [];
         let uniqueIds = [];
 
@@ -356,7 +356,7 @@ export const action = async ({ request }) => {
     );
 
     const result = await response.json();
-    console.log(result.data.discountAutomaticBxgyCreate, "hleoooo______");
+    
     return result.data.discountAutomaticBxgyCreate.automaticDiscountNode.id;
   };
 
@@ -381,7 +381,7 @@ export const action = async ({ request }) => {
     );
 
     const data = await response.json();
-    console.log(data, "datta___________");
+  
   };
 
   const bogoDiscountActivateShopify = async(discountId)=>{
@@ -477,7 +477,7 @@ export const action = async ({ request }) => {
     ) {
       
       const bogoCreateId = await BogoDiscountCreateShopify();
-      console.log(bogoCreateId, "bogoCreateId_______");
+     
       const updatedData = {
         store: data.store,
         discount_type: data.discount_type,
@@ -494,7 +494,7 @@ export const action = async ({ request }) => {
         },
         data: updatedData,
       });
-      console.log(updateDiscounts, "updateDiscounts___");
+  
     } else if (
       existData.shopify_discount_id != null &&
       data.offer_status == "Draft"
@@ -598,7 +598,7 @@ export const action = async ({ request }) => {
       data: addDiscounts,
     });
   } else if (actionType == "activated") {
-    console.log(ids, "ids");
+   
    
 
     const updateDiscounts = await prisma.UpsellBuilder.updateMany({
@@ -646,7 +646,7 @@ export const action = async ({ request }) => {
       data: updateddata,
     });
   } else if (actionType == "deleted") {
-      console.log(ids,"ids___________")
+     
     const updateDiscounts = await prisma.UpsellBuilder.deleteMany({
       where: {
         id: {

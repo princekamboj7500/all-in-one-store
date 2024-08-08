@@ -3,8 +3,15 @@
 
 
 <script>
+var cartNotice ={{ app.metafields.CartNotice |json  }};
 
- window.CartNotice = {{app.metafields.CartNotice.items }};
+if(productReviews == undefined){
+   window.CartNotice  ={}
+}else{
+   window.CartNotice= cartNotice.items ;
+}
+
+ 
  
 </script>
 
@@ -14,6 +21,7 @@
  "name": "Cart Notice",
   "javascript": "bundle.js",
  "target": "section",
+   "available_if":"{{ app.metafields.AllInOneStore.status }}",
  "settings":[]
 }
 

@@ -2,7 +2,7 @@
 import {Button, Popover, ActionList, Card} from '@shopify/polaris';
 import {useState, useCallback} from 'react';
 
-const DeactivatePopover = ({ handleToggleStatus, buttonLoading }) => {
+const DeactivatePopover = ({type,  handleToggleStatus, buttonLoading }) => {
   const [popoverActive, setPopoverActive] = useState(false);
 
   const togglePopoverActive = useCallback(
@@ -30,7 +30,7 @@ const DeactivatePopover = ({ handleToggleStatus, buttonLoading }) => {
     >
       <Card>
         <Button onClick={handleDeactivateClick} tone="critical" loading={buttonLoading}>
-          Deactivate Scroll To Top Button
+        {`Deactivate ${type}`}
         </Button>
       </Card>
     </Popover>

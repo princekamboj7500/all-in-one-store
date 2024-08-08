@@ -18,7 +18,7 @@ export const loader = async ({ request }) => {
     product_image:item.product_image,
    product_title:item.product_title
   }));
-  // console.log(productHandlesWithRatings,"productHandlesWithRatings-")
+ 
   
   const formattedHandles = productHandlesWithRatings.map(item => `handle:${item.product_handle}`).join(' OR ');
 

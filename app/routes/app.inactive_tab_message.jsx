@@ -8,7 +8,7 @@ import "./assets/style.css"
 import {
     ChevronDownIcon, EditIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
-
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
     const response = await admin.graphql(`query {
@@ -71,7 +71,9 @@ function InactiveTabMessage() {
     const [error, setError] = useState('');
     const [msgData, setMsgData] = useState("");
     const [buttonloading, setButtonLoading] = useState(false);
-
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const handleChange = (value, property) => {
         setFormData((formData) => ({
             ...formData,
@@ -82,6 +84,9 @@ function InactiveTabMessage() {
     const handleFocus = (fieldName) => {
         setActiveField(fieldName);
     };
+    useEffect(()=>{
+        shopify.loading(false);
+        },[])
     const handleSave = async () => {
         setButtonLoading(true);
         const dataToSend = {
@@ -113,8 +118,10 @@ function InactiveTabMessage() {
         }
       };
       
-    const handleDiscard = () => {
+      const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
 
 
@@ -174,16 +181,20 @@ function InactiveTabMessage() {
             <Toast content={msgData} onDismiss={toggleActive} error={error} />
         </Frame>
     ) : null;
-
+    const appName = "Inactive Tab Message"
+    const handleClick = () => {
+        navigate("/app");
+        shopify.loading(true);
+      };
     return (
         <div className='Inactivetab-message'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Inactive Tab Message"
                 subtitle="Reduce cart abandonment by dynamically modifying the browser tab's title when the visitor navigates away from your store."
                 primaryAction={
                     status ? (
-                        <DeactivatePopover handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
+                        <DeactivatePopover type={appName} handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                         {
                             content: "Activate App",
@@ -193,11 +204,7 @@ function InactiveTabMessage() {
                         }
                     )
                 }
-                secondaryActions={[
-                    {
-                        content: 'Tutorial',
-                    },
-                ]}
+              
             >
                 <Layout>
                     <Layout.AnnotatedSection
@@ -219,38 +226,19 @@ function InactiveTabMessage() {
                                 <Text tone='subdue' as='p'>
                                     The message that will show in the browser tab's title when the visitor changes to another tab.
                                     <br/><br/>
-                                    You can use emojis as well, copy them from  <Link url="https://getemoji.com/" >
+                                    You can use emojis as well, copy them from  <a target="_blank" href="https://getemoji.com/" >
                                         this page
-                                    </Link>.
+                                    </a>.
                                 </Text>
                         </Card>
                     </Layout.AnnotatedSection>
                 </Layout>
-                <div className='lower_section' style={{marginTop:"20px"}}>
+                {/* <div className='lower_section' style={{marginTop:"20px"}}>
             <Grid>
-            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                    <Card roundedAbove="sm">
-                        <BlockStack gap="200">
-                            <Text as="h2" variant="headingSm">
-                            Localization
-                            </Text>
-                            <BlockStack gap="200">
-                                <Text as="p" variant="headingSm" tone='subdue' fontWeight='regular'>
-                                    Translate all the strings from the Inactive Tab Message app to all the languages enabled on your store.
-                                </Text>
-
-                            </BlockStack>
-                            <InlineStack align="end">
-                                <ButtonGroup>
-                                    <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                        <Text variant="headingXs" as="h6" fontWeight='regular'>Translate</Text>
-                                    </Button>
-                                </ButtonGroup>
-                            </InlineStack>
-                        </BlockStack>
-                    </Card>
-                </Grid.Cell>
-                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+            
+             
+             
+                <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
                     <Card roundedAbove="sm">
                         <BlockStack gap="200">
                             <Text as="h2" variant="headingSm">
@@ -272,7 +260,7 @@ function InactiveTabMessage() {
                         </BlockStack>
                     </Card>
                 </Grid.Cell>
-                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
                     <Card roundedAbove="sm">
                         <BlockStack gap="200">
                             <Text as="h2" variant="headingSm">
@@ -296,7 +284,7 @@ function InactiveTabMessage() {
                     </Card>
                 </Grid.Cell>
             </Grid>
-        </div>
+        </div> */}
         {activeField && (
                     <Frame
                         logo={{
@@ -319,6 +307,7 @@ function InactiveTabMessage() {
                         </Frame>
                     )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
 
         </div>

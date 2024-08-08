@@ -47,7 +47,7 @@ const BundleProducts = ({
   selectProduct,
   product,
 }) => {
-  console.log(product, "product-----");
+ 
   return (
     <>
       <Grid>

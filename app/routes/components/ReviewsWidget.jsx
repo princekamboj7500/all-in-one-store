@@ -9,7 +9,7 @@ import gridimg from "./../assets/product_review/grid.png"
 import listimg from "./../assets/product_review/list.png"
 
 
-function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange }) {
+function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorChange }) {
 
     const star_shape_options = [
         { id: 'Rounded', label: 'Rounded corners', imgSrc: rounded },
@@ -50,6 +50,13 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
         { label: '1 column', value: '1 column' },
         { label: '2 columns', value: '2 columns' },
     ]
+    const handleCarouselClick = () => {
+        window.open(
+            `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/productreviews&target=newAppsSection`,
+            "__blank",
+          );
+      
+    }
     return (
         <>
             <Layout.Section>
@@ -680,8 +687,8 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                                 <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the Vitals app you need.</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
-                                        <Button onClick={() => { }} accessibilityLabel="Go to editor"> Go to editor</Button>
-                                        <Button variant="plain">Learn more</Button>
+                                        <Button onClick={handleCarouselClick} accessibilityLabel="Go to editor"> Go to editor</Button>
+                                       
                                     </ButtonGroup>
                                 </InlineStack>
                             </BlockStack>

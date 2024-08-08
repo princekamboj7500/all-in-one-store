@@ -1,52 +1,29 @@
 import {
   Page,
-  Badge,
-  Grid,
   Layout,
   Card,
-  Collapsible,
   Checkbox,
   TextField,
   Button,
   Icon,
-  Tooltip,
-  Link,
-  OptionList,
   Popover,
-  ActionList,
   BlockStack,
   Text,
   InlineStack,
-  ButtonGroup,
   Box,
   Frame,
   Toast,
   ContextualSaveBar,
-  InlineGrid,
 } from "@shopify/polaris";
 import "./assets/style.css";
 import { useState, useCallback, useEffect } from "react";
 
 import { authenticate } from "../shopify.server";
-import {
-  Modal,
-  TitleBar,
-  useAppBridge,
-  SaveBar,
-} from "@shopify/app-bridge-react";
+
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 
-import {
-  ChevronDownIcon,
-  XIcon,
-  MinusIcon,
-  SearchIcon,
-  ExternalIcon,
-  CalendarIcon,
-  AlertCircleIcon,
-  ArrowRightIcon,
-} from "@shopify/polaris-icons";
+import { XIcon } from "@shopify/polaris-icons";
 import {
   SvgIcon1,
   SvgIcon10,
@@ -65,12 +42,14 @@ import {
   SvgIcon8,
   SvgIcon9,
 } from "./components/Icons";
+import DiscardModal from "./components/DiscardModal";
+
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   const response = await admin.graphql(`query {
         currentAppInstallation {
           id
-          metafields(first: 3) {
+          metafields(first: 20) {
             edges {
               node {
                 namespace
@@ -92,7 +71,7 @@ export const loader = async ({ request }) => {
     button_color: "#888888",
     show_on_desktop: 1,
     show_on_mobile: 1,
-    
+
     theme_icon: "SvgIcon1",
   };
 
@@ -111,8 +90,8 @@ export const loader = async ({ request }) => {
     try {
       data = JSON.parse(appSettings);
     } catch (error) {
-      console.error("Error parsing appSettings:", error);
-      data = {}; // or handle the error as needed
+   
+      data = {}; 
     }
   } else {
     data = appSettings;
@@ -123,7 +102,7 @@ export const loader = async ({ request }) => {
 
 export default function ScrollToTop() {
   const navigate = useNavigate();
-  const shopify = useAppBridge();
+
 
   const { data } = useLoaderData();
   const [status, setStatus] = useState(data.app_status);
@@ -136,11 +115,15 @@ export default function ScrollToTop() {
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
   const [msgData, setMsgData] = useState("");
-
+  const [lastSavedData, setLastSavedData] = useState(data);
+  const [activemodal, setActivemodal] = useState(false);
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
-
+  const toggleModal = useCallback(
+    () => setActivemodal((activemodal) => !activemodal),
+    [],
+  );
   const toggleActive = useCallback(
     () => setActive((prevActive) => !prevActive),
     [],
@@ -184,9 +167,11 @@ export default function ScrollToTop() {
 
   const ScrollArrowsIcon = svgIcons.map((box) => (
     <div
-    className={`aios_scroll_images ${
-      formData.theme_icon === box.name || activeIcon === box.name ? "aios_scroll_active" : "aios_scroll_inactive"
-    }`}
+      className={`aios_scroll_images ${
+        formData.theme_icon === box.name || activeIcon === box.name
+          ? "aios_scroll_active"
+          : "aios_scroll_inactive"
+      }`}
       key={box.name}
       onClick={() => handleImageClick(box.name)}
       onFocus={() => handleFocus(box.name)}
@@ -202,6 +187,9 @@ export default function ScrollToTop() {
       [property]: value,
     }));
   };
+  useEffect(() => {
+    shopify.loading(false);
+  }, []);
 
   const SelectedIcon = () => {
     var icon = svgIcons.find((i) => i.name == formData.theme_icon);
@@ -219,7 +207,7 @@ export default function ScrollToTop() {
     );
 
     const handleDeactivateClick = useCallback(() => {
-      console.log("Hello deactivated successfully");
+  
       setIsActivated(false);
       setPopoverActive(true);
     }, []);
@@ -308,7 +296,7 @@ export default function ScrollToTop() {
       data: formData,
     };
 
-    console.log(formData, "formData--");
+  
     const response = await fetch("/api/save", {
       method: "POST",
       headers: {
@@ -332,7 +320,9 @@ export default function ScrollToTop() {
     }
   };
   const handleDiscard = () => {
+    setFormData(lastSavedData);
     setActiveField(false);
+    toggleModal();
   };
 
   const handleToggleStatus = async () => {
@@ -379,10 +369,15 @@ export default function ScrollToTop() {
       setActiveField(false);
     }
   };
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
 
+  const appName = "Scroll to Top Button"
   return (
     <Page
-      backAction={{ content: "Back", onAction: () => navigate("/app") }}
+      backAction={{ content: "Back", onAction: handleClick }}
       title="Scroll to Top Button"
       subtitle={
         <Text variant="bodyLg" as="h6">
@@ -393,6 +388,7 @@ export default function ScrollToTop() {
       primaryAction={
         status ? (
           <DeactivatePopover
+          type={appName}
             handleToggleStatus={handleToggleStatus}
             buttonLoading={buttonloading}
           />
@@ -449,13 +445,27 @@ export default function ScrollToTop() {
                             connectedLeft={
                               <input
                                 type="color"
+                                style={{
+                                  boxShadow:
+                                    formData.text_color === "#ffffff"
+                                      ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                      : "none",
+                                  width:
+                                    formData.text_color === "#ffffff"
+                                      ? "34px"
+                                      : "38px",
+                                  height:
+                                    formData.text_color === "#ffffff"
+                                      ? "34px"
+                                      : "38px",
+                                }}
+                                onFocus={() => handleFocus("field3")}
                                 value={formData.button_color}
                                 onChange={handleColorChange}
                               />
                             }
                           />
                         </div>
-                       
                       </BlockStack>
                     </div>
                   </Box>
@@ -547,6 +557,11 @@ export default function ScrollToTop() {
       )}
 
       {toastMarkup}
+      <DiscardModal
+        toggleModal={toggleModal}
+        handleDiscard={handleDiscard}
+        activemodal={activemodal}
+      />
     </Page>
   );
 }

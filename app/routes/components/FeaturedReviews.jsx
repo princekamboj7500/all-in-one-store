@@ -7,7 +7,13 @@ function FeaturedReviews({ formData, handleFocus, handleChange, handleColorChang
         { id: 'Grid_view', label: 'Grid View', imgSrc: gridimg },
         { id: 'List_view', label: 'List View', imgSrc: listimg }
     ];
-
+    const handleNavigate = () => {
+     
+        window.open(
+          `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/featuredreviews&target=newAppsSection`,
+          "__blank",
+        );
+      };
     return (
         <>
         <Layout.Section>
@@ -117,7 +123,7 @@ function FeaturedReviews({ formData, handleFocus, handleChange, handleColorChang
                             <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the Vitals app you need.</Text>
                             <InlineStack align="start">
                                 <ButtonGroup>
-                                    <Button onClick={() => { }} accessibilityLabel="Go to editor"> Go to editor</Button>
+                                    <Button onClick={handleNavigate} accessibilityLabel="Go to editor"> Go to editor</Button>
                                     <Button variant="plain">Learn more</Button>
                                 </ButtonGroup>
                             </InlineStack>

@@ -8,7 +8,7 @@ export const loader = async ({ request, params }) => {
   const type = url.searchParams.get("type");
   const query = url.searchParams.get("str");
   const product_id = url.searchParams.get("product_id");
-console.log("helooo____");
+
   const { admin, session } = await unauthenticated.admin(shopName);
 
   const getAllCollections = async () => {

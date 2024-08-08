@@ -46,7 +46,7 @@ import "./assets/style.css";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import DeactivatePopover from "./components/DeactivatePopover";
-
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   const response = await admin.graphql(`query {
@@ -109,10 +109,13 @@ function Favicon_cart_count(props) {
   const [active, setActive] = useState(false);
   const [buttonloading, setButtonLoading] = useState(false);
   const [msgData, setMsgData] = useState("");
-
+  const [lastSavedData, setLastSavedData] = useState(data);
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [activemodal, setActivemodal] = useState(false);
+  const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
   const [formData, setFormData] = useState(data);
 
   const [activeField, setActiveField] = useState(null);
@@ -145,9 +148,7 @@ function Favicon_cart_count(props) {
     () => setActive((prevActive) => !prevActive),
     [],
   );
-  const handleDiscard = () => {
-    setActiveField(false);
-  };
+ 
 
   const handleSave = async () => {
     setButtonLoading(true);
@@ -191,7 +192,7 @@ function Favicon_cart_count(props) {
       app_status: !formData.app_status,
     };
     const actionType = formData.app_status ? "Deactivate" : "Activate";
-    console.log(updatedFormData, "updatedFormData -----");
+  
     const dataToSend = {
       actionType: actionType,
       data: updatedFormData,
@@ -228,17 +229,34 @@ function Favicon_cart_count(props) {
       setActiveField(false);
     }
   };
+  const handleDiscard = () => {
+    setFormData(lastSavedData)
+    setActiveField(false);
+    toggleModal();
+};
+ 
 
-
+  useEffect(() => {
+    shopify.loading(false);
+  }, []);
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
+  const handleDismiss = () => {
+    setIsDismissed(true);
+  };
+    const appName = "Favicon Cart Count"
   return (
     <div className="Favicon_cart_count_page">
       <Page
-        backAction={{ content: "Back", onAction: () => navigate("/app") }}
+        backAction={{ content: "Back", onAction:  handleClick  }}
         title="Favicon Cart Count"
         subtitle="Make sure your store's browser tab stands out by displaying the number of items in cart on the favicon."
         primaryAction={
           status ? (
             <DeactivatePopover
+            type={appName}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
@@ -251,14 +269,15 @@ function Favicon_cart_count(props) {
             }
           )
         }
-        secondaryActions={[
-          {
-            content: "Tutorial",
-          },
-        ]}
+    
       >
         <div className="Favicon_cart_count">
-          {/* <Test/> */}
+        {!isDismissed &&(
+        <Banner   onDismiss={handleDismiss}>
+          <p>
+          Please make sure you have added a favicon image to view this app.
+          </p>
+        </Banner>)}
           <div className="SettingsDataTab_container">
             <BlockStack gap="400">
               <InlineGrid columns={["oneThird", "twoThirds"]}>
@@ -271,26 +290,7 @@ function Favicon_cart_count(props) {
                       <BlockStack gap="300">
                         <div className="checkbox_section">
                           <BlockStack gap="400">
-                            {/* <Select
-                              label="Shape"
-                              options={Location_options}
-                              onChange={(value) =>
-                                handleSelectChange(value, "shape")
-                              }
-                              value={formData.shape}
-                              onFocus={() => handleFocus("field1")}
-                            /> */}
-
-                            {/* <Select
-                              label="The location of the bullet."
-                              options={Cart_bar_options}
-                              onChange={(value) =>
-                                handleSelectChange(value, "location")
-                              }
-                              value={formData.location}
-                              onFocus={() => handleFocus("field2")}
-                            /> */}
-
+                            
                             <div className="color_section">
                               <TextField
                                 label="Badge color"
@@ -303,15 +303,30 @@ function Favicon_cart_count(props) {
                                 autoComplete="off"
                                 connectedLeft={
                                   <input
-                                    type="color"
-                                    onChange={(e) =>
-                                      handleColorChange(
-                                        e.target.value,
-                                        "badge_color",
-                                      )
-                                    }
-                                    value={formData.badge_color}
-                                  />
+                                  type="color"
+                                  onChange={(e) =>{
+                                    handleFocus("field1")
+                                    handleColorChange(
+                                      e.target.value,
+                                      "badge_color",
+                                    )
+                                  }}
+                                  style={{
+                                    boxShadow:
+                                      formData.badge_color === "#ffffff"
+                                        ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                        : "none",
+                                    width:
+                                      formData.badge_color === "#ffffff"
+                                        ? "34px"
+                                        : "38px",
+                                    height:
+                                      formData.badge_color === "#ffffff"
+                                        ? "34px"
+                                        : "38px",
+                                  }}
+                                  value={formData.badge_color}
+                                />
                                 }
                               />
                             </div>
@@ -330,15 +345,26 @@ function Favicon_cart_count(props) {
                                   <input
                                     type="color"
                                     onChange={(e) =>
+                                      {
+                                        handleFocus("field2")
                                       handleColorChange(
                                         e.target.value,
                                         "text_color",
                                       )
-                                    }
+                                    }}
                                     style={{
-                                      boxShadow: formData.text_color === '#ffffff' ? 'inset 0 0 0 1px rgba(0, 0, 0, .19)' : 'none',
-                                      width:formData.text_color === '#ffffff' ? '34px':'38px',
-                                         height:formData.text_color === '#ffffff' ? '34px':'38px'
+                                      boxShadow:
+                                        formData.text_color === "#ffffff"
+                                          ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                          : "none",
+                                      width:
+                                        formData.text_color === "#ffffff"
+                                          ? "34px"
+                                          : "38px",
+                                      height:
+                                        formData.text_color === "#ffffff"
+                                          ? "34px"
+                                          : "38px",
                                     }}
                                     value={formData.text_color}
                                   />
@@ -450,6 +476,7 @@ function Favicon_cart_count(props) {
         )}
 
         {toastMarkup}
+        <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
       </Page>
     </div>
   );

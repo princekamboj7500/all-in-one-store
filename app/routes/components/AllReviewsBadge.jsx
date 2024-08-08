@@ -8,7 +8,7 @@ import custom from "./../assets/product_review/custom.png"
 import dark from "./../assets/product_review/dark.png"
 import light from "./../assets/product_review/light.png"
 
-function AllreviewsBadge({ formData, handleFocus, handleChange, handleColorChange }) {
+function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColorChange }) {
     const layout_options = [
         { id: 'horizontal', label: 'Horizontal', imgSrc: horizontal },
         { id: 'vertical', label: 'Vertical', imgSrc: vertical }
@@ -23,7 +23,15 @@ function AllreviewsBadge({ formData, handleFocus, handleChange, handleColorChang
         { id: 'Center', label: 'Center' },
         { id: 'Right', label: 'Right' },
     ];
+    const handleNavigate = () => {
+       
+        window.open(
+          `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/featuredbadge&target=newAppsSection`,
+          "__blank",
+        );
+      };
 
+    const url = `https://admin.shopify.com/store/${shop.replace('.myshopify.com', '')}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/cartnotice&target=newAppsSection`;
     return (
         <>
             <Layout.Section>
@@ -37,7 +45,7 @@ function AllreviewsBadge({ formData, handleFocus, handleChange, handleColorChang
                                 <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Place the All Reviews Badge manually on your homepage or other pages using the editor.</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
-                                        <Button onClick={() => { }} accessibilityLabel="Go to editor"> Go to Shopify Editor</Button>
+                                        <Button onClick={handleNavigate} accessibilityLabel="Go to editor"> Go to Shopify Editor</Button>
                                     </ButtonGroup>
                                 </InlineStack>
                             </BlockStack>
@@ -303,7 +311,7 @@ function AllreviewsBadge({ formData, handleFocus, handleChange, handleColorChang
                             />
                         </div>
                         <Checkbox
-                            label={'Show "Collected by Vitals"'}
+                            label={'Show "Collected by AIOS"'}
                             checked={formData.show_collected_by_vitals}
                             onChange={(e) => {
                                 handleFocus("show_collected_by_vitals")

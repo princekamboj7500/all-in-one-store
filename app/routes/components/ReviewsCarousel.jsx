@@ -11,7 +11,7 @@ import arrow5 from "./../assets/product_review/arrow5.png"
 import arrow6 from "./../assets/product_review/arrow6.png"
 import arrow7 from "./../assets/product_review/arrow7.png"
 
-function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChange }) {
+function ReviewsCarousel({ shop, formData, handleFocus, handleChange, handleColorChange }) {
     const layout_options = [
         { id: 'imagecards', label: 'Image Cards', imgSrc: imagecards_img },
         { id: 'textcards', label: 'Text Cards', imgSrc: textcards_img },
@@ -38,48 +38,18 @@ function ReviewsCarousel({ formData, handleFocus, handleChange, handleColorChang
 
     const handleCarouselClick = () => {
         window.open(
-            `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/themes/${selectedTheme.id}/editor${URL}`,
-            "__blank"
-        );
-        // window.open(
-        //     `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/themes/current/editor?context=apps&activateAppId=apps&activateAppId=43a095cf-fbea-48e6-adab-28c9d62cab23%2Fstar_rating`,
-        //     "__blank"
-        //   );
+            `https://admin.shopify.com/store/${shop.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/productcarousel&target=newAppsSection`,
+            "__blank",
+          );
+      
     }
     return (
         <>
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="300">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish a Reviews Carousel</Text>
-                        <Box background="bg-surface-secondary" padding="200" borderRadius="200">
-                            <BlockStack gap={200}>
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'> Send reviews to carousel</Text>
-                                <BlockStack>
-                                    <RadioButton
-                                        label="Automatically - Display the most recent 5-star reviews"
-                                        checked={formData.reviews_carousel_option === 'automatically'}
-                                        id="automatically"
-                                        name="reviews_carousel_option"
-                                        onChange={() => {
-                                            handleChange('automatically', 'reviews_carousel_option')
-                                            handleFocus('reviews_carousel_option')
-                                        }}
-                                    />
-                                    <RadioButton
-                                        label="Manually by sending reviews to the carousel"
-                                        helpText='To curate reviews for carousel display, navigate to the Reviews tab, choose the relevant product, select the desired reviews, and opt for "Send reviews to carousel" under More actions. The most recently sent 15 reviews will be prioritized.'
-                                        checked={formData.reviews_carousel_option === 'manually'}
-                                        id="manually"
-                                        name="reviews_carousel_option"
-                                        onChange={() => {
-                                            handleChange('manually', 'reviews_carousel_option')
-                                            handleFocus('reviews_carousel_option')
-                                        }}
-                                    />
-                                </BlockStack>
-                            </BlockStack>
-                        </Box>
+                        
+                      
                         <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text>
                       
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
