@@ -3,13 +3,12 @@
 client_id = "30e55710145993ddb5716e3a7c3e50c3"
 name = "droptracking-dev"
 handle = "droptracking-dev"
-application_url = "https://drama-transformation-check-macedonia.trycloudflare.com"
+application_url = "https://deliver-tree-carbon-relate.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "droptrackingapp.myshopify.com"
-include_config_on_deploy = true
+dev_store_url = "test-all-in-one-store.myshopify.com"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -17,9 +16,9 @@ scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_pro
 
 [auth]
 redirect_urls = [
-  "https://drama-transformation-check-macedonia.trycloudflare.com/auth/callback",
-  "https://drama-transformation-check-macedonia.trycloudflare.com/auth/shopify/callback",
-  "https://drama-transformation-check-macedonia.trycloudflare.com/api/auth/callback"
+  "https://deliver-tree-carbon-relate.trycloudflare.com/auth/callback",
+  "https://deliver-tree-carbon-relate.trycloudflare.com/auth/shopify/callback",
+  "https://deliver-tree-carbon-relate.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
