@@ -260,7 +260,7 @@ export const loader = async ({ request }) => {
       store_name: session.shop,
     },
   });
-  const reviews = await prisma.reviews.findMany({
+  const reviews = await db.Reviews.findMany({
     where: {
       store_name: session.shop,
     },
