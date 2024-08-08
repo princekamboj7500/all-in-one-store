@@ -1214,14 +1214,8 @@ function CookieBanner(props) {
       panelID: "Settings-customers-content-1",
       component: <>{SettingsDataTab}</>,
       dummy: "",
-    },
-    {
-      id: "Analytics-marketing-1",
-      content: "Analytics",
-      panelID: "Analytics-marketing-content-1",
-      component: <AnalyticsPaymentsTab />,
-      dummy: "",
-    },
+    }
+   
   ];
   const appName = "Cookies Banner";
   return (

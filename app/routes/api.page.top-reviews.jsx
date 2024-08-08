@@ -120,11 +120,11 @@ export let loader = async ({ request }) => {
     },
   });
 
-  // const htmlContent = ReactDOMServer.renderToString(
-  //   <HappyCustomers data={data} reviews={featuredReviews} />
-  // );cons
-  const h1="hello wolrd"
-  return new Response(h1, {
+  const htmlContent = ReactDOMServer.renderToString(
+    <HappyCustomers data={data} reviews={featuredReviews} />
+  );
+ 
+  return new Response(htmlContent, {
     headers: {
       "Content-Type": "application/liquid",
     },
