@@ -274,7 +274,7 @@ function BuilderCreate() {
       },
     });
     if (collections) {
-      console.log(collections, "products_____________");
+    
       const allSelectedProducts = collections.map((product) => {
         const { image, id, title, handle } = product;
 
@@ -329,7 +329,7 @@ function BuilderCreate() {
         };
       });
       const productIds = products.map((product) => product.id);
-      console.log(productIds,"productIds________")
+    
 
       setFormData((prevState) => {
         const newRules = { ...prevState.rules };
@@ -402,7 +402,7 @@ function BuilderCreate() {
     if (result.success) {
       setActive(true);
       const data = result.data;
-      console.log(result);
+   
       setButtonLoading(false);
       nav(`/app/edit/${type}/${data.id}`);
     } else {

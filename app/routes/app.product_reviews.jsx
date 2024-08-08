@@ -125,7 +125,7 @@ export const loader = async ({ request }) => {
     storyreply_title_color: "#5e5e5e",
     storyreply_text_color: "#5e5e5e",
     storyreply_card_bg: "#f7f7f7",
-    form_allow_img: 0,
+    form_allow_img: 1,
     form_text_color: "#5e5e5e",
     form_bg_color: "#ffffff",
     form_btn_text: "#ffffff",
@@ -153,12 +153,12 @@ export const loader = async ({ request }) => {
     badge_margin_bottom: 24,
 
     //happy customers
-    activate_happy_customer_page: 1,
+    activate_happy_customer_page: 0,
     happy_customer_page_title: "Happy Customers",
     happy_customer_page_description:
       "Customers from all over the world love our products!",
     happy_customer_reviews_layout: "Grid_view",
-    happy_customer_show_filterbar: 1,
+    happy_customer_show_filterbar: 0,
     happy_customer_min_reviews_desktop: 20,
     happy_customer_min_reviews_mobile: 10,
 
@@ -364,6 +364,11 @@ export function ReviewList({ reviews }) {
     ) : undefined;
 
   const resourceName = { singular: "product", plural: "products" };
+  const handleReviewNavigate = (url, id) =>{
+    shopify.loading(true)
+    navigate(`${url}${id}`)
+  
+  }
 
   return (
     <Card padding={0}>
@@ -384,7 +389,7 @@ export function ReviewList({ reviews }) {
             <ResourceItem
               id={id}
               key={id}
-              onClick={() => navigate(`${url}${id}`)}
+              onClick={() =>handleReviewNavigate(url, id)}
               media={media}
               accessibilityLabel={`View details for ${title}`}
             >
@@ -1528,6 +1533,7 @@ function ProductReviews() {
           <Layout>
             {selectedWidget === "ReviewsWidget" && (
               <ReviewsWidget
+              shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1544,6 +1550,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "ReviewsCarousel" && (
               <ReviewsCarousel
+              shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1561,6 +1568,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "FeaturedReviews" && (
               <FeaturedReviews
+              shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1569,6 +1577,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "AllReviewsBadge" && (
               <AllreviewsBadge
+              shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1816,15 +1825,25 @@ function ProductReviews() {
     },
   ];
 
+  useEffect(()=>{
+    shopify.loading(false)
+  },[])
+  const handleClick = () => {
+    navigate("/app");
+    shopify.loading(true);
+  };
+ const appName = "Product Reviews"
+
   return (
     <div className="Produyct-reviews">
       <Page
-        backAction={{ content: "Back", onAction: () => navigate("/app") }}
+        backAction={{ content: "Back", onAction: handleClick }}
         title="Product Reviews"
         subtitle="Easily collect, import and display reviews with photos and boost trust and conversion rates with social proof."
         primaryAction={
           status ? (
             <DeactivatePopover
+            type={appName}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
@@ -1837,11 +1856,7 @@ function ProductReviews() {
             }
           )
         }
-        secondaryActions={[
-          {
-            content: "Tutorial",
-          },
-        ]}
+     
       >
         <div className="product-reviews">
           <BlockStack gap="200">

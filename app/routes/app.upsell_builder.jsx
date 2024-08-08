@@ -534,7 +534,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
     setInputValues((prevState) => {
       return { ...prevState, since: value };
     });
-    console.log("handleStartInputValueChange, validDate", value);
+
     if (isValidDate(value)) {
       const newSince = parseYearMonthDayDateString(value);
       setActiveDateRange((prevState) => {
@@ -1374,7 +1374,7 @@ function UpsellBuilder() {
     };
 
     try {
-      console.log(dataToSend, "dataToSend");
+      
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -1865,41 +1865,46 @@ function UpsellBuilder() {
       component: <Offers />,
       dummy: "",
     },
-    {
-      id: "General Settings",
-      content: "General Settings",
-      panelID: "General Settings",
-      component: <ReviewList reviews={productReviews} />,
-      dummy: "",
-    },
-    {
-      id: "Excluded Products",
-      content: "Excluded Products",
-      panelID: "Excluded Products",
-      component: <Importtab />,
-      dummy: "",
-    },
+    // {
+    //   id: "General Settings",
+    //   content: "General Settings",
+    //   panelID: "General Settings",
+    //   component: <ReviewList reviews={productReviews} />,
+    //   dummy: "",
+    // },
+    // {
+    //   id: "Excluded Products",
+    //   content: "Excluded Products",
+    //   panelID: "Excluded Products",
+    //   component: <Importtab />,
+    //   dummy: "",
+    // },
 
-    {
-      id: "Analytics",
-      content: "Analytics",
-      panelID: "Analytics",
-      component: (
-        <AnalyticsDataTab data={analyticsData} reviews={collectionData} />
-      ),
-      dummy: "",
-    },
-  ];
-
+    // {
+    //   id: "Analytics",
+    //   content: "Analytics",
+    //   panelID: "Analytics",
+    //   component: (
+    //     <AnalyticsDataTab data={analyticsData} reviews={collectionData} />
+    //   ),
+    //   dummy: "",
+    // },
+  ]
+  const handleClick =()=>{
+    shopify.loading(true);
+    navigate("/app");
+  }
+  const appName = "Upsell Builder"
   return (
     <div className="Produyct-reviews">
       <Page
-        backAction={{ content: "Back", onAction: () => navigate("/app") }}
+        backAction={{ content: "Back", onAction: handleClick }}
         title="Upsell Builder"
         subtitle="Easily collect, import and display reviews with photos and boost trust and conversion rates with social proof."
         primaryAction={
           status ? (
             <DeactivatePopover
+            type={appName}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
@@ -1912,11 +1917,7 @@ function UpsellBuilder() {
             }
           )
         }
-        secondaryActions={[
-          {
-            content: "Tutorial",
-          },
-        ]}
+      
       >
         <div className="product-reviews">
           <BlockStack gap="200">
@@ -1963,7 +1964,7 @@ function UpsellBuilder() {
                         Clicks
                       </Text>
                       <Text as="p" variant="headingLg">
-                        {publishReviews}
+                      0
                       </Text>
                       <span
                         style={{ paddingBottom: "10px", display: "block" }}
@@ -1986,7 +1987,7 @@ function UpsellBuilder() {
                           <Icon source={StarIcon} tone="base" />
                         </span>
                         <Text as="p" variant="headingLg">
-                          {averageRating}
+                         0
                         </Text>
                       </InlineStack>
                       <span

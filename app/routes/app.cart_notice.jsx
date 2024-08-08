@@ -1,5 +1,5 @@
 import { ActionList, Banner, BlockStack, Box, Button, ButtonGroup, Frame, ContextualSaveBar, Toast, Card, Checkbox, Collapsible, DatePicker, Form, FormLayout, Grid, Icon, InlineGrid, InlineStack, Layout, LegacyCard, LegacyStack, Link, OptionList, Page, Popover, Scrollable, Select, Tabs, Text, TextContainer, TextField, Tooltip, useBreakpoints } from '@shopify/polaris';
-import React, { useCallback, useState, } from 'react';
+import React, { useCallback, useState,useEffect } from 'react';
 import {
     ChevronDownIcon, XIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
@@ -8,9 +8,10 @@ import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css"
-
+import DiscardModal from './components/DiscardModal';
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
+    let storeName = session.shop.split(".")[0];
     const response = await admin.graphql(`query {
           currentAppInstallation {
             id
@@ -59,13 +60,12 @@ export const loader = async ({ request }) => {
     } else {
         data = appSettings;
     }
-    console.log(data, "data")
-    return { data };
+   return { data, storeName };
 };
 
 function CartNotice(props) {
     const navigate = useNavigate();
-    const { data } = useLoaderData();
+    const { data, storeName } = useLoaderData();
     const [formData, setFormData] = useState(data);
     const [status, setStatus] = useState(data.app_status);
     const [active, setActive] = useState(false);
@@ -73,8 +73,10 @@ function CartNotice(props) {
     const [msgData, setMsgData] = useState("");
     const [buttonloading, setButtonLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
-
-
+    const [isDismissed, setIsDismissed] = useState(false);
+    const [lastSavedData, setLastSavedData] = useState(data);
+    const [activemodal, setActivemodal] = useState(false);
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const handleSave = async () => {
         setButtonLoading(true);
         const dataToSend = {
@@ -106,9 +108,13 @@ function CartNotice(props) {
     };
 
     const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
-
+    useEffect(()=>{
+        shopify.loading(false);
+        },[])
     const handleToggleStatus = async () => {
         setButtonLoading(true);
         const updatedFormData = {
@@ -186,12 +192,7 @@ function CartNotice(props) {
     const SettingsDataTab = (
             <div className='Cart_notice_page_SettingsDataTab_container'>
                 <BlockStack gap="400">
-                    {showBanner && <Banner onDismiss={() => { setShowBanner(false) }}>
-                        <p>
-                            If your store utilizes a cookie banner to collect visitor consent, some app settings might not apply until the user agrees to cookies.{' '}
-                            <Link url="">Learn more</Link>
-                        </p>
-                    </Banner>}
+                   
                     <InlineGrid columns={['oneThird', 'twoThirds']}>
                         <Text variant="headingMd" as="h6">
                             Settings
@@ -306,30 +307,8 @@ function CartNotice(props) {
 
                     <div className='lower_section'>
                         <Grid>
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                                <Card roundedAbove="sm">
-                                    <BlockStack gap="200">
-                                        <Text as="h2" variant="headingSm">
-                                            Localization
-                                        </Text>
-                                        <BlockStack gap="200">
-                                            <Text as="p" fontWeight="reguler">
-                                                Translate all the strings from the Cart Notice app to all the languages enabled on your store.
-                                            </Text>
-
-                                        </BlockStack>
-                                        <InlineStack align="end">
-                                            <ButtonGroup>
-                                                <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                    <Text variant="headingSm" as="h6">Translate</Text>
-                                                </Button>
-
-                                            </ButtonGroup>
-                                        </InlineStack>
-                                    </BlockStack>
-                                </Card>
-                            </Grid.Cell>
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+                        
+                            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6}}>
                                 <Card roundedAbove="sm">
                                     <BlockStack gap="200">
                                         <Text as="h2" variant="headingSm">
@@ -352,7 +331,7 @@ function CartNotice(props) {
                                     </BlockStack>
                                 </Card>
                             </Grid.Cell>
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+                            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
                                 <Card roundedAbove="sm">
                                     <BlockStack gap="200">
                                         <Text as="h2" variant="headingSm">
@@ -381,17 +360,24 @@ function CartNotice(props) {
                 </BlockStack>
             </div>
      );
-
-
+     const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?template=cart&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/cartnotice&target=newAppsSection`;
+     const appName = "Cart Notice"
+     const handleClick = () => {
+         navigate("/app");
+         shopify.loading(true);
+       };
+         const handleDismiss = () => {
+    setIsDismissed(true);
+  };
     return (
         <div className='Cart_notice_page_page'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate("/app") }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Cart Notice"
                 subtitle="Create urgency in the cart page with a custom message shown on top of the cart line items."
                 primaryAction={
                     status ? (
-                        <DeactivatePopover handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
+                        <DeactivatePopover  type={appName}handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                         {
                             content: "Activate App",
@@ -403,6 +389,16 @@ function CartNotice(props) {
                 }
             >
                 <div className='intant_search'>
+                { !isDismissed  && (
+          <Banner
+            title="Please add the cart widget in cart page to view"
+            tone="warning"
+            onDismiss={handleDismiss}
+          >
+            <p>Add Cart Notice  widget in your theme. <a href={url} target="_blank">Here</a>
+            </p>
+          </Banner>
+        )}
                     <div className='intant_search_TabsField'>
                         <BlockStack gap='200'>
                             {SettingsDataTab}
@@ -431,6 +427,7 @@ function CartNotice(props) {
                     </Frame>
                 )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
         </div>
     );

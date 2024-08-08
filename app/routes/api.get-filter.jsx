@@ -9,7 +9,7 @@ export const action = async ({ request }) => {
     const {  session } = await authenticate.admin(request);
     const reqData = await request.json();
     const { action,type, id} = reqData;
-    console.log(action, type)
+
     let data ;
  if(action=="Rating"){
    data = await db.Reviews.findMany({

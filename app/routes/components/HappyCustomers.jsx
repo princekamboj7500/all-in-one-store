@@ -126,7 +126,7 @@ const HappyCustomers = ({ data, reviews }) => {
     filterReviews.forEach((review) => {
       totalRating += parseInt(review.rating);
     });
-    console.log(totalRating);
+   
     return (totalRating / filterReviews.length).toFixed(2);
   };
   const starPaths = {
@@ -355,13 +355,13 @@ const HappyCustomers = ({ data, reviews }) => {
   }, []);
   
   const showMoreReviews = () => {
-    alert("hello");
+    
     if (isMobile) {
       setReviewsToShow((prev) => Math.min(prev + happy_customer_min_reviews_mobile));
     } else {
       setReviewsToShow((prev) => Math.min(prev + happy_customer_min_reviews_desktop));
     }
-    console.log(reviewsToShow,"reviewsToShow--")
+  
   };
 
   return (

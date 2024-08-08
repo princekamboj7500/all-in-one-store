@@ -17,7 +17,7 @@ const shopify = shopifyApp({
   apiVersion: ApiVersion.April24,
   billing: {
     [MONTHLY_PLAN]: {
-      amount: 8.99,
+      amount: process.env.APP_PRICE,
       currencyCode: "USD",
       trialDays: 30,
       interval: BillingInterval.Every30Days,
@@ -37,58 +37,58 @@ const shopify = shopifyApp({
   },
   hooks: {
     afterAuth: async ({ session }) => {
-      console.log("i m called Noww")
       shopify.registerWebhooks({ session });
-  
-console.log("session=-----",session)
-      console.log("I m called")
-      const stores = await db.stores.findUnique({
-        where: {
-          store: session.shop,
-        },
-        select: {
-          id: true,
-        },
-      });
 
-      if (stores) {
-        const data = {
-          token: session.accessToken,
-          name: stores.name,
-        };
-        const updatedData = await db.stores.update({
-          where: { store: session.shop },
-          data: data,
-        });
-      } else {
-        try {
-          const insertedData = await db.stores.create({
-            data: {
-              store: session.shop,
-              token: session.accessToken,
-            },
-          });
-
-const appSettingsData = {
-  show_on_desktop: 1, 
-  show_on_mobile: 1, 
-  button_color: '#0000',
-  fill_animation: 0,
-  theme_icon: 'SvgIcon1',
-};
-const appSettingsDataJson = JSON.stringify(appSettingsData);
-          const appsettings = await db.AppSettings.create({
-            data:{
-              store_id :parseInt(insertedData.id),
-              isActive :false,
-              app_name:"Sticky Add To Cart",
-              appJsonData :appSettingsDataJson ,
-    }
-          })
-         
-        } catch (err) {
-          console.log(err, "there is error while insertting data");
+      const response = await admin.graphql(`query {
+        currentAppInstallation {
+          id
+          metafields(first: 6) {
+            edges {
+              node {
+                namespace
+                key
+                value
+              }
+            }
+          }
         }
+      }`);
+      const result = await response.json();
+      const appId = result.data.currentAppInstallation.id;
+
+      try {
+        const createMetafield = await admin.graphql(
+          `#graphql
+    mutation CreateAppDataMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
+    metafieldsSet(metafields: $metafieldsSetInput) {
+    metafields {
+      id
+      namespace
+      key
+    }
+    userErrors {
+      field
+      message
+    }
+    }
+    }`,
+          {
+            variables: {
+              metafieldsSetInput: [
+                {
+                  namespace: "AllInOneStore",
+                  key: "status",
+                  type: "boolean",
+                  value: "false",
+                  ownerId: appId,
+                },
+              ],
+            },
+          },
+        );
+        const response = await createMetafield.json();
+      } catch (err) {
+       
       }
     },
   },

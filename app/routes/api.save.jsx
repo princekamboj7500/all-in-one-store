@@ -36,7 +36,7 @@ export const action = async ({ request }) => {
       });
     } else if (reqData && reqData.actionType === "save") {
 
-        console.log(reqData.data,"reqData.data---")
+    
 
       const response = await admin.graphql(`query {
             currentAppInstallation {

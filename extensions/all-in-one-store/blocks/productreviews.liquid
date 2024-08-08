@@ -19,6 +19,7 @@ window.currentProduct = {{ product  |  json}}
  "name": "Product Reviews",
   "javascript": "bundle.js",
  "target": "section",
+    "available_if":"{{ app.metafields.AllInOneStore.status }}",
  "settings":[]
 }
 

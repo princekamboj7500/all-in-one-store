@@ -199,7 +199,7 @@ export const loader = async ({ request, params }) => {
     );
     const data = await response.json();
     const collections = data.data.collections.edges;
-    console.log(collections,"collections____")
+   
 
     getCustomerCollections = collections.map(
       ({ node: { id, title, image } }) => ({
@@ -416,7 +416,7 @@ const EditDiscountType = () => {
       },
     });
     if (collections) {
-      console.log(collections, "products_____________");
+    
       const allSelectedProducts = collections.map((product) => {
         const { image, id, title, handle } = product;
 
@@ -593,11 +593,11 @@ const EditDiscountType = () => {
   );
   const handleDelete = (id, type) => {
     if (type === "customer_buy") {
-      console.log(buyProduct,"buyProduct____")
+      
       setBuyProduct((prevBuyProduct) =>
         prevBuyProduct.filter((product, index) => index !== id),
       );
-      console.log(id,"id_____")
+  
       setFormData((prevState) => {
         const newRules = { ...prevState.rules };
         newRules.customer_buy.products = newRules.customer_buy.products.filter(
@@ -605,7 +605,7 @@ const EditDiscountType = () => {
         );
         return { ...prevState, rules: newRules };
       });
-      console.log(formData, "formData__________");
+   
     } else {
       setGetProduct((prevGetProduct) =>
         prevGetProduct.filter((product, index) => index !== id),

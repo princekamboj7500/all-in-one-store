@@ -1,11 +1,9 @@
 import db from "../db.server";
 import { authenticate } from "../shopify.server";
+import ReactDOMServer from 'react-dom/server';
 import HappyCustomers from "./components/HappyCustomers";
 export let loader = async ({ request }) => {
-  const { admin, session } =
-    await authenticate.public.appProxy(request);
-
-
+  const { admin, session } = await authenticate.public.appProxy(request);
 
   const response = await admin.graphql(`query {
       currentAppInstallation {
@@ -63,8 +61,6 @@ export let loader = async ({ request }) => {
     form_btn_text: "#ffffff",
     form_btn_bg: "#000000",
 
-
-
     //happy customers
     activate_happy_customer_page: 1,
     happy_customer_page_title: "Happy Customers",
@@ -74,9 +70,6 @@ export let loader = async ({ request }) => {
     happy_customer_show_filterbar: 1,
     happy_customer_min_reviews_desktop: 20,
     happy_customer_min_reviews_mobile: 10,
-
-
-
 
     // translation
     translation_reviews: "reviews",
@@ -100,7 +93,6 @@ export let loader = async ({ request }) => {
     translation_verified_buyer: "Verified buyer",
     translation_collected_by: "Collected by",
     translation_From_no_of_reviews: "From {{reviews_count}} reviews",
-
   };
   const appName =
     metafielData.length > 0
@@ -128,9 +120,11 @@ export let loader = async ({ request }) => {
     },
   });
 
-  const htmlContent =<HappyCustomers data={data} reviews={featuredReviews} />
-  ;
-  return new Response(htmlContent, {
+  // const htmlContent = ReactDOMServer.renderToString(
+  //   <HappyCustomers data={data} reviews={featuredReviews} />
+  // );cons
+  const h1="hello wolrd"
+  return new Response(h1, {
     headers: {
       "Content-Type": "application/liquid",
     },

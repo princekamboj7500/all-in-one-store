@@ -194,7 +194,7 @@ function ReviewsWidget(props) {
     };
 
     const handleChange = (value, property) => {
-        console.log(value,"value--")
+     
         setInnerFormData((innerFormData) => ({
             ...innerFormData,
             [property]: value,

@@ -71,7 +71,7 @@ export const loader = async ({ request }) => {
   const data = JSON.parse(checkStatus.data[0].value);
   const themeBlock = data.current.blocks;
   const status = findAppStatus(themeBlock);
-  console.log(status,"status______")
+
 
   return { storeName, status, currentTheme };
 };
@@ -82,6 +82,7 @@ export default function Index() {
   const actionData = useActionData();
   const submit = useSubmit();
   const [isBannerVisible, setIsBannerVisible] = useState(status);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   const activateApp = () => {
 
@@ -93,9 +94,14 @@ export default function Index() {
     );
   };
   const handleDismiss = () => {
-    setIsBannerVisible(false);
+    setIsDismissed(true);
   };
-
+  useEffect(()=>{
+    shopify.loading(false);
+  },[])
+  const handleClick = () => {
+     shopify.loading(true);
+  };
   return (
     <Page>
       <BlockStack gap="500">
@@ -124,7 +130,7 @@ export default function Index() {
           </InlineStack>
         </Card>
 
-        {isBannerVisible  === false && (
+        {(isBannerVisible === false || isBannerVisible === null) && !isDismissed  && (
           <Banner
             title="Please Enable the app"
             action={{
@@ -132,7 +138,7 @@ export default function Index() {
               variant: "primary",
               onAction: activateApp,
             }}
-            tone="info"
+           tone="warning"
             onDismiss={handleDismiss}
           >
             <p>Activate All-in-one Store  widget in your theme</p>
@@ -217,7 +223,7 @@ export default function Index() {
 
                   <BlockStack gap="200">
                     <InlineStack align="space-between" blockAlign="center">
-                      <Link
+                      <Link 
                         removeUnderline
                         className="app_upsell"
                         monochrome
@@ -379,7 +385,7 @@ export default function Index() {
               <div className="apps_name">
                 <InlineStack blockAlign="center" rows="5">
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/cart_favicon">
+                    <Link monochrome  onClick= {handleClick} removeUnderline url="/app/cart_favicon">
                       <InlineStack gap="200" blockAlign="center">
                         <div className="app_icon">
                           <img src={upsell} style={{ width: "100%" }} />
@@ -393,7 +399,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/scroll_to_top">
+                    <Link   onClick= {handleClick} monochrome removeUnderline url="/app/scroll_to_top">
                       <InlineStack gap="200" blockAlign="center">
                         <div className="app_icon">
                           <img src={scroll} style={{ width: "100%" }} />
@@ -407,7 +413,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/sticky_add_cart">
+                    <Link   onClick= {handleClick} monochrome removeUnderline url="/app/sticky_add_cart">
                       <InlineStack gap="200" blockAlign="center">
                         <div className="app_icon">
                           <img src={sticky} style={{ width: "100%" }} />
@@ -422,7 +428,7 @@ export default function Index() {
                   </div>
 
                   <div className="all_in_apps_Card">
-                    <Link
+                    <Link  onClick= {handleClick}
                       monochrome
                       removeUnderline
                       url="/app/auto_external_links"
@@ -444,7 +450,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/instant_search">
+                    <Link monochrome  onClick= {handleClick} removeUnderline url="/app/instant_search">
                       <InlineStack
                         align="space-between"
                         gap="200"
@@ -462,7 +468,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link
+                    <Link  onClick= {handleClick}
                       monochrome
                       removeUnderline
                       url="/app/inactive_tab_message"
@@ -485,7 +491,7 @@ export default function Index() {
                   </div>
 
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/cart_notice">
+                    <Link monochrome   onClick= {handleClick} removeUnderline url="/app/cart_notice">
                       <InlineStack align="space-between" blockAlign="center">
                         <div className="app_icon">
                           <img src={visitor} style={{ width: "100%" }} />
@@ -499,7 +505,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link
+                    <Link  onClick= {handleClick}
                       monochrome
                       removeUnderline
                       url="/app/hide_dynamic_checkout_buttons"
@@ -521,7 +527,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/cookie_banner">
+                    <Link   onClick= {handleClick} monochrome removeUnderline url="/app/cookie_banner">
                       <InlineStack
                         align="space-between"
                         gap="200"
@@ -539,7 +545,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/product_reviews">
+                    <Link   onClick= {handleClick} monochrome removeUnderline url="/app/product_reviews">
                       <InlineStack
                         align="space-between"
                         gap="200"
@@ -556,26 +562,9 @@ export default function Index() {
                       </InlineStack>
                     </Link>
                   </div>
+                
                   <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/sticky_add_cart">
-                      <InlineStack
-                        align="space-between"
-                        gap="200"
-                        blockAlign="center"
-                      >
-                        <div className="app_icon">
-                          <img src={upsell} style={{ width: "100%" }} />
-                        </div>
-                        <div className="app_name">
-                          <Text variant="bodyMd" as="h3">
-                            Inactive tab massage
-                          </Text>
-                        </div>
-                      </InlineStack>
-                    </Link>
-                  </div>
-                  <div className="all_in_apps_Card">
-                    <Link monochrome removeUnderline url="/app/upsell_builder">
+                    <Link  onClick= {handleClick}  monochrome removeUnderline url="/app/upsell_builder">
                       <InlineStack
                         align="space-between"
                         gap="200"

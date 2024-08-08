@@ -7,7 +7,7 @@ import {
 import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import DeactivatePopover from "./components/DeactivatePopover";
-
+import DiscardModal from './components/DiscardModal';
 import "./assets/style.css";
 export const loader = async ({ request }) => {
     const { session, admin } = await authenticate.admin(request);
@@ -30,7 +30,7 @@ export const loader = async ({ request }) => {
 
     const appId = result.data.currentAppInstallation.id;
     const metafielData = result.data.currentAppInstallation.metafields.edges;
-    console.log(metafielData,"metafielData0---")
+  
     const defaultSettings = {
         app_name: "StickyAddCart",
         app_status: false,
@@ -69,7 +69,7 @@ export const loader = async ({ request }) => {
             : [];
 
     let appSettings =appName.length > 0 ? appName[0].node.value : defaultSettings;
-       console.log(appSettings,"appSettings---");
+      
     let data;
     if (typeof appSettings === 'string') {
         try {
@@ -93,10 +93,10 @@ export default function StickyAddToCart() {
     const navigate = useNavigate();
     const [buttonloading, setButtonLoading] = useState(false);
     const [error, setError] = useState('');
-
+    const [lastSavedData, setLastSavedData] = useState(data);
     const [msgData, setMsgData] = useState("");
     const [active, setActive] = useState(false);
-
+    const [activemodal, setActivemodal] = useState(false);
     const toggleActive = useCallback(
         () => setActive((prevActive) => !prevActive),
         [],
@@ -119,7 +119,7 @@ export default function StickyAddToCart() {
     const handleFocus = (fieldName) => {
         setActiveField(fieldName);
     };
-
+    const toggleModal = useCallback(() => setActivemodal((activemodal) => !activemodal), []);
     const toastMarkup = active ? (
         <Frame>
             <Toast content={msgData} onDismiss={toggleActive} error={error} />
@@ -157,7 +157,9 @@ export default function StickyAddToCart() {
         }
     };
     const handleDiscard = () => {
+        setFormData(lastSavedData)
         setActiveField(false);
+        toggleModal();
     };
 
     const handleToggleStatus = async () => {
@@ -304,7 +306,7 @@ export default function StickyAddToCart() {
             setInputValues((prevState) => {
                 return { ...prevState, since: value };
             });
-            console.log("handleStartInputValueChange, validDate", value);
+       
             if (isValidDate(value)) {
                 const newSince = parseYearMonthDayDateString(value);
                 setActiveDateRange((prevState) => {
@@ -1185,7 +1187,7 @@ export default function StickyAddToCart() {
             </Layout>
         </InlineGrid>
 
-        <InlineGrid columns={['oneThird', 'twoThirds']}>
+        {/* <InlineGrid columns={['oneThird', 'twoThirds']}>
             <Text variant="headingMd" as="h6">
             </Text>
             <Layout>
@@ -1197,7 +1199,7 @@ export default function StickyAddToCart() {
                     </BlockStack>
                 </Layout.Section>
             </Layout>
-        </InlineGrid>
+        </InlineGrid> */}
 
         <InlineGrid columns={['oneThird', 'twoThirds']}>
             <Text variant="headingMd" as="h6">
@@ -1266,19 +1268,7 @@ export default function StickyAddToCart() {
     </BlockStack>
     )
 
-    const AnalyticsPaymentsTab = () => {
-
-        return (
-            <div className='AnalyticsPaymentsTab_container'>
-                <BlockStack gap='300'>
-                    <InlineStack gap='300'>
-                        <div><DateRangePicker /></div>
-                        <Text >compared to May 17, 2024 - May 23, 2024</Text>
-                    </InlineStack>
-                </BlockStack>
-            </div>
-        )
-    }
+   
 
     const [selected, setSelected] = useState(0);
     const handleTabChange = useCallback(
@@ -1294,26 +1284,27 @@ export default function StickyAddToCart() {
             panelID: 'Settings-customers-content-1',
             component: <div className='SettingsDataTab_container'>{SettingsTab}</div>,
             dummy: ''
-        },
-        {
-            id: 'Analytics-marketing-1',
-            content: 'Analytics',
-            panelID: 'Analytics-marketing-content-1',
-            component: <AnalyticsPaymentsTab />,
-            dummy: ''
-        },
+        }
+      
     ];
-
+    const appName = "Sticky Add to Cart"
+    useEffect(()=>{
+        shopify.loading(false);
+            },[])
+            const handleClick = () => {
+                navigate("/app");
+                shopify.loading(true);
+              };
     return (
         <div className='Sticky_Add_to_Cart_page'>
             <Page
-                backAction={{ content: "Back", onAction: () => navigate(("/app")) }}
+                backAction={{ content: "Back", onAction: handleClick }}
                 title="Sticky Add to Cart"
                 subtitle={"Improve conversion rate by displaying a sticky add to cart bar when the visitors are scrolling down."}
                 // compactTitle
                 primaryAction={
                     status ? (
-                        <DeactivatePopover handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
+                        <DeactivatePopover type={appName} handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : {
                         content: "Activate App",
                         tone: "success",
@@ -1321,11 +1312,7 @@ export default function StickyAddToCart() {
                         loading: buttonloading,
                     }
                 }
-                secondaryActions={[
-                    {
-                        content: 'Tutorial',
-                    },
-                ]}
+              
             >
                 <div className='Sticky_Add_to_Cart'>
                     <div className='TabsField'>
@@ -1364,6 +1351,7 @@ export default function StickyAddToCart() {
                         </Frame>
                     )}
                 {toastMarkup}
+                <DiscardModal toggleModal={toggleModal} handleDiscard={handleDiscard} activemodal={activemodal} />
             </Page>
         </div>
     );

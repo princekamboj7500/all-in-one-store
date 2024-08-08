@@ -1,7 +1,14 @@
  
 
 <script>
-window.productReviews= {{ app.metafields.ProductReviews.items}}
+var productReviews ={{ app.metafields.ProductReviews |json  }};
+
+if(productReviews == undefined){
+   window.productReviews  ={}
+}else{
+   window.productReviews= productReviews.items ;
+}
+
 
 </script>
  <featuredbadge></featuredbadge>
@@ -10,6 +17,7 @@ window.productReviews= {{ app.metafields.ProductReviews.items}}
  "name": "Featured Badge",
   "javascript": "bundle.js",
  "target": "section",
+  "available_if":"{{ app.metafields.AllInOneStore.status }}",
  "settings":[]
 }
 
