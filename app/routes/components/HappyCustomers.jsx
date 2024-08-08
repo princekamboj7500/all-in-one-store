@@ -99,7 +99,7 @@ const HappyCustomers = ({ data, reviews }) => {
   const [reviewsToShow, setReviewsToShow] = useState(
     happy_customer_min_reviews_desktop,
   );
-  const starsDesign = data?.star_shape || ["Pointed"];
+    const starsDesign = Array.isArray(data?.star_shape) ? data.star_shape : [data.star_shape || "Pointed"];
   const starShape = starsDesign.join();
   const [isMobile, setIsMobile] = useState(false);
 
