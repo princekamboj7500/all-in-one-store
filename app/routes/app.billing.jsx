@@ -1,13 +1,12 @@
-import { json } from "@remix-run/node";
-import polarisStyles from "@shopify/polaris/build/esm/styles.css";
-import { authenticate, MONTHLY_PLAN } from "../shopify.server";
-export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
+
+import { authenticate } from "../shopify.server";
+
 export const loader = async ({ request }) => {
 
-    const { session, admin, redirect } = await authenticate.admin(request);
+    const { admin, redirect } = await authenticate.admin(request);
     const queryParams = new URLSearchParams(request.url.split('?')[1]);
     const chargeId = queryParams.get('charge_id');
-  console.log(chargeId,"chargeId_________")
+
     const response = await admin.graphql(`query {
       currentAppInstallation {
         id
@@ -24,7 +23,7 @@ export const loader = async ({ request }) => {
     }`);
     const result = await response.json();
      const appId = result.data.currentAppInstallation.id;
-   console.log(appId,"appId_________")
+  
     try {
       const createMetafield = await admin.graphql(
         `#graphql
