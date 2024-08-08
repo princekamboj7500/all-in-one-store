@@ -15,7 +15,7 @@ export const loader = async ({ request }) => {
 
   await billing.require({
     plans: [MONTHLY_PLAN],
-    isTest: true,
+    isTest: appTest,
     onFailure: async () => billing.request({ plan: MONTHLY_PLAN, isTest: appTest, returnUrl: 'https://'+ session.shop+'/admin/apps/' + process.env.SHOPIFY_API_KEY + '/app/billing' }),
   });
 
