@@ -2,7 +2,7 @@ import { BlockStack, Button, ButtonGroup, Card, RadioButton, ContextualSaveBar, 
 import gridimg from "./../assets/product_review/grid.png"
 import listimg from "./../assets/product_review/list.png"
 
-function FeaturedReviews({ formData, handleFocus, handleChange, handleColorChange }) {
+function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColorChange }) {
     const review_layout_options = [
         { id: 'Grid_view', label: 'Grid View', imgSrc: gridimg },
         { id: 'List_view', label: 'List View', imgSrc: listimg }
