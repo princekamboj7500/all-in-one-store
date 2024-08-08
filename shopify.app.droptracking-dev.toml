@@ -3,7 +3,7 @@
 client_id = "30e55710145993ddb5716e3a7c3e50c3"
 name = "droptracking-dev"
 handle = "droptracking-dev"
-application_url = "https://deliver-tree-carbon-relate.trycloudflare.com"
+application_url = "https://observer-pb-scenic-authentic.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_pro
 
 [auth]
 redirect_urls = [
-  "https://deliver-tree-carbon-relate.trycloudflare.com/auth/callback",
-  "https://deliver-tree-carbon-relate.trycloudflare.com/auth/shopify/callback",
-  "https://deliver-tree-carbon-relate.trycloudflare.com/api/auth/callback"
+  "https://observer-pb-scenic-authentic.trycloudflare.com/auth/callback",
+  "https://observer-pb-scenic-authentic.trycloudflare.com/auth/shopify/callback",
+  "https://observer-pb-scenic-authentic.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
