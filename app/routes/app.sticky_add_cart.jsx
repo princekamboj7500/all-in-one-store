@@ -846,7 +846,7 @@ export default function StickyAddToCart() {
                                             value={formData.desktop_position}
                                         />
 
-                                        <Select
+                                        {/* <Select
                                             key="how_sticky_cart"
                                             label="Show the Sticky Add to Cart bar"
                                             onFocus={() => handleFocus("field3")}
@@ -855,7 +855,7 @@ export default function StickyAddToCart() {
                                                 handleChange(e, "how_sticky_cart")
                                             }
                                             value={formData.how_sticky_cart}
-                                        />
+                                        /> */}
 
                                         <Checkbox
                                             key="show_quantity"
@@ -947,7 +947,7 @@ export default function StickyAddToCart() {
                                             value={formData.mobile_position}
                                         />
 
-                                        <Select
+                                        {/* <Select
                                             label="Show the Sticky Add to Cart bar"
                                             onFocus={() => handleFocus("field_3")}
                                             options={Show_Cart_bar_options}
@@ -955,7 +955,7 @@ export default function StickyAddToCart() {
                                                 handleChange(e, "show_sticky_cart_mobile")
                                             }
                                             value={formData.show_sticky_cart_mobile}
-                                        />
+                                        /> */}
 
                                         <Checkbox
                                             label="Show Quantity Selector on Mobile"
@@ -983,7 +983,7 @@ export default function StickyAddToCart() {
             </Layout>
         </InlineGrid>
 
-        <InlineGrid columns={['oneThird', 'twoThirds']}>
+        {/* <InlineGrid columns={['oneThird', 'twoThirds']}>
             <Text variant="headingMd" as="h6">
                 Product Reviews integration
             </Text>
@@ -1011,7 +1011,7 @@ export default function StickyAddToCart() {
                     </Card>
                 </Layout.Section>
             </Layout>
-        </InlineGrid>
+        </InlineGrid> */}
 
         <InlineGrid columns={['oneThird', 'twoThirds']}>
             <Text variant="headingMd" as="h6">
