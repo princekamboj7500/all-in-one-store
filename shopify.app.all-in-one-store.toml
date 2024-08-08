@@ -3,12 +3,13 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://excited-windsor-inexpensive-flavor.trycloudflare.com"
+application_url = "https://nfl-guyana-olympic-random.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "test-all-in-one-store.myshopify.com"
+dev_store_url = "checkoutuitestapp.myshopify.com"
+include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -16,9 +17,9 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://excited-windsor-inexpensive-flavor.trycloudflare.com/auth/callback",
-  "https://excited-windsor-inexpensive-flavor.trycloudflare.com/auth/shopify/callback",
-  "https://excited-windsor-inexpensive-flavor.trycloudflare.com/api/auth/callback"
+  "https://nfl-guyana-olympic-random.trycloudflare.com/auth/callback",
+  "https://nfl-guyana-olympic-random.trycloudflare.com/auth/shopify/callback",
+  "https://nfl-guyana-olympic-random.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -29,7 +30,7 @@ api_version = "2024-04"
   compliance_topics = [ "customers/redact", "customers/data_request", "shop/redact" ]
 
 [app_proxy]
-url = "https://excited-windsor-inexpensive-flavor.trycloudflare.com/api"
+url = "https://nfl-guyana-olympic-random.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

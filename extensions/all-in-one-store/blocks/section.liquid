@@ -59,7 +59,7 @@ if(AutoExternalLinks == undefined){
 
 var InActiveTab ={{ app.metafields.InactiveTabMessage |json  }};
 
-if(AutoExternalLinks == undefined){
+if(InActiveTab == undefined){
   window.InActiveTab  ={}
 }else{
   window.InActiveTab = InActiveTab.items ;
