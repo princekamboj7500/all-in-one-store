@@ -6,15 +6,16 @@ export const loader = async ({ request, params }) => {
   const url = new URL(request.url);
   const shopName = url.searchParams.get("shop");
   const type = url.searchParams.get("type");
-  const query = url.searchParams.get("str");
+
   const product_id = url.searchParams.get("product_id");
+
 
   const { admin, session } = await unauthenticated.admin(shopName);
 
   const getAllCollections = async () => {
     const response = await admin.graphql(
       `#graphql
-       query { collections(first: 250) {
+       query { collections(first: 5) {
           edges {
            node {
               id
@@ -34,11 +35,12 @@ export const loader = async ({ request, params }) => {
     const response = await admin.graphql(
       `#graphql
       query {
-        products(first: 250, query: "${query}") {
+        products(first: 5, query: "${query}") {
           edges {
               node {
                   title
                   id
+                  handle
                   hasOnlyDefaultVariant
                   hasOutOfStockVariants
                   totalVariants
@@ -116,7 +118,7 @@ export const loader = async ({ request, params }) => {
             node {
               id
               title
-          
+          handle
               products(first: 250) {
                 edges {
                     node {
@@ -156,7 +158,7 @@ export const loader = async ({ request, params }) => {
     query {
     product(id: "gid://shopify/Product/${product_id}") {
       title
-      collections(first: 250){
+      collections(first:5){
         edges{
           node{
             id
@@ -177,7 +179,7 @@ export const loader = async ({ request, params }) => {
     });
   }
 
-  if (type) {
+
     try {
    
       const results = await db.$runCommandRaw({
@@ -220,13 +222,16 @@ export const loader = async ({ request, params }) => {
         }
 
         let collections_filter = selected_rule.rules.customer_get.collections;
+       
         if (collections_filter.length) {
           collections_filter = collections_filter
             .map((v) => {
               return "id:" + v.replace("gid://shopify/Collection/", "");
             })
             .join(" OR ");
+    
           var Collections = await getCollections(collections_filter);
+      
           // selected_rule.rules.customer_get.collections =
           //   Collections.data.collections.edges[0].node.products.edges;
           
@@ -275,46 +280,10 @@ export const loader = async ({ request, params }) => {
         return json({ success: false, discount: {} });
       }
     } catch (error) {
-      return json({ success: false, error: error.message });
+      console.log(error,"error___")
+      return json({ success: false,data:"not exits", error: error.message });
     }
-  } else {
-    try {
-      const response = await admin.graphql(
-        `#graphql
-              query {
-                  products(first: 250, query: "${query}") {
-                      edges {
-                          node {
-                              title
-                              id
-                              hasOnlyDefaultVariant
-                              hasOutOfStockVariants
-                              totalVariants
-                              featuredImage{
-                              src
 
-                              }
-                              variants(first: 100) {
-                                  edges {
-                                      node {
-                                          id
-                                          title
-                                          price
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }`,
-      );
-
-      const data = await response.json();
-      const products = data.data.products.edges;
-
-      return json({ success: true, data: products });
-    } catch (error) {
-      return json({ success: false, error: error.message });
-    }
-  }
+   
+  
 };

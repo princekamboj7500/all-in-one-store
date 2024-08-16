@@ -371,7 +371,7 @@ function ReviewsWidget(props) {
                                 handleFocus("hide_review_mainwidget")
                                 handleChange(e, "hide_review_mainwidget")
                             }}
-                            helpText="Check this option if you want to use other Product Reviews widgets (like Carousel) while hiding the Main Widget from the product page. However, this won't hide the widget if placed via Shopify or Vitals Editor."
+                            helpText="Check this option if you want to use other Product Reviews widgets (like Carousel) while hiding the Main Widget from the product page. However, this won't hide the widget if placed via Shopify  Editor."
                         />
                     </BlockStack>
                 </Card>
@@ -923,7 +923,7 @@ function ReviewsWidget(props) {
                         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='semibold'>Place or move this app using Shopify Editor</Text>
-                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the Vitals app you need.</Text>
+                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the All-In-One Store  app you need.</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
                                         <Button onClick={() => { }} accessibilityLabel="Go to editor"> Go to editor</Button>

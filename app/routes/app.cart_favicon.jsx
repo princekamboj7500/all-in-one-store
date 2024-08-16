@@ -65,7 +65,7 @@ export const loader = async ({ request }) => {
 
       }`);
   const result = await response.json();
-
+  let storeName = session.shop.split(".")[0];
   const appId = result.data.currentAppInstallation.id;
   const metafielData = result.data.currentAppInstallation.metafields.edges;
   const defaultSettings = {
@@ -97,14 +97,14 @@ export const loader = async ({ request }) => {
     data = appSettings;
   }
 
-  return { data };
+  return { data , storeName};
 };
 import { useNavigate } from "@remix-run/react";
 function Favicon_cart_count(props) {
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
-  const { data } = useLoaderData();
+  const { data, storeName } = useLoaderData();
   const [status, setStatus] = useState(data.app_status);
   const [active, setActive] = useState(false);
   const [buttonloading, setButtonLoading] = useState(false);
@@ -246,6 +246,7 @@ function Favicon_cart_count(props) {
   const handleDismiss = () => {
     setIsDismissed(true);
   };
+   const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?context=theme`;
     const appName = "Favicon Cart Count"
   return (
     <div className="Favicon_cart_count_page">
@@ -276,6 +277,7 @@ function Favicon_cart_count(props) {
         <Banner   onDismiss={handleDismiss}>
           <p>
           Please make sure you have added a favicon image to view this app.
+          <a href={url} target="_blank">Click Here</a>
           </p>
         </Banner>)}
           <div className="SettingsDataTab_container">

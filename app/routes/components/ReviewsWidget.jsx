@@ -684,7 +684,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
                             <BlockStack gap={200}>
                                 <Text variant="headingSm" as="h6" fontWeight='semibold'>Place or move this app using Shopify Editor</Text>
-                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the Vitals app you need.</Text>
+                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the All-In-One Store  app you need.</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
                                         <Button onClick={handleCarouselClick} accessibilityLabel="Go to editor"> Go to editor</Button>

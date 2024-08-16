@@ -173,7 +173,7 @@ export const loader = async ({ request, params }) => {
       ({ node: { id, title, image } }) => ({
         productId: id,
         productTitle: title,
-        productImage: image.url,
+        productImage: image?.url,
       }),
     );
   }
@@ -220,6 +220,1837 @@ export const loader = async ({ request, params }) => {
     getCustomerCollections
   };
 };
+
+export function Discount({
+  handleFocus,
+
+  toggleModal,
+  isFirstButtonActive,
+  handleSecondButtonClick,
+  handleFirstButtonClick,
+  leftPreviewLayout,
+  handleChange,
+  formData,
+
+  handleContinueClick,
+}) {
+  return (
+    <>
+      <div className="aios_layout_spacer">
+        <Layout>
+          <Layout.Section variant="oneHalf">
+            <Layout>
+              <Layout.Section>
+                <Card roundedAbove="sm">
+                  <BlockStack gap="300">
+                    <Text variant="headingSm" as="h6">
+                      Discount value
+                    </Text>
+                    <Box paddingBlockStart="200">
+                      <BlockStack gap="400">
+                        <InlineStack gap="200">
+                          <ButtonGroup variant="segmented">
+                            <Button
+                              pressed={isFirstButtonActive}
+                              onClick={() => {
+                                handleFirstButtonClick("discount");
+                              }}
+                            >
+                              Percent
+                            </Button>
+                            <Button
+                              pressed={!isFirstButtonActive}
+                              onClick={handleSecondButtonClick}
+                            >
+                              Fixed Amount
+                            </Button>
+                          </ButtonGroup>
+                          <TextField
+                            type="number"
+                            value={formData.rules.discount.discount_amount}
+                            suffix={formData.rules.discount.discount_symbol}
+                            onChange={(e) => {
+                              handleFocus("discount_amount");
+                              handleChange(e, "discount", "discount_amount");
+                            }}
+                            placeholder="Min Value : 0"
+                            min={0}
+                          />
+                        </InlineStack>
+                      </BlockStack>
+                    </Box>
+                  </BlockStack>
+                </Card>
+              </Layout.Section>
+            </Layout>
+          </Layout.Section>
+          <Layout.Section variant="oneHalf">
+            {leftPreviewLayout}
+          </Layout.Section>
+        </Layout>
+      </div>
+      <PageActions
+        primaryAction={{
+          content: "Continue to Appearance",
+          onClick: handleContinueClick,
+        }}
+        secondaryActions={
+          <Button onClick={toggleModal} variant="primary" tone="critical">
+            Delete
+          </Button>
+        }
+      />
+    </>
+  );
+}
+
+export function ReviewsLayout({ handleFocus,toggleModal, handleTab, handleSave, getCollections,buyCollections, getProduct, buyProduct, handleChange, formData }) {
+  const getCustomerBuysText = () => {
+    const { chosen_type, qty } = formData?.rules?.customer_buy || {};
+    const eligibleProductsCount = buyProduct.length;
+
+    return chosen_type === "specific"
+      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
+      : "any product";
+  };
+  const getCustomerGetsText = () => {
+    const { chosen_type, qty } = formData?.rules?.customer_get || {};
+    const eligibleProductsCount = getProduct.length;
+
+    return chosen_type === "specific"
+      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
+      : "any product";
+  };
+ 
+  const options = [
+    { label: "Draft", value: "Draft" },
+    { label: "Active", value: "Active" },
+  ];
+  return (
+    <div className="aios_layout_spacer">
+      <Layout>
+        <Layout.Section>
+          <Layout>
+            <Layout.Section>
+              <Layout>
+                <Layout.Section variant="oneThird">
+                  <Card>
+                    <InlineStack wrap={false} align="space-between">
+                      <Text variant="headingSm" as="h6">
+                        Products
+                      </Text>
+                      <div>
+                        <Button
+                          variant="plain"
+                          onClick={() => handleTab(1)}
+                          icon={EditIcon}
+                        />
+                      </div>
+                    </InlineStack>
+                    <Text variant="bodySm" as="p">
+                      Customer buys: {getCustomerBuysText()}
+                    </Text>
+                    Customer gets: {getCustomerGetsText()}
+                  </Card>
+                </Layout.Section>
+                <Layout.Section>
+                  <Card>
+                    <InlineStack wrap={false} align="space-between">
+                      <Text variant="headingSm" as="h6">
+                        Discount details
+                      </Text>
+                      <div>
+                        <Button
+                          variant="plain"
+                          onClick={() => handleTab(2)}
+                          icon={EditIcon}
+                        />
+                      </div>
+                    </InlineStack>
+                    {formData?.rules?.discount?.discount_amount}
+                    {formData?.rules?.discount?.discount_symbol} Discount
+                  </Card>
+                </Layout.Section>
+                <Layout.Section>
+                  <Card>
+                    <InlineStack wrap={false} align="space-between">
+                      <Text variant="headingSm" as="h6">
+                        Placements & Appearance
+                      </Text>
+                      <div>
+                        <Button
+                          variant="plain"
+                          onClick={() => handleTab(3)}
+                          icon={EditIcon}
+                        />
+                      </div>
+                    </InlineStack>
+                    <Box
+                      background="bg-surface"
+                      borderColor="border"
+                      borderWidth="025"
+                      borderRadius="100"
+                    >
+                      <a>
+                        <div className="aios_placements_reviews">
+                          <BlockStack gap="500">
+                            <InlineStack wrap={false} align="space-between">
+                              <Text variant="bodyMd" as="p">
+                                BOGO on Product Page
+                              </Text>
+                              <div>
+                              {formData?.rules?.product_page.status =="Active"?( 
+                                  <Badge tone="success">Active</Badge>):(
+                         <Badge tone="info">Inactive</Badge>
+                                  )}
+                              </div>
+                            </InlineStack>
+                          </BlockStack>
+                        </div>
+                      </a>
+                    </Box>
+                    <Box
+                      background="bg-surface"
+                      borderColor="border"
+                      borderWidth="025"
+                      borderRadius="100"
+                    >
+                      <a>
+                        <div className="aios_placements_reviews">
+                          <BlockStack gap="500">
+                            <InlineStack wrap={false} align="space-between">
+                              <Text variant="bodyMd" as="p">
+                                Cart Suggestion on Cart page Success
+                              </Text>
+                              <div>
+                              {formData?.rules?.cart_page.status=="Active"?( 
+                                  <Badge tone="success">Active</Badge>):(
+                         <Badge>Inactive</Badge>
+                                  )}
+                              </div>
+                            </InlineStack>
+                          </BlockStack>
+                        </div>
+                      </a>
+                    </Box>
+                    {/* <Box
+                      background="bg-surface"
+                      borderColor="border"
+                      borderWidth="025"
+                      borderRadius="100"
+                    >
+                      <a>
+                        <div className="aios_placements_reviews">
+                          <BlockStack gap="500">
+                            <InlineStack wrap={false} align="space-between">
+                              <Text variant="bodyMd" as="p">
+                                Post Purchase on Thank you page
+                              </Text>
+                              <div>
+                              {formData?.rules?.popup_cart.status=="Active"?( 
+                                  <Badge tone="success">Active</Badge>):(
+                         <Badge>Inactive</Badge>
+                                  )}
+                              </div>
+                            </InlineStack>
+                          </BlockStack>
+                        </div>
+                      </a>
+                    </Box> */}
+                    <Box
+                      background="bg-surface"
+                      borderColor="border"
+                      borderWidth="025"
+                      borderRadius="100"
+                    >
+                      <a>
+                        <div className="aios_placements_reviews">
+                          <BlockStack gap="500">
+                            <InlineStack wrap={false} align="space-between">
+                              <Text variant="bodyMd" as="p">
+                                Pop-up on Add to Cart button
+                              </Text>
+                              <div>
+                              {formData?.rules?.popup_cart.status=="Active"?( 
+                                  <Badge tone="success">Active</Badge>):(
+                         <Badge>Inactive</Badge>
+                                  )}
+                              </div>
+                            </InlineStack>
+                          </BlockStack>
+                        </div>
+                      </a>
+                    </Box>
+                  </Card>
+                </Layout.Section>
+              </Layout>
+            </Layout.Section>
+          </Layout>
+        </Layout.Section>
+        <Layout.Section variant="oneThird">
+          <Layout>
+            <Layout.Section>
+              <Card>
+                <Text variant="headingMd" as="h6">
+                  Offer status
+                </Text>
+                <Select
+                  options={options}
+                  value={formData.offer_status}
+                  onChange={(value) => {
+                    handleFocus("offer_status");
+                    handleChange(value, "offer_status");
+                  }}
+                />
+              </Card>
+            </Layout.Section>
+            <Layout.Section variant="oneThird">
+              <Card>
+                <Text variant="headingMd" as="h6">
+                  Internal name
+                </Text>
+                <TextField
+                  onChange={(e) => {
+                    handleFocus("internal_name");
+                    handleChange(e, "internal_name");
+                  }}
+                  value={formData.internal_name}
+                  autoComplete="off"
+                />
+              </Card>
+            </Layout.Section>
+            <Layout.Section variant="oneThird">
+              <Card>
+                <Text variant="headingMd" as="h6">
+                  Cart Label
+                </Text>
+                <TextField
+                  onChange={(e) => {
+                    handleFocus("cart_label");
+                    handleChange(e, "cart_label");
+                  }}
+                  value={formData.cart_label}
+                  helpText="Customize the text that shows up near the discount on the Cart page."
+                  autoComplete="off"
+                />
+              </Card>
+            </Layout.Section>
+          </Layout>
+        </Layout.Section>
+      </Layout>
+      <PageActions
+       
+        secondaryActions={<Button onClick={handleSave}>Save</Button>}
+      />
+    </div>
+  );
+}
+
+
+export function BogoProducts({ toggleModal,getCollections, handleFocus, buyCollections, getProduct, buyProduct,selectProduct, selectCollection,handleContinueClick,leftPreviewLayout,handleDelete,handleChange,formData,handleCollectionDelete}){
+    const handleInputChangeCustomerProduct = () => {
+      selectProduct("customer_buy");
+    };
+    const handleInputChangeCustomerCollection = () => {
+      selectCollection("customer_buy")
+    };
+    const handleInputChangeCustomerGet = () => {
+      selectProduct("customer_get");
+    };
+    const handleInputChangeCustomerColl = () => {
+      selectCollection("customer_get");
+    }
+ 
+  return (
+    <>
+      <Grid>
+        <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+          <div style={{ padding: "10px" }} className="product-review">
+            <Layout.Section>
+              <Card>
+                <BlockStack gap="200">
+                  <Text variant="headingMd" as="h6" fontWeight="semibold">
+                    Customer buys
+                  </Text>
+                  <RadioButton
+                    label="Any product"
+                    id="any-products-slotA"
+                    name="products-slotA"
+                    checked={
+                      formData.rules.customer_buy.chosen_type === "any"
+                    }
+                    onChange={(e) => {
+                      handleFocus("any");
+                      handleChange("any", "customer_buy", "chosen_type");
+                    }}
+                  />
+
+                  <RadioButton
+                    label="Specific product or collection"
+                    id="product-collection-slotA"
+                    name="products-slotA"
+                    checked={
+                      formData.rules.customer_buy.chosen_type === "specific"
+                    }
+                    onChange={(e) => {
+                      handleFocus("specific");
+                      handleChange("specific", "customer_buy", "chosen_type");
+                    }}
+                  />
+
+                  {formData.rules.customer_buy.chosen_type === "specific" ? (
+                    <>
+                    <InlineStack wrap={false} gap="200">
+                      <div style={{ width: "100%" }}>
+                        <TextField
+                          placeholder="Search Products"
+                          type="text"
+                          onChange={handleInputChangeCustomerProduct}
+                          prefix={<Icon source={SearchIcon} tone="base" />}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <Button onClick={() => selectProduct("customer_buy")}>
+                        Browse
+                      </Button>
+                    </InlineStack>
+                    <InlineStack wrap={false} gap="200">
+                      <div style={{ width: "100%" }}>
+                        <TextField
+                          placeholder="Search  Collections"
+                          type="text"
+                          onChange={handleInputChangeCustomerCollection}
+                          prefix={<Icon source={SearchIcon} tone="base" />}
+                          autoComplete="off"
+                        />
+                      </div>
+                      <Button onClick={() => selectCollection("customer_buy")}>
+                        Browse
+                      </Button>
+                    </InlineStack>
+                    </>
+                  ) : (
+                    ""
+                  )}
+
+                  <TextField
+                    label="Quantity"
+                    type="number"
+                    value={formData.rules.customer_buy.qty}
+                    autoComplete="off"
+                    onChange={(e) => {
+                      handleFocus("qty");
+                      handleChange(e, "customer_buy", "qty");
+                    }}
+                  />
+                  {formData.rules.customer_buy.chosen_type === "specific" && (
+                    <>
+                      {buyProduct.length === 0  && buyCollections.length ===0 ? (
+                        <InlineError
+                          message="A product or collection selection is required"
+                          fieldID="myFieldID"
+                        />
+                      ) : (
+
+                     <>
+                          {buyProduct.length > 0 && (
+                            <BlockStack gap="200">
+                              <Text as="p" fontWeight="bold">
+                                You have selected {buyProduct.length} product
+                                {buyProduct.length > 1 ? "s" : ""}
+                              </Text>
+                              {buyProduct.length > 0 &&
+                                buyProduct.map((item, index) => (
+                                  <div
+                                    className="upsell_products_bundles_list"
+                                    key={index}
+                                  >
+                                    <Box>
+                                      <InlineStack
+                                        wrap={false}
+                                        align="space-between"
+                                        blockAlign="center"
+                                      >
+                                        <Box padding="200">
+                                          <InlineStack
+                                            align="center"
+                                            blockAlign="center"
+                                            gap="200"
+                                          >
+                                            {item.productImage ? (
+                                              <Thumbnail
+                                                source={item.productImage}
+                                                alt={item.productTitle}
+                                              />
+                                            ) : (
+                                              <Icon
+                                                source={ImageIcon}
+                                                color="base"
+                                                accessibilityLabel="Placeholder image"
+                                              />
+                                            )}
+                                            <Text variant="bodySm" as="p">
+                                              {item.productTitle}
+                                            </Text>
+                                          </InlineStack>
+                                        </Box>
+                                        <Box padding="200">
+                                          <Button
+                                            icon={DeleteIcon}
+                                            onClick={() =>
+                                              handleDelete(
+                                                index,
+                                                "customer_buy",
+                                              )
+                                            }
+                                            accessibilityLabel="Delete product"
+                                          />
+                                        </Box>
+                                      </InlineStack>
+                                    </Box>
+                                  </div>
+                                ))}
+                            </BlockStack>
+                          )}
+                          {buyCollections.length > 0 && (
+                            <BlockStack gap="200">
+                              <Text as="p" fontWeight="bold">
+                                You have selected {buyCollections.length}{" "}
+                                collection
+                                {buyCollections.length > 1 ? "s" : ""}
+                              </Text>
+                              {buyCollections.map((item, index) => (
+                                <div
+                                  className="upsell_products_bundles_list"
+                                  key={index}
+                                >
+                                  <Box>
+                                    <InlineStack
+                                      wrap={false}
+                                      align="space-between"
+                                      blockAlign="center"
+                                    >
+                                      <Box padding="200">
+                                        <InlineStack
+                                          align="center"
+                                          blockAlign="center"
+                                          gap="200"
+                                        >
+                                          {item.productImage ? (
+                                            <Thumbnail
+                                              source={item.productImage}
+                                              alt={item.productTitle}
+                                            />
+                                          ) : (
+                                            <Icon
+                                              source={ImageIcon}
+                                              color="base"
+                                              accessibilityLabel="Placeholder image"
+                                            />
+                                          )}
+                                          <Text variant="bodySm" as="p">
+                                            {item.productTitle}
+                                          </Text>
+                                        </InlineStack>
+                                      </Box>
+                                      <Box padding="200">
+                                        <Button
+                                          icon={DeleteIcon}
+                                          onClick={() =>
+                                            handleCollectionDelete(
+                                              index,
+                                              "customer_buy",
+                                            )
+                                          }
+                                          accessibilityLabel="Delete collection"
+                                        />
+                                      </Box>
+                                    </InlineStack>
+                                  </Box>
+                                </div>
+                              ))}
+                            </BlockStack>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
+                </BlockStack>
+              </Card>
+            </Layout.Section>
+            <Layout.Section>
+              <Card>
+                <BlockStack gap={300}>
+                  <Text variant="headingMd" as="h6" fontWeight="semibold">
+                    Customer gets
+                  </Text>
+                  <BlockStack>
+                    <RadioButton
+                      label="Any product"
+                      id="any-products-slotB"
+                      name="products-slotB"
+                      checked={
+                        formData.rules.customer_get.chosen_type === "any"
+                      }
+                      onChange={(e) => {
+                        handleFocus("any");
+                        handleChange("any", "customer_get", "chosen_type");
+                      }}
+                    />
+                    <RadioButton
+                      label="Specific product or Collection"
+                      id="same-collection-slotB"
+                      name="products-slotB"
+                      checked={
+                        formData.rules.customer_get.chosen_type === "specific"
+                      }
+                      onChange={(e) => {
+                        handleFocus("specific");
+                        handleChange(
+                          "specific",
+                          "customer_get",
+                          "chosen_type",
+                        );
+                      }}
+                    />
+                    {formData.rules.customer_get.chosen_type ===
+                    "specific" ? (
+                      <>
+                      <BlockStack gap="200">
+                      <InlineStack wrap={false} gap="200">
+                        <div style={{ width: "100%" }}>
+                          <TextField
+                            placeholder="Search Products or Collections"
+                            type="text"
+                            onChange={handleInputChangeCustomerGet}
+                            prefix={<Icon source={SearchIcon} tone="base" />}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <Button onClick={() => selectProduct("customer_get")}>
+                          Browse
+                        </Button>
+                      </InlineStack>
+                      <InlineStack wrap={false} gap="200">
+                        <div style={{ width: "100%" }}>
+                          <TextField
+                            placeholder="Search Products or Collections"
+                            type="text"
+                            onChange={handleInputChangeCustomerColl}
+                            prefix={<Icon source={SearchIcon} tone="base" />}
+                            autoComplete="off"
+                          />
+                        </div>
+                        <Button onClick={() => selectCollection("customer_get")}>Browse</Button>
+                      </InlineStack>
+                      </BlockStack>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    <TextField
+                      label="Quantity"
+                      type="number"
+                      onChange={(e) => {
+                        handleFocus("qty");
+                        handleChange(e, "customer_get", "qty");
+                      }}
+                      autoComplete="off"
+                      value={formData.rules.customer_get.qty}
+                    />{" "}
+                    {formData.rules.customer_get.chosen_type ===
+                      "specific" && (
+                      <>
+                        {getProduct.length === 0  && getCollections.length === 0 ? (
+                          <InlineError
+                            message="A product or collection selection is required"
+                            fieldID="myFieldID"
+                          />
+                        ) : (
+                          <>
+                          {getProduct.length > 0 && (
+                            <BlockStack gap="200">
+                              <Text as="p" fontWeight="bold">
+                                You have selected {getProduct.length} product
+                                {getProduct.length > 1 ? "s" : ""}
+                              </Text>
+                              {getProduct.length > 0 &&
+                                getProduct.map((item, index) => (
+                                  <div
+                                    className="upsell_products_bundles_list"
+                                    key={index}
+                                  >
+                                    <Box>
+                                      <InlineStack
+                                        wrap={false}
+                                        align="space-between"
+                                        blockAlign="center"
+                                      >
+                                        <Box padding="200">
+                                          <InlineStack
+                                            align="center"
+                                            blockAlign="center"
+                                            gap="200"
+                                          >
+                                            {item.productImage ? (
+                                              <Thumbnail
+                                                source={item.productImage}
+                                                alt={item.productTitle}
+                                              />
+                                            ) : (
+                                              <Icon
+                                                source={ImageIcon}
+                                                color="base"
+                                                accessibilityLabel="Placeholder image"
+                                              />
+                                            )}
+                                            <Text variant="bodySm" as="p">
+                                              {item.productTitle}
+                                            </Text>
+                                          </InlineStack>
+                                        </Box>
+                                        <Box padding="200">
+                                          <Button
+                                            icon={DeleteIcon}
+                                            onClick={() =>
+                                              handleDelete(
+                                                index,
+                                                "customer_get",
+                                              )
+                                            }
+                                            accessibilityLabel="Delete product"
+                                          />
+                                        </Box>
+                                      </InlineStack>
+                                    </Box>
+                                  </div>
+                                ))}
+                            </BlockStack>
+                          )}
+                          {getCollections.length > 0 && (
+                            <BlockStack gap="200">
+                              <Text as="p" fontWeight="bold">
+                                You have selected {getCollections.length}{" "}
+                                collection
+                                {getCollections.length > 1 ? "s" : ""}
+                              </Text>
+                              {getCollections.map((item, index) => (
+                                <div
+                                  className="upsell_products_bundles_list"
+                                  key={index}
+                                >
+                                  <Box>
+                                    <InlineStack
+                                      wrap={false}
+                                      align="space-between"
+                                      blockAlign="center"
+                                    >
+                                      <Box padding="200">
+                                        <InlineStack
+                                          align="center"
+                                          blockAlign="center"
+                                          gap="200"
+                                        >
+                                          {item.productImage ? (
+                                            <Thumbnail
+                                              source={item.productImage}
+                                              alt={item.productTitle}
+                                            />
+                                          ) : (
+                                            <Icon
+                                              source={ImageIcon}
+                                              color="base"
+                                              accessibilityLabel="Placeholder image"
+                                            />
+                                          )}
+                                          <Text variant="bodySm" as="p">
+                                            {item.productTitle}
+                                          </Text>
+                                        </InlineStack>
+                                      </Box>
+                                      <Box padding="200">
+                                        <Button
+                                          icon={DeleteIcon}
+                                          onClick={() =>
+                                            handleCollectionDelete(
+                                              index,
+                                              "customer_get",
+                                            )
+                                          }
+                                          accessibilityLabel="Delete collection"
+                                        />
+                                      </Box>
+                                    </InlineStack>
+                                  </Box>
+                                </div>
+                              ))}
+                            </BlockStack>
+                          )}
+                        </>
+                        )}
+                      </>
+                    )}
+                  </BlockStack>
+                </BlockStack>
+              </Card>
+            </Layout.Section>
+          </div>
+        </Grid.Cell>
+        <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+          <Layout.Section variant="oneHalf">
+            {leftPreviewLayout}
+          </Layout.Section>
+        </Grid.Cell>
+      </Grid>
+
+      <PageActions
+        primaryAction={{
+          content: "Continue to discount",
+          onClick: handleContinueClick,
+        }}
+        secondaryActions={
+          <Button onClick={toggleModal} variant="primary" tone="critical">
+            Delete
+          </Button>
+        }
+      />
+      </>
+  )
+}
+
+export function Apperance({ handleFocus,toggleModal, openStates, handleToggle, leftPreviewLayout, handleContinueClick, handleChange, formData, handleColorChange}){
+  const Status_options = [
+    { label: "Select an option", value: "Select an option" },
+    { label: "Active", value: "Active" },
+    { label: "Inactive", value: "Inactive" },
+  ];
+
+  const informative_Status_options = [
+    { label: "Select an option", value: "Select an option" },
+    { label: "Active", value: "Active" },
+    { label: "Inactive", value: "Inactive" },
+  ];
+
+  const Productpage = (
+    <div>
+      <Card sectioned>
+        <BlockStack gap="500">
+          <div className="arrow-sign">
+            <BlockStack gap={200}>
+              <div
+                onClick={() => handleToggle("cookiesettings")}
+                style={{ display: "inline-block", cursor: "pointer" }}
+              >
+                <div style={{ float: "left" }}>
+                  <Text variant="headingSm" as="h6">
+                    <InlineStack gap={300}>
+                      {" "}
+                      BOGO on Product Page
+                      {formData.rules.product_page.status === "Active" ? (
+                        <Badge tone="success">Active</Badge>
+                      ) : (
+                        <Badge>Inactive</Badge>
+                      )}
+                    </InlineStack>
+                  </Text>
+                </div>
+                <div style={{ float: "right" }}>
+                  <InlineStack>
+                    {openStates.cookiesettings ? (
+                      <></>
+                    ) : (
+                      <div style={{ marginTop: "2px" }}>
+                        <Text variant="bodySm" as="p">
+                          Show settings
+                        </Text>
+                      </div>
+                    )}
+                    <Icon source={ChevronDownIcon} tone="base" />
+                  </InlineStack>
+                </div>
+              </div>
+              <Text variant="bodySm" as="p">
+                Showcase the products from the offer, together with the
+                discount. Suited just below the product description.
+                {/* <Link href="#">
+                  <Text variant="headingSm" as="h5">
+                    Preview
+                  </Text>
+                </Link> */}
+              </Text>
+            </BlockStack>
+          </div>
+
+          <Collapsible
+            open={openStates.cookiesettings}
+            id="productpage"
+            transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+            expandOnPrint
+          >
+            <BlockStack gap="400">
+              <Select
+                label="Status"
+                options={Status_options}
+                onChange={(e) => {
+                  handleFocus("status");
+                  handleChange(e, "product_page", "status");
+                }}
+                value={formData.rules.product_page.status}
+              />
+              <TextField
+                label="Offer title"
+                autoComplete="off"
+                onChange={(e) => {
+                  handleFocus("offer_title");
+                  handleChange(e, "product_page", "offer_title");
+                }}
+                value={formData.rules.product_page.offer_title}
+              />
+              <TextField
+                label={`Button text`}
+                autoComplete="off"
+                onChange={(e) => {
+                  handleFocus("button_text");
+                  handleChange(e, "product_page", "button_text");
+                }}
+                value={formData.rules.product_page.button_text}
+              />
+              <TextField
+                label={`Badge text`}
+                autoComplete="off"
+                onChange={(e) => {
+                  handleFocus("badge_text");
+                  handleChange(e, "product_page", "badge_text");
+                }}
+                value={formData.rules.product_page.badge_text}
+              />
+              <BlockStack gap={300}>
+                <div
+                  class="discount-displayed"
+                  style={{
+                    paddingTop: "20px",
+                    borderBottom: "1px solid #ebebeb",
+                  }}
+                ></div>
+              </BlockStack>
+              <BlockStack gap={200}>
+                <div style={{ float: "left" }}>
+                  <Text variant="headingMd" as="h6">
+                    Appearance
+                  </Text>
+                  <Text variant="bodySm" as="p">
+                    These settings apply to offer badges, price badge and
+                    button.
+                  </Text>
+                </div>
+
+                <Grid>
+                  <Grid.Cell
+                    columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                  >
+                    <div className="color_section">
+                      <TextField
+                        label={`Accent color`}
+                        type="text"
+                        onChange={(e) => {
+                          handleFocus("accent_color");
+                          handleChange(e, "product_page", "accent_color");
+                        }}
+                        value={formData.rules.product_page.accent_color}
+                        autoComplete="off"
+                        connectedLeft={
+                          <input
+                            style={{
+                              boxShadow:
+                                formData.rules.product_page.accent_color ===
+                                "#ffffff"
+                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                  : "none",
+                              width:
+                                formData.rules.product_page.accent_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                              height:
+                                formData.rules.product_page.accent_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                            }}
+                            type="color"
+                            value={formData.rules.product_page.accent_color}
+                            onChange={(e) =>
+                              handleColorChange(
+                                e,
+                                "accent_color",
+                                "product_page",
+                                "accent_color",
+                              )
+                            }
+                          />
+                        }
+                      />
+                    </div>
+                  </Grid.Cell>
+                  <Grid.Cell
+                    columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                  >
+                    <div className="color_section">
+                      <TextField
+                        label={`Text color`}
+                        type="text"
+                        onChange={(e) => {
+                          handleFocus("text_color");
+                          handleChange(e, "product_page", "text_color");
+                        }}
+                        value={formData.rules.product_page.text_color}
+                        autoComplete="off"
+                        connectedLeft={
+                          <input
+                            style={{
+                              boxShadow:
+                                formData.rules.product_page.text_color ===
+                                "#ffffff"
+                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                  : "none",
+                              width:
+                                formData.rules.product_page.text_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                              height:
+                                formData.rules.product_page.text_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                            }}
+                            type="color"
+                            value={formData.rules.product_page.text_color}
+                            onChange={(e) =>
+                              handleColorChange(
+                                e,
+                                "text_color",
+                                "product_page",
+                                "text_color",
+                              )
+                            }
+                          />
+                        }
+                      />
+                    </div>
+                  </Grid.Cell>
+                </Grid>
+                <RangeSlider
+                  output
+                  label={
+                    <InlineStack style={{ margin: "0px" }}>
+                      Offer badge text size
+                      <Tooltip
+                        content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
+                      ></Tooltip>
+                    </InlineStack>
+                  }
+                  min={10}
+                  max={60}
+                  prefix="10px"
+                  suffix="16px"
+                  value={formData.rules.product_page.badge_size}
+                  onChange={(e) => {
+                    handleFocus("badge_size");
+                    handleChange(e, "product_page", "badge_size");
+                  }}
+                />
+              </BlockStack>
+              <BlockStack gap={300}>
+                <div
+                  className="discount-displayed"
+                  style={{
+                    paddingTop: "20px",
+                    borderBottom: "1px solid #ebebeb",
+                  }}
+                ></div>
+              </BlockStack>
+              <div>
+                <Text variant="headingSm" as="h6">
+                  Product card
+                </Text>
+                <Text variant="bodyMd" as="p">
+                  These settings apply to all BOGO offers on Product Page
+                </Text>
+              </div>
+              <BlockStack gap={300}>
+                <Checkbox
+                  label="Show shadow"
+                  checked={formData.rules.product_page.show_shadow}
+                  onChange={(e) => {
+                    handleFocus("show_shadow");
+                    handleChange(e, "product_page", "show_shadow");
+                  }}
+                />
+                <Checkbox
+                  label="Show border"
+                  checked={formData.rules.product_page.show_border}
+                  onChange={(e) => {
+                    handleFocus("show_border");
+                    handleChange(e, "product_page", "show_border");
+                  }}
+                />
+
+                <Grid>
+                  <Grid.Cell
+                    columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                  >
+                    <div className="color_section">
+                      <TextField
+                        label={`Border color`}
+                        type="text"
+                        onChange={(e) => {
+                          handleFocus("border_color");
+                          handleChange(e, "product_page", " border_color");
+                        }}
+                        value={formData.rules.product_page.border_color}
+                        autoComplete="off"
+                        connectedLeft={
+                          <input
+                            type="color"
+                            style={{
+                              boxShadow:
+                                formData.rules.product_page.border_color ===
+                                "#ffffff"
+                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                  : "none",
+                              width:
+                                formData.rules.product_page.border_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                              height:
+                                formData.rules.product_page.border_color ===
+                                "#ffffff"
+                                  ? "34px"
+                                  : "38px",
+                            }}
+                            value={formData.rules.product_page.border_color}
+                            onChange={(e) =>
+                              handleColorChange(
+                                e,
+                                "border_color",
+                                "product_page",
+                                "border_color",
+                              )
+                            }
+                          />
+                        }
+                      />
+                    </div>
+                  </Grid.Cell>
+                  <Grid.Cell
+                    columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                  ></Grid.Cell>
+                </Grid>
+              </BlockStack>
+            </BlockStack>
+          </Collapsible>
+        </BlockStack>
+      </Card>
+    </div>
+  );
+  const CartPage = (
+    <div>
+      <Card sectioned>
+        <BlockStack gap="500">
+          <div className="arrow-sign">
+            <BlockStack gap={200}>
+              <div
+                onClick={() => handleToggle("informativeCookieBanner")}
+                style={{ display: "inline-block", cursor: "pointer" }}
+              >
+                <div style={{ float: "left" }}>
+                  <Text variant="headingSm" as="h6">
+                    <InlineStack gap={300}>
+                      Cart Suggestion on Cart page
+                      {formData.rules.cart_page.status === "Active" ? (
+                        <Badge tone="success">Active</Badge>
+                      ) : (
+                        <Badge>Inactive</Badge>
+                      )}
+                    </InlineStack>
+                  </Text>
+                </div>
+                <div style={{ float: "right" }}>
+                  <InlineStack>
+                    {openStates.informativeCookieBanner ? (
+                      <> </>
+                    ) : (
+                      <div style={{ marginTop: "2px" }}>
+                        <Text variant="bodySm" as="p">
+                          Show settings
+                        </Text>
+                      </div>
+                    )}
+                    <Icon source={ChevronDownIcon} tone="base" />
+                  </InlineStack>
+                </div>
+              </div>
+              <Text variant="bodySm" as="p">
+                If your visitors are not required to give permission before
+                their data can be used, you can display an informative banner.
+                It will notify the visitors that by using your service, they
+                accept your Privacy Policy.
+                {/* <Link href="#">
+                  <Text variant="headingSm" as="h5">
+                    Preview
+                  </Text>
+                </Link> */}
+              </Text>
+            </BlockStack>
+          </div>
+
+          <Collapsible
+            open={openStates.informativeCookieBanner}
+            id="basic-collapsible"
+            transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+            expandOnPrint
+          >
+            <BlockStack gap="400">
+              <Select
+                label="Status"
+                options={informative_Status_options}
+                onChange={(e) => {
+                  handleFocus("status");
+                  handleChange(e, "cart_page", "status");
+                }}
+                value={formData.rules.cart_page.status}
+              />
+              <TextField
+                label="Product suggestion format when there is a discount"
+                onChange={(e) => {
+                  handleFocus("format");
+                  handleChange(e, "cart_page", "format");
+                }}
+                value={formData.rules.cart_page.format}
+                autoComplete="off"
+                helpText="Default is: You are eligible to get {{ quantity }} x {{ product }} with
+{{ value }} OFF!'"
+              />
+
+              <Divider />
+
+              <Text variant="headingSm" as="h6">
+                Button
+              </Text>
+              <div className="aios-product-appearnce">
+                <label>Type</label>
+                <RadioButton
+                  label="
+                 Auto-detect theme style"
+                  id="disabled"
+                  name="accounts"
+                  onChange={(e) => {
+                    handleFocus("button_style");
+                    handleChange("auto-detect", "cart_page", "button_style");
+                  }}
+                  checked={
+                    formData.rules.cart_page.button_style === "auto-detect"
+                  }
+                />
+                <RadioButton
+                  label="Custom"
+                  onChange={(e) => {
+                    handleFocus("button_style");
+                    handleChange("custom", "cart_page", "button_style");
+                  }}
+                  checked={formData.rules.cart_page.button_style === "custom"}
+                  id="optional"
+                  name="accounts"
+                />
+              </div>
+            </BlockStack>
+          </Collapsible>
+        </BlockStack>
+      </Card>
+    </div>
+  );
+  //     const ThankuPage = (
+  //       <div>
+  //         <Card sectioned>
+  //           <BlockStack gap="500">
+  //             <div className="arrow-sign">
+  //               <BlockStack gap={200}>
+  //                 <div
+  //                   onClick={() => handleToggle("thankubanner")}
+  //                   style={{ display: "inline-block", cursor: "pointer" }}
+  //                 >
+  //                   <div style={{ float: "left" }}>
+  //                     <Text variant="headingSm" as="h6">
+  //                       <InlineStack gap={300}>
+  //                         Post Purchase on Thank you page
+  //                         {formData.informative_banner_status === "Active" ? (
+  //                           <Badge tone="success">Active</Badge>
+  //                         ) : (
+  //                           <Badge>Inactive</Badge>
+  //                         )}
+  //                       </InlineStack>
+  //                     </Text>
+  //                   </div>
+  //                   <div style={{ float: "right" }}>
+  //                     <InlineStack>
+  //                       {openStates.thankubanner ? (
+  //                         <> </>
+  //                       ) : (
+  //                         <div style={{ marginTop: "2px" }}>
+  //                           <Text variant="bodySm" as="p">
+  //                             Show settings
+  //                           </Text>
+  //                         </div>
+  //                       )}
+  //                       <Icon source={ChevronDownIcon} tone="base" />
+  //                     </InlineStack>
+  //                   </div>
+  //                 </div>
+  //               </BlockStack>
+  //             </div>
+
+  //             <Collapsible
+  //               open={openStates.thankubanner}
+  //               id="basic-collapsible"
+  //               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+  //               expandOnPrint
+  //             >
+  //               <BlockStack gap="400">
+  //                 <Select
+  //                   label="Status"
+  //                   options={informative_Status_options}
+  //                   onChange={(e) => {
+  //                     handleFocus("informative_banner_status");
+  //                     handleChange(e, "informative_banner_status");
+  //                   }}
+  //                   value={formData.informative_banner_status}
+  //                 />
+  //                 <TextField
+  //                   label="Post Purchase offer title"
+  //                   onChange={(e) => {
+  //                     handleFocus("informative_banner_text");
+  //                     handleChange(e, "informative_banner_text");
+  //                   }}
+  //                   value={formData.informative_banner_text}
+  //                   autoComplete="off"
+  //                   helpText="Default is: Last chance to get {{ value }} OFF, if you buy {{ quantity }}"
+  //                 />
+
+  //                 <TextField label={`"Accept" button`} autoComplete="off" />
+  //                 <Divider />
+  //                 <BlockStack gap={200}>
+  //                   <div
+  //                     onClick={() => handleToggle("generalDesignSettings")}
+  //                     style={{ display: "inline-block", cursor: "pointer" }}
+  //                   >
+  //                     <div style={{ float: "left" }}>
+  //                       <Text variant="headingMd" as="h6">
+  //                         Appearance
+  //                       </Text>
+  //                       <Text variant="bodyMd" as="h6">
+  //                         Accent
+  //                       </Text>
+  //                     </div>
+  //                   </div>
+  //                   <Grid>
+  //                     <Grid.Cell
+  //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+  //                     >
+  //                       <div className="color_section">
+  //                         <TextField
+  //                           label="Background"
+  //                           type="text"
+  //                           onChange={(e) => {
+  //                             handleFocus("Accent_color");
+  //                             handleChange(e, "Accent_color");
+  //                           }}
+  //                           value={formData.Accent_color}
+  //                           autoComplete="off"
+  //                           connectedLeft={
+  //                             <input
+  //                               type="color"
+  //                               value={formData.Accent_color}
+  //                               onChange={(e) => {
+  //                                 handleFocus("Accent_color");
+  //                                 handleColorChange(e, "Accent_color");
+  //                               }}
+  //                             />
+  //                           }
+  //                         />
+  //                       </div>
+  //                     </Grid.Cell>
+  //                     <Grid.Cell
+  //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+  //                     >
+  //                       <div className="color_section">
+  //                         <TextField
+  //                           label="Text"
+  //                           type="text"
+  //                           onChange={(e) => {
+  //                             handleFocus("text_color");
+  //                             handleChange(e, "text_color");
+  //                           }}
+  //                           value={formData.text_color}
+  //                           autoComplete="off"
+  //                           connectedLeft={
+  //                             <input
+  //                               type="color"
+  //                               value={formData.text_color}
+  //                               onChange={(e) => {
+  //                                 handleFocus("reject_text_color");
+  //                                 handleColorChange(e, "reject_text_color");
+  //                               }}
+  //                             />
+  //                           }
+  //                         />
+  //                       </div>
+  //                     </Grid.Cell>
+  //                   </Grid>
+  //                   <Text variant="bodyMd" as="h6">
+  //                     Widget Position
+  //                   </Text>
+  //                   <Divider />
+  //                   <Text variant="headingMd" as="h6">
+  //                     Advanced Settings
+  //                   </Text>
+  //                   <TextField
+  //                     label="Maximum acceptable discount
+  // "
+  //                     autoComplete="off"
+  //                     helpText="This setting will protect against situations where the discount would make the upsell unprofitable."
+  //                   />
+  //                   <TextField
+  //                     label="Bonus disclaimer text"
+  //                     multiline={4}
+  //                     autoComplete="off"
+  //                   />
+  //                 </BlockStack>
+  //               </BlockStack>
+  //             </Collapsible>
+  //           </BlockStack>
+  //         </Card>
+  //       </div>
+  //     );
+  const addCart = (
+    <div>
+      <Card sectioned>
+        <BlockStack gap="500">
+          <div className="arrow-sign">
+            <BlockStack gap={200}>
+              <div
+                onClick={() => handleToggle("addCart")}
+                style={{ display: "inline-block", cursor: "pointer" }}
+              >
+                <div style={{ float: "left" }}>
+                  <Text variant="headingSm" as="h6">
+                    <InlineStack gap={300}>
+                      Pop-up on Add to Cart button
+                      {formData.rules.popup_cart.status === "Active" ? (
+                        <Badge tone="success">Active</Badge>
+                      ) : (
+                        <Badge>Inactive</Badge>
+                      )}
+                    </InlineStack>
+                  </Text>
+                </div>
+                <div style={{ float: "right" }}>
+                  <InlineStack>
+                    {openStates.addCart ? (
+                      <> </>
+                    ) : (
+                      <div style={{ marginTop: "2px" }}>
+                        <Text variant="bodySm" as="p">
+                          Show settings
+                        </Text>
+                      </div>
+                    )}
+                    <Icon source={ChevronDownIcon} tone="base" />
+                  </InlineStack>
+                </div>
+              </div>
+              <Text variant="bodySm" as="p">
+                Remind customers about this offer, if they missed the Classic
+                widget on the product page.
+                {/* <Link href="#">
+                  <Text variant="headingSm" as="h5">
+                    Preview
+                  </Text>
+                </Link> */}
+              </Text>
+            </BlockStack>
+          </div>
+
+          <Collapsible
+            open={openStates.addCart}
+            id="basic-collapsible"
+            transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+            expandOnPrint
+          >
+            <BlockStack gap="400">
+              <Select
+                label="Status"
+                options={informative_Status_options}
+                onChange={(e) => {
+                  handleFocus("status");
+                  handleChange(e, "popup_cart", "status");
+                }}
+                value={formData.rules.popup_cart.status}
+              />
+              <TextField
+                label="Pop-up title"
+                onChange={(e) => {
+                  handleFocus("title");
+                  handleChange(e, "popup_cart", "title");
+                }}
+                value={formData.rules.popup_cart.title}
+                autoComplete="off"
+              />
+              <TextField
+                label="Button text"
+                onChange={(e) => {
+                  handleFocus("text");
+                  handleChange(e, "popup_cart", "text");
+                }}
+                value={formData.rules.popup_cart.text}
+                autoComplete="off"
+              />
+
+              <Divider />
+
+              <Text variant="headingSm" as="h6">
+                Appearance
+              </Text>
+              <Text variant="headingSm" as="h6">
+                Overlay
+              </Text>
+              <Grid>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Background"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("overlay_bgColor");
+                        handleChange(e, "popup_cart", "overlay_bgColor");
+                      }}
+                      value={formData.rules.popup_cart.overlay_bgColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          type="color"
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.overlay_bgColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.overlay_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.overlay_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          value={formData.rules.popup_cart.overlay_bgColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "overlay_bgColor",
+                              "popup_cart",
+                              "overlay_bgColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Text"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("overlay_textColor");
+                        handleChange(e, "popup_cart", "overlay_textColor");
+                      }}
+                      value={formData.rules.popup_cart.overlay_textColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.overlay_textColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.overlay_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.overlay_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          type="color"
+                          value={formData.rules.popup_cart.overlay_textColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "overlay_textColor",
+                              "popup_cart",
+                              "overlay_textColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+              </Grid>
+              <Text variant="headingSm" as="h6">
+                Button
+              </Text>
+              <Grid>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Background"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("button_bgColor");
+                        handleChange(e, "popup_cart", "button_bgColor");
+                      }}
+                      value={formData.rules.popup_cart.button_bgColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          type="color"
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.button_bgColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.button_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.button_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          value={formData.rules.popup_cart.button_bgColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "button_bgColor",
+                              "popup_cart",
+                              "button_bgColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Text"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("button_textColor");
+                        handleChange(e, "popup_cart", "button_textColor");
+                      }}
+                      value={formData.rules.popup_cart.button_textColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          type="color"
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.button_textColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.button_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.button_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          value={formData.rules.popup_cart.button_textColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "button_textColor",
+                              "popup_cart",
+                              "button_textColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+              </Grid>
+              <Text variant="headingSm" as="h6">
+                Variant selector
+              </Text>
+              <Grid>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Background"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("variant_bgColor");
+                        handleChange(e, "popup_cart", "variant_bgColor");
+                      }}
+                      value={formData.rules.popup_cart.variant_bgColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          type="color"
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.variant_bgColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.variant_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.variant_bgColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          value={formData.rules.popup_cart.variant_bgColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "variant_bgColor",
+                              "popup_cart",
+                              "variant_bgColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+                <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+                  <div className="color_section">
+                    <TextField
+                      label="Text"
+                      type="text"
+                      onChange={(e) => {
+                        handleFocus("variant_textColor");
+                        handleChange(e, "popup_cart", " variant_textColor");
+                      }}
+                      value={formData.rules.popup_cart.variant_textColor}
+                      autoComplete="off"
+                      connectedLeft={
+                        <input
+                          type="color"
+                          style={{
+                            boxShadow:
+                              formData.rules.popup_cart.variant_textColor ===
+                              "#ffffff"
+                                ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                : "none",
+                            width:
+                              formData.rules.popup_cart.variant_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                            height:
+                              formData.rules.popup_cart.variant_textColor ===
+                              "#ffffff"
+                                ? "34px"
+                                : "38px",
+                          }}
+                          value={formData.rules.popup_cart.variant_textColor}
+                          onChange={(e) =>
+                            handleColorChange(
+                              e,
+                              "variant_textColor",
+                              "popup_cart",
+                              "variant_textColor",
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </div>
+                </Grid.Cell>
+              </Grid>
+            </BlockStack>
+          </Collapsible>
+        </BlockStack>
+      </Card>
+    </div>
+  );
+
+  const ApperanceDataTab = (
+    <div style={{ padding: "10px" }} className="SettingsDataTab_container">
+      <BlockStack gap={500}>
+        <div className="upper_section">
+          <Layout>
+            <Layout.Section variant="oneThird"></Layout.Section>
+            <Layout.Section variant="oneThird">{Productpage}</Layout.Section>
+            <Layout.Section variant="oneThird">{CartPage}</Layout.Section>
+            {/* <Layout.Section variant="oneThird">{ThankuPage}</Layout.Section> */}
+            <Layout.Section variant="oneThird">{addCart}</Layout.Section>
+          </Layout>
+        </div>
+      </BlockStack>
+    </div>
+  );
+
+  return (
+    <div className="aios_layout_spacer">
+      <Layout>
+        <Layout.Section variant="oneHalf">
+          <Layout>
+            <Layout.Section>{ApperanceDataTab}</Layout.Section>
+          </Layout>
+        </Layout.Section>
+        <Layout.Section variant="oneHalf">{leftPreviewLayout}</Layout.Section>
+      </Layout>
+      <PageActions
+      
+        secondaryActions={
+          <Button onClick={toggleModal} variant="primary" tone="critical">
+            Delete
+          </Button>
+        }
+      />
+    </div>
+  );
+}
 const EditDiscountType = () => {
   const navigate = useNavigate();
   const {
@@ -265,7 +2096,7 @@ const EditDiscountType = () => {
   );
   const [buyProduct, setBuyProduct] = useState(buyCustomerProducts);
   const [getProduct, setGetProduct] = useState(getCustomerProducts);
-
+  const [isFirstButtonActive, setIsFirstButtonActive] = useState(true);
   const [buyCollections, setBuyCollections] = useState(buyCustomerCollections);
   const [getCollections, setGetCollections] = useState(getCustomerCollections);
 
@@ -330,7 +2161,37 @@ const EditDiscountType = () => {
       setMsgData("There is some error while update");
     }
   };
+  const handleFirstButtonClick = (field) => {
+    setIsFirstButtonActive(true);
+    setFormData({
+      ...formData,
+      rules: {
+        ...formData.rules,
+        discount: {
+          ...formData.rules.discount,
 
+          discount_type: "Percent",
+          discount_symbol: "%",
+        },
+      },
+    });
+  };
+  const handleSecondButtonClick = (field) => {
+    // setFormData({ ...formData, discount_type: "fixed" });
+    setFormData({
+      ...formData,
+      rules: {
+        ...formData.rules,
+        discount: {
+          ...formData.rules.discount,
+
+          discount_type: "fixed",
+          discount_symbol: "INR",
+        },
+      },
+    });
+    setIsFirstButtonActive(false);
+  };
   const toggleActive = useCallback(
     () => setActive((prevActive) => !prevActive),
     [],
@@ -427,9 +2288,11 @@ const EditDiscountType = () => {
         };
       });
       const collectionIds = collections.map((coll) => coll.id);
+      console.log(collectionIds,"collectionIds___")
 
       setFormData((prevState) => {
         const newRules = { ...prevState.rules };
+        console.log(newRules,"newRules____")
 
         if (type == "customer_buy") {
           newRules.customer_buy.collections = collectionIds;
@@ -704,1830 +2567,1815 @@ const EditDiscountType = () => {
     );
   };
 
-  const BogoProducts = () => {
-    return (
-      <>
-        <Grid>
-          <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-            <div style={{ padding: "10px" }} className="product-review">
-              <Layout.Section>
-                <Card>
-                  <BlockStack gap="200">
-                    <Text variant="headingMd" as="h6" fontWeight="semibold">
-                      Customer buys
-                    </Text>
-                    <RadioButton
-                      label="Any product"
-                      id="any-products-slotA"
-                      name="products-slotA"
-                      checked={
-                        formData.rules.customer_buy.chosen_type === "any"
-                      }
-                      onChange={(e) => {
-                        handleFocus("any");
-                        handleChange("any", "customer_buy", "chosen_type");
-                      }}
-                    />
+  // const BogoProducts = () => {
+  //   return (
+  //     <>
+  //       <Grid>
+  //         <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+  //           <div style={{ padding: "10px" }} className="product-review">
+  //             <Layout.Section>
+  //               <Card>
+  //                 <BlockStack gap="200">
+  //                   <Text variant="headingMd" as="h6" fontWeight="semibold">
+  //                     Customer buys
+  //                   </Text>
+  //                   <RadioButton
+  //                     label="Any product"
+  //                     id="any-products-slotA"
+  //                     name="products-slotA"
+  //                     checked={
+  //                       formData.rules.customer_buy.chosen_type === "any"
+  //                     }
+  //                     onChange={(e) => {
+  //                       handleFocus("any");
+  //                       handleChange("any", "customer_buy", "chosen_type");
+  //                     }}
+  //                   />
 
-                    <RadioButton
-                      label="Specific product or collection"
-                      id="product-collection-slotA"
-                      name="products-slotA"
-                      checked={
-                        formData.rules.customer_buy.chosen_type === "specific"
-                      }
-                      onChange={(e) => {
-                        handleFocus("specific");
-                        handleChange("specific", "customer_buy", "chosen_type");
-                      }}
-                    />
+  //                   <RadioButton
+  //                     label="Specific product or collection"
+  //                     id="product-collection-slotA"
+  //                     name="products-slotA"
+  //                     checked={
+  //                       formData.rules.customer_buy.chosen_type === "specific"
+  //                     }
+  //                     onChange={(e) => {
+  //                       handleFocus("specific");
+  //                       handleChange("specific", "customer_buy", "chosen_type");
+  //                     }}
+  //                   />
 
-                    {formData.rules.customer_buy.chosen_type === "specific" ? (
-                      <>
-                      <InlineStack wrap={false} gap="200">
-                        <div style={{ width: "100%" }}>
-                          <TextField
-                            placeholder="Search Products"
-                            type="text"
-                            prefix={<Icon source={SearchIcon} tone="base" />}
-                            autoComplete="off"
-                          />
-                        </div>
-                        <Button onClick={() => selectProduct("customer_buy")}>
-                          Browse
-                        </Button>
-                      </InlineStack>
-                      <InlineStack wrap={false} gap="200">
-                        <div style={{ width: "100%" }}>
-                          <TextField
-                            placeholder="Search  Collections"
-                            type="text"
-                            prefix={<Icon source={SearchIcon} tone="base" />}
-                            autoComplete="off"
-                          />
-                        </div>
-                        <Button onClick={() => selectCollection("customer_buy")}>
-                          Browse
-                        </Button>
-                      </InlineStack>
-                      </>
-                    ) : (
-                      ""
-                    )}
+  //                   {formData.rules.customer_buy.chosen_type === "specific" ? (
+  //                     <>
+  //                     <InlineStack wrap={false} gap="200">
+  //                       <div style={{ width: "100%" }}>
+  //                         <TextField
+  //                           placeholder="Search Products"
+  //                           type="text"
+  //                           prefix={<Icon source={SearchIcon} tone="base" />}
+  //                           autoComplete="off"
+  //                         />
+  //                       </div>
+  //                       <Button onClick={() => selectProduct("customer_buy")}>
+  //                         Browse
+  //                       </Button>
+  //                     </InlineStack>
+  //                     <InlineStack wrap={false} gap="200">
+  //                       <div style={{ width: "100%" }}>
+  //                         <TextField
+  //                           placeholder="Search  Collections"
+  //                           type="text"
+  //                           prefix={<Icon source={SearchIcon} tone="base" />}
+  //                           autoComplete="off"
+  //                         />
+  //                       </div>
+  //                       <Button onClick={() => selectCollection("customer_buy")}>
+  //                         Browse
+  //                       </Button>
+  //                     </InlineStack>
+  //                     </>
+  //                   ) : (
+  //                     ""
+  //                   )}
 
-                    <TextField
-                      label="Quantity"
-                      type="number"
-                      value={formData.rules.customer_buy.qty}
-                      autoComplete="off"
-                      onChange={(e) => {
-                        handleFocus("qty");
-                        handleChange(e, "customer_buy", "qty");
-                      }}
-                    />
-                    {formData.rules.customer_buy.chosen_type === "specific" && (
-                      <>
-                        {buyProduct.length === 0  && buyCollections.length ===0 ? (
-                          <InlineError
-                            message="A product or collection selection is required"
-                            fieldID="myFieldID"
-                          />
-                        ) : (
+  //                   <TextField
+  //                     label="Quantity"
+  //                     type="number"
+  //                     value={formData.rules.customer_buy.qty}
+  //                     autoComplete="off"
+  //                     onChange={(e) => {
+  //                       handleFocus("qty");
+  //                       handleChange(e, "customer_buy", "qty");
+  //                     }}
+  //                   />
+  //                   {formData.rules.customer_buy.chosen_type === "specific" && (
+  //                     <>
+  //                       {buyProduct.length === 0  && buyCollections.length ===0 ? (
+  //                         <InlineError
+  //                           message="A product or collection selection is required"
+  //                           fieldID="myFieldID"
+  //                         />
+  //                       ) : (
 
-                       <>
-                            {buyProduct.length > 0 && (
-                              <BlockStack gap="200">
-                                <Text as="p" fontWeight="bold">
-                                  You have selected {buyProduct.length} product
-                                  {buyProduct.length > 1 ? "s" : ""}
-                                </Text>
-                                {buyProduct.length > 0 &&
-                                  buyProduct.map((item, index) => (
-                                    <div
-                                      className="upsell_products_bundles_list"
-                                      key={index}
-                                    >
-                                      <Box>
-                                        <InlineStack
-                                          wrap={false}
-                                          align="space-between"
-                                          blockAlign="center"
-                                        >
-                                          <Box padding="200">
-                                            <InlineStack
-                                              align="center"
-                                              blockAlign="center"
-                                              gap="200"
-                                            >
-                                              {item.productImage ? (
-                                                <Thumbnail
-                                                  source={item.productImage}
-                                                  alt={item.productTitle}
-                                                />
-                                              ) : (
-                                                <Icon
-                                                  source={ImageIcon}
-                                                  color="base"
-                                                  accessibilityLabel="Placeholder image"
-                                                />
-                                              )}
-                                              <Text variant="bodySm" as="p">
-                                                {item.productTitle}
-                                              </Text>
-                                            </InlineStack>
-                                          </Box>
-                                          <Box padding="200">
-                                            <Button
-                                              icon={DeleteIcon}
-                                              onClick={() =>
-                                                handleDelete(
-                                                  index,
-                                                  "customer_buy",
-                                                )
-                                              }
-                                              accessibilityLabel="Delete product"
-                                            />
-                                          </Box>
-                                        </InlineStack>
-                                      </Box>
-                                    </div>
-                                  ))}
-                              </BlockStack>
-                            )}
-                            {buyCollections.length > 0 && (
-                              <BlockStack gap="200">
-                                <Text as="p" fontWeight="bold">
-                                  You have selected {buyCollections.length}{" "}
-                                  collection
-                                  {buyCollections.length > 1 ? "s" : ""}
-                                </Text>
-                                {buyCollections.map((item, index) => (
-                                  <div
-                                    className="upsell_products_bundles_list"
-                                    key={index}
-                                  >
-                                    <Box>
-                                      <InlineStack
-                                        wrap={false}
-                                        align="space-between"
-                                        blockAlign="center"
-                                      >
-                                        <Box padding="200">
-                                          <InlineStack
-                                            align="center"
-                                            blockAlign="center"
-                                            gap="200"
-                                          >
-                                            {item.productImage ? (
-                                              <Thumbnail
-                                                source={item.productImage}
-                                                alt={item.productTitle}
-                                              />
-                                            ) : (
-                                              <Icon
-                                                source={ImageIcon}
-                                                color="base"
-                                                accessibilityLabel="Placeholder image"
-                                              />
-                                            )}
-                                            <Text variant="bodySm" as="p">
-                                              {item.productTitle}
-                                            </Text>
-                                          </InlineStack>
-                                        </Box>
-                                        <Box padding="200">
-                                          <Button
-                                            icon={DeleteIcon}
-                                            onClick={() =>
-                                              handleCollectionDelete(
-                                                index,
-                                                "customer_buy",
-                                              )
-                                            }
-                                            accessibilityLabel="Delete collection"
-                                          />
-                                        </Box>
-                                      </InlineStack>
-                                    </Box>
-                                  </div>
-                                ))}
-                              </BlockStack>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </BlockStack>
-                </Card>
-              </Layout.Section>
-              <Layout.Section>
-                <Card>
-                  <BlockStack gap={300}>
-                    <Text variant="headingMd" as="h6" fontWeight="semibold">
-                      Customer gets
-                    </Text>
-                    <BlockStack>
-                      <RadioButton
-                        label="Any product"
-                        id="any-products-slotB"
-                        name="products-slotB"
-                        checked={
-                          formData.rules.customer_get.chosen_type === "any"
-                        }
-                        onChange={(e) => {
-                          handleFocus("any");
-                          handleChange("any", "customer_get", "chosen_type");
-                        }}
-                      />
-                      <RadioButton
-                        label="Specific product or Collection"
-                        id="same-collection-slotB"
-                        name="products-slotB"
-                        checked={
-                          formData.rules.customer_get.chosen_type === "specific"
-                        }
-                        onChange={(e) => {
-                          handleFocus("specific");
-                          handleChange(
-                            "specific",
-                            "customer_get",
-                            "chosen_type",
-                          );
-                        }}
-                      />
-                      {formData.rules.customer_get.chosen_type ===
-                      "specific" ? (
-                        <>
-                        <InlineStack wrap={false} gap="200">
-                          <div style={{ width: "100%" }}>
-                            <TextField
-                              placeholder="Search Products or Collections"
-                              type="text"
-                              prefix={<Icon source={SearchIcon} tone="base" />}
-                              autoComplete="off"
-                            />
-                          </div>
-                          <Button onClick={() => selectProduct("customer_get")}>
-                            Browse
-                          </Button>
-                        </InlineStack>
-                        <InlineStack wrap={false} gap="200">
-                          <div style={{ width: "100%" }}>
-                            <TextField
-                              placeholder="Search Products or Collections"
-                              type="text"
-                              prefix={<Icon source={SearchIcon} tone="base" />}
-                              autoComplete="off"
-                            />
-                          </div>
-                          <Button onClick={() => selectCollection("customer_get")}>Browse</Button>
-                        </InlineStack>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                      <TextField
-                        label="Quantity"
-                        type="number"
-                        onChange={(e) => {
-                          handleFocus("qty");
-                          handleChange(e, "customer_get", "qty");
-                        }}
-                        autoComplete="off"
-                        value={formData.rules.customer_get.qty}
-                      />{" "}
-                      {formData.rules.customer_get.chosen_type ===
-                        "specific" && (
-                        <>
-                          {getProduct.length === 0  && getCollections.length === 0 ? (
-                            <InlineError
-                              message="A product or collection selection is required"
-                              fieldID="myFieldID"
-                            />
-                          ) : (
-                            <>
-                            {getProduct.length > 0 && (
-                              <BlockStack gap="200">
-                                <Text as="p" fontWeight="bold">
-                                  You have selected {getProduct.length} product
-                                  {getProduct.length > 1 ? "s" : ""}
-                                </Text>
-                                {getProduct.length > 0 &&
-                                  getProduct.map((item, index) => (
-                                    <div
-                                      className="upsell_products_bundles_list"
-                                      key={index}
-                                    >
-                                      <Box>
-                                        <InlineStack
-                                          wrap={false}
-                                          align="space-between"
-                                          blockAlign="center"
-                                        >
-                                          <Box padding="200">
-                                            <InlineStack
-                                              align="center"
-                                              blockAlign="center"
-                                              gap="200"
-                                            >
-                                              {item.productImage ? (
-                                                <Thumbnail
-                                                  source={item.productImage}
-                                                  alt={item.productTitle}
-                                                />
-                                              ) : (
-                                                <Icon
-                                                  source={ImageIcon}
-                                                  color="base"
-                                                  accessibilityLabel="Placeholder image"
-                                                />
-                                              )}
-                                              <Text variant="bodySm" as="p">
-                                                {item.productTitle}
-                                              </Text>
-                                            </InlineStack>
-                                          </Box>
-                                          <Box padding="200">
-                                            <Button
-                                              icon={DeleteIcon}
-                                              onClick={() =>
-                                                handleDelete(
-                                                  index,
-                                                  "customer_get",
-                                                )
-                                              }
-                                              accessibilityLabel="Delete product"
-                                            />
-                                          </Box>
-                                        </InlineStack>
-                                      </Box>
-                                    </div>
-                                  ))}
-                              </BlockStack>
-                            )}
-                            {getCollections.length > 0 && (
-                              <BlockStack gap="200">
-                                <Text as="p" fontWeight="bold">
-                                  You have selected {getCollections.length}{" "}
-                                  collection
-                                  {getCollections.length > 1 ? "s" : ""}
-                                </Text>
-                                {getCollections.map((item, index) => (
-                                  <div
-                                    className="upsell_products_bundles_list"
-                                    key={index}
-                                  >
-                                    <Box>
-                                      <InlineStack
-                                        wrap={false}
-                                        align="space-between"
-                                        blockAlign="center"
-                                      >
-                                        <Box padding="200">
-                                          <InlineStack
-                                            align="center"
-                                            blockAlign="center"
-                                            gap="200"
-                                          >
-                                            {item.productImage ? (
-                                              <Thumbnail
-                                                source={item.productImage}
-                                                alt={item.productTitle}
-                                              />
-                                            ) : (
-                                              <Icon
-                                                source={ImageIcon}
-                                                color="base"
-                                                accessibilityLabel="Placeholder image"
-                                              />
-                                            )}
-                                            <Text variant="bodySm" as="p">
-                                              {item.productTitle}
-                                            </Text>
-                                          </InlineStack>
-                                        </Box>
-                                        <Box padding="200">
-                                          <Button
-                                            icon={DeleteIcon}
-                                            onClick={() =>
-                                              handleCollectionDelete(
-                                                index,
-                                                "customer_get",
-                                              )
-                                            }
-                                            accessibilityLabel="Delete collection"
-                                          />
-                                        </Box>
-                                      </InlineStack>
-                                    </Box>
-                                  </div>
-                                ))}
-                              </BlockStack>
-                            )}
-                          </>
-                          )}
-                        </>
-                      )}
-                    </BlockStack>
-                  </BlockStack>
-                </Card>
-              </Layout.Section>
-            </div>
-          </Grid.Cell>
-          <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-            <Layout.Section variant="oneHalf">
-              {leftPreviewLayout}
-            </Layout.Section>
-          </Grid.Cell>
-        </Grid>
+  //                      <>
+  //                           {buyProduct.length > 0 && (
+  //                             <BlockStack gap="200">
+  //                               <Text as="p" fontWeight="bold">
+  //                                 You have selected {buyProduct.length} product
+  //                                 {buyProduct.length > 1 ? "s" : ""}
+  //                               </Text>
+  //                               {buyProduct.length > 0 &&
+  //                                 buyProduct.map((item, index) => (
+  //                                   <div
+  //                                     className="upsell_products_bundles_list"
+  //                                     key={index}
+  //                                   >
+  //                                     <Box>
+  //                                       <InlineStack
+  //                                         wrap={false}
+  //                                         align="space-between"
+  //                                         blockAlign="center"
+  //                                       >
+  //                                         <Box padding="200">
+  //                                           <InlineStack
+  //                                             align="center"
+  //                                             blockAlign="center"
+  //                                             gap="200"
+  //                                           >
+  //                                             {item.productImage ? (
+  //                                               <Thumbnail
+  //                                                 source={item.productImage}
+  //                                                 alt={item.productTitle}
+  //                                               />
+  //                                             ) : (
+  //                                               <Icon
+  //                                                 source={ImageIcon}
+  //                                                 color="base"
+  //                                                 accessibilityLabel="Placeholder image"
+  //                                               />
+  //                                             )}
+  //                                             <Text variant="bodySm" as="p">
+  //                                               {item.productTitle}
+  //                                             </Text>
+  //                                           </InlineStack>
+  //                                         </Box>
+  //                                         <Box padding="200">
+  //                                           <Button
+  //                                             icon={DeleteIcon}
+  //                                             onClick={() =>
+  //                                               handleDelete(
+  //                                                 index,
+  //                                                 "customer_buy",
+  //                                               )
+  //                                             }
+  //                                             accessibilityLabel="Delete product"
+  //                                           />
+  //                                         </Box>
+  //                                       </InlineStack>
+  //                                     </Box>
+  //                                   </div>
+  //                                 ))}
+  //                             </BlockStack>
+  //                           )}
+  //                           {buyCollections.length > 0 && (
+  //                             <BlockStack gap="200">
+  //                               <Text as="p" fontWeight="bold">
+  //                                 You have selected {buyCollections.length}{" "}
+  //                                 collection
+  //                                 {buyCollections.length > 1 ? "s" : ""}
+  //                               </Text>
+  //                               {buyCollections.map((item, index) => (
+  //                                 <div
+  //                                   className="upsell_products_bundles_list"
+  //                                   key={index}
+  //                                 >
+  //                                   <Box>
+  //                                     <InlineStack
+  //                                       wrap={false}
+  //                                       align="space-between"
+  //                                       blockAlign="center"
+  //                                     >
+  //                                       <Box padding="200">
+  //                                         <InlineStack
+  //                                           align="center"
+  //                                           blockAlign="center"
+  //                                           gap="200"
+  //                                         >
+  //                                           {item.productImage ? (
+  //                                             <Thumbnail
+  //                                               source={item.productImage}
+  //                                               alt={item.productTitle}
+  //                                             />
+  //                                           ) : (
+  //                                             <Icon
+  //                                               source={ImageIcon}
+  //                                               color="base"
+  //                                               accessibilityLabel="Placeholder image"
+  //                                             />
+  //                                           )}
+  //                                           <Text variant="bodySm" as="p">
+  //                                             {item.productTitle}
+  //                                           </Text>
+  //                                         </InlineStack>
+  //                                       </Box>
+  //                                       <Box padding="200">
+  //                                         <Button
+  //                                           icon={DeleteIcon}
+  //                                           onClick={() =>
+  //                                             handleCollectionDelete(
+  //                                               index,
+  //                                               "customer_buy",
+  //                                             )
+  //                                           }
+  //                                           accessibilityLabel="Delete collection"
+  //                                         />
+  //                                       </Box>
+  //                                     </InlineStack>
+  //                                   </Box>
+  //                                 </div>
+  //                               ))}
+  //                             </BlockStack>
+  //                           )}
+  //                         </>
+  //                       )}
+  //                     </>
+  //                   )}
+  //                 </BlockStack>
+  //               </Card>
+  //             </Layout.Section>
+  //             <Layout.Section>
+  //               <Card>
+  //                 <BlockStack gap={300}>
+  //                   <Text variant="headingMd" as="h6" fontWeight="semibold">
+  //                     Customer gets
+  //                   </Text>
+  //                   <BlockStack>
+  //                     <RadioButton
+  //                       label="Any product"
+  //                       id="any-products-slotB"
+  //                       name="products-slotB"
+  //                       checked={
+  //                         formData.rules.customer_get.chosen_type === "any"
+  //                       }
+  //                       onChange={(e) => {
+  //                         handleFocus("any");
+  //                         handleChange("any", "customer_get", "chosen_type");
+  //                       }}
+  //                     />
+  //                     <RadioButton
+  //                       label="Specific product or Collection"
+  //                       id="same-collection-slotB"
+  //                       name="products-slotB"
+  //                       checked={
+  //                         formData.rules.customer_get.chosen_type === "specific"
+  //                       }
+  //                       onChange={(e) => {
+  //                         handleFocus("specific");
+  //                         handleChange(
+  //                           "specific",
+  //                           "customer_get",
+  //                           "chosen_type",
+  //                         );
+  //                       }}
+  //                     />
+  //                     {formData.rules.customer_get.chosen_type ===
+  //                     "specific" ? (
+  //                       <>
+  //                       <InlineStack wrap={false} gap="200">
+  //                         <div style={{ width: "100%" }}>
+  //                           <TextField
+  //                             placeholder="Search Products or Collections"
+  //                             type="text"
+  //                             prefix={<Icon source={SearchIcon} tone="base" />}
+  //                             autoComplete="off"
+  //                           />
+  //                         </div>
+  //                         <Button onClick={() => selectProduct("customer_get")}>
+  //                           Browse
+  //                         </Button>
+  //                       </InlineStack>
+  //                       <InlineStack wrap={false} gap="200">
+  //                         <div style={{ width: "100%" }}>
+  //                           <TextField
+  //                             placeholder="Search Products or Collections"
+  //                             type="text"
+  //                             prefix={<Icon source={SearchIcon} tone="base" />}
+  //                             autoComplete="off"
+  //                           />
+  //                         </div>
+  //                         <Button onClick={() => selectCollection("customer_get")}>Browse</Button>
+  //                       </InlineStack>
+  //                       </>
+  //                     ) : (
+  //                       ""
+  //                     )}
+  //                     <TextField
+  //                       label="Quantity"
+  //                       type="number"
+  //                       onChange={(e) => {
+  //                         handleFocus("qty");
+  //                         handleChange(e, "customer_get", "qty");
+  //                       }}
+  //                       autoComplete="off"
+  //                       value={formData.rules.customer_get.qty}
+  //                     />{" "}
+  //                     {formData.rules.customer_get.chosen_type ===
+  //                       "specific" && (
+  //                       <>
+  //                         {getProduct.length === 0  && getCollections.length === 0 ? (
+  //                           <InlineError
+  //                             message="A product or collection selection is required"
+  //                             fieldID="myFieldID"
+  //                           />
+  //                         ) : (
+  //                           <>
+  //                           {getProduct.length > 0 && (
+  //                             <BlockStack gap="200">
+  //                               <Text as="p" fontWeight="bold">
+  //                                 You have selected {getProduct.length} product
+  //                                 {getProduct.length > 1 ? "s" : ""}
+  //                               </Text>
+  //                               {getProduct.length > 0 &&
+  //                                 getProduct.map((item, index) => (
+  //                                   <div
+  //                                     className="upsell_products_bundles_list"
+  //                                     key={index}
+  //                                   >
+  //                                     <Box>
+  //                                       <InlineStack
+  //                                         wrap={false}
+  //                                         align="space-between"
+  //                                         blockAlign="center"
+  //                                       >
+  //                                         <Box padding="200">
+  //                                           <InlineStack
+  //                                             align="center"
+  //                                             blockAlign="center"
+  //                                             gap="200"
+  //                                           >
+  //                                             {item.productImage ? (
+  //                                               <Thumbnail
+  //                                                 source={item.productImage}
+  //                                                 alt={item.productTitle}
+  //                                               />
+  //                                             ) : (
+  //                                               <Icon
+  //                                                 source={ImageIcon}
+  //                                                 color="base"
+  //                                                 accessibilityLabel="Placeholder image"
+  //                                               />
+  //                                             )}
+  //                                             <Text variant="bodySm" as="p">
+  //                                               {item.productTitle}
+  //                                             </Text>
+  //                                           </InlineStack>
+  //                                         </Box>
+  //                                         <Box padding="200">
+  //                                           <Button
+  //                                             icon={DeleteIcon}
+  //                                             onClick={() =>
+  //                                               handleDelete(
+  //                                                 index,
+  //                                                 "customer_get",
+  //                                               )
+  //                                             }
+  //                                             accessibilityLabel="Delete product"
+  //                                           />
+  //                                         </Box>
+  //                                       </InlineStack>
+  //                                     </Box>
+  //                                   </div>
+  //                                 ))}
+  //                             </BlockStack>
+  //                           )}
+  //                           {getCollections.length > 0 && (
+  //                             <BlockStack gap="200">
+  //                               <Text as="p" fontWeight="bold">
+  //                                 You have selected {getCollections.length}{" "}
+  //                                 collection
+  //                                 {getCollections.length > 1 ? "s" : ""}
+  //                               </Text>
+  //                               {getCollections.map((item, index) => (
+  //                                 <div
+  //                                   className="upsell_products_bundles_list"
+  //                                   key={index}
+  //                                 >
+  //                                   <Box>
+  //                                     <InlineStack
+  //                                       wrap={false}
+  //                                       align="space-between"
+  //                                       blockAlign="center"
+  //                                     >
+  //                                       <Box padding="200">
+  //                                         <InlineStack
+  //                                           align="center"
+  //                                           blockAlign="center"
+  //                                           gap="200"
+  //                                         >
+  //                                           {item.productImage ? (
+  //                                             <Thumbnail
+  //                                               source={item.productImage}
+  //                                               alt={item.productTitle}
+  //                                             />
+  //                                           ) : (
+  //                                             <Icon
+  //                                               source={ImageIcon}
+  //                                               color="base"
+  //                                               accessibilityLabel="Placeholder image"
+  //                                             />
+  //                                           )}
+  //                                           <Text variant="bodySm" as="p">
+  //                                             {item.productTitle}
+  //                                           </Text>
+  //                                         </InlineStack>
+  //                                       </Box>
+  //                                       <Box padding="200">
+  //                                         <Button
+  //                                           icon={DeleteIcon}
+  //                                           onClick={() =>
+  //                                             handleCollectionDelete(
+  //                                               index,
+  //                                               "customer_get",
+  //                                             )
+  //                                           }
+  //                                           accessibilityLabel="Delete collection"
+  //                                         />
+  //                                       </Box>
+  //                                     </InlineStack>
+  //                                   </Box>
+  //                                 </div>
+  //                               ))}
+  //                             </BlockStack>
+  //                           )}
+  //                         </>
+  //                         )}
+  //                       </>
+  //                     )}
+  //                   </BlockStack>
+  //                 </BlockStack>
+  //               </Card>
+  //             </Layout.Section>
+  //           </div>
+  //         </Grid.Cell>
+  //         <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+  //           <Layout.Section variant="oneHalf">
+  //             {leftPreviewLayout}
+  //           </Layout.Section>
+  //         </Grid.Cell>
+  //       </Grid>
 
-        <PageActions
-          primaryAction={{
-            content: "Continue to discount",
-            onClick: handleContinueClick,
-          }}
-          secondaryActions={
-            <Button onClick={toggleModal} variant="primary" tone="critical">
-              Delete
-            </Button>
-          }
-        />
-      </>
-    );
-  };
+  //       <PageActions
+  //         primaryAction={{
+  //           content: "Continue to discount",
+  //           onClick: handleContinueClick,
+  //         }}
+  //         secondaryActions={
+  //           <Button onClick={toggleModal} variant="primary" tone="critical">
+  //             Delete
+  //           </Button>
+  //         }
+  //       />
+  //     </>
+  //   );
+  // };
 
-  const Discount = () => {
-    const [isFirstButtonActive, setIsFirstButtonActive] = useState(true);
+  // const Discount = () => {
+   
 
-    const handleFirstButtonClick = (field) => {
-      setIsFirstButtonActive(true);
-      setFormData({
-        ...formData,
-        rules: {
-          ...formData.rules,
-          discount: {
-            ...formData.rules.discount,
+  //   const handleFirstButtonClick = (field) => {
+  //     setIsFirstButtonActive(true);
+  //     setFormData({
+  //       ...formData,
+  //       rules: {
+  //         ...formData.rules,
+  //         discount: {
+  //           ...formData.rules.discount,
 
-            discount_type: "Percent",
-            discount_symbol: "%",
-          },
-        },
-      });
-    };
-    const handleSecondButtonClick = (field) => {
-      // setFormData({ ...formData, discount_type: "fixed" });
-      setFormData({
-        ...formData,
-        rules: {
-          ...formData.rules,
-          discount: {
-            ...formData.rules.discount,
+  //           discount_type: "Percent",
+  //           discount_symbol: "%",
+  //         },
+  //       },
+  //     });
+  //   };
+  //   const handleSecondButtonClick = (field) => {
+  //     // setFormData({ ...formData, discount_type: "fixed" });
+  //     setFormData({
+  //       ...formData,
+  //       rules: {
+  //         ...formData.rules,
+  //         discount: {
+  //           ...formData.rules.discount,
 
-            discount_type: "fixed",
-            discount_symbol: "INR",
-          },
-        },
-      });
-      setIsFirstButtonActive(false);
-    };
-    return (
-      <>
-        <div className="aios_layout_spacer">
-          <Layout>
-            <Layout.Section variant="oneHalf">
-              <Layout>
-                <Layout.Section>
-                  <Card roundedAbove="sm">
-                    <BlockStack gap="300">
-                      <Text variant="headingSm" as="h6">
-                        Discount value
-                      </Text>
-                      <Box paddingBlockStart="200">
-                        <BlockStack gap="400">
-                          <InlineStack gap="200">
-                            <ButtonGroup variant="segmented">
-                              <Button
-                                pressed={isFirstButtonActive}
-                                onClick={() => {
-                                  handleFirstButtonClick("discount");
-                                }}
-                              >
-                                Percent
-                              </Button>
-                              <Button
-                                pressed={!isFirstButtonActive}
-                                onClick={handleSecondButtonClick}
-                              >
-                                Fixed Amount
-                              </Button>
-                            </ButtonGroup>
-                            <TextField
-                              type="number"
-                              value={formData.rules.discount.discount_amount}
-                              suffix={formData.rules.discount.discount_symbol}
-                              onChange={(e) => {
-                                handleFocus("discount_amount");
-                                handleChange(e, "discount", "discount_amount");
-                              }}
-                              placeholder="Min Value : 0"
-                              min={0}
-                            />
-                          </InlineStack>
-                        </BlockStack>
-                      </Box>
-                    </BlockStack>
-                  </Card>
-                </Layout.Section>
-              </Layout>
-            </Layout.Section>
-            <Layout.Section variant="oneHalf">
-              {leftPreviewLayout}
-            </Layout.Section>
-          </Layout>
-        </div>
-        <PageActions
-          primaryAction={{
-            content: "Continue to Appearance",
-            onClick: handleContinueClick,
-          }}
-          secondaryActions={
-            <Button onClick={toggleModal} variant="primary" tone="critical">
-              Delete
-            </Button>
-          }
-        />
-      </>
-    );
-  };
+  //           discount_type: "fixed",
+  //           discount_symbol: "INR",
+  //         },
+  //       },
+  //     });
+  //     setIsFirstButtonActive(false);
+  //   };
+  //   return (
+  //     <>
+  //       <div className="aios_layout_spacer">
+  //         <Layout>
+  //           <Layout.Section variant="oneHalf">
+  //             <Layout>
+  //               <Layout.Section>
+  //                 <Card roundedAbove="sm">
+  //                   <BlockStack gap="300">
+  //                     <Text variant="headingSm" as="h6">
+  //                       Discount value
+  //                     </Text>
+  //                     <Box paddingBlockStart="200">
+  //                       <BlockStack gap="400">
+  //                         <InlineStack gap="200">
+  //                           <ButtonGroup variant="segmented">
+  //                             <Button
+  //                               pressed={isFirstButtonActive}
+  //                               onClick={() => {
+  //                                 handleFirstButtonClick("discount");
+  //                               }}
+  //                             >
+  //                               Percent
+  //                             </Button>
+  //                             <Button
+  //                               pressed={!isFirstButtonActive}
+  //                               onClick={handleSecondButtonClick}
+  //                             >
+  //                               Fixed Amount
+  //                             </Button>
+  //                           </ButtonGroup>
+  //                           <TextField
+  //                             type="number"
+  //                             value={formData.rules.discount.discount_amount}
+  //                             suffix={formData.rules.discount.discount_symbol}
+  //                             onChange={(e) => {
+  //                               handleFocus("discount_amount");
+  //                               handleChange(e, "discount", "discount_amount");
+  //                             }}
+  //                             placeholder="Min Value : 0"
+  //                             min={0}
+  //                           />
+  //                         </InlineStack>
+  //                       </BlockStack>
+  //                     </Box>
+  //                   </BlockStack>
+  //                 </Card>
+  //               </Layout.Section>
+  //             </Layout>
+  //           </Layout.Section>
+  //           <Layout.Section variant="oneHalf">
+  //             {leftPreviewLayout}
+  //           </Layout.Section>
+  //         </Layout>
+  //       </div>
+  //       <PageActions
+  //         primaryAction={{
+  //           content: "Continue to Appearance",
+  //           onClick: handleContinueClick,
+  //         }}
+  //         secondaryActions={
+  //           <Button onClick={toggleModal} variant="primary" tone="critical">
+  //             Delete
+  //           </Button>
+  //         }
+  //       />
+  //     </>
+  //   );
+  // };
 
-  const Apperance = () => {
-    const Status_options = [
-      { label: "Select an option", value: "Select an option" },
-      { label: "Active", value: "Active" },
-      { label: "Inactive", value: "Inactive" },
-    ];
+//   const Apperance = () => {
+//     const Status_options = [
+//       { label: "Select an option", value: "Select an option" },
+//       { label: "Active", value: "Active" },
+//       { label: "Inactive", value: "Inactive" },
+//     ];
 
-    const informative_Status_options = [
-      { label: "Select an option", value: "Select an option" },
-      { label: "Active", value: "Active" },
-      { label: "Inactive", value: "Inactive" },
-    ];
+//     const informative_Status_options = [
+//       { label: "Select an option", value: "Select an option" },
+//       { label: "Active", value: "Active" },
+//       { label: "Inactive", value: "Inactive" },
+//     ];
 
-    const Productpage = (
-      <div>
-        <Card sectioned>
-          <BlockStack gap="500">
-            <div className="arrow-sign">
-              <BlockStack gap={200}>
-                <div
-                  onClick={() => handleToggle("cookiesettings")}
-                  style={{ display: "inline-block", cursor: "pointer" }}
-                >
-                  <div style={{ float: "left" }}>
-                    <Text variant="headingSm" as="h6">
-                      <InlineStack gap={300}>
-                        {" "}
-                        BOGO on Product Page
-                        {formData.rules.product_page.status === "Active" ? (
-                          <Badge tone="success">Active</Badge>
-                        ) : (
-                          <Badge>Inactive</Badge>
-                        )}
-                      </InlineStack>
-                    </Text>
-                  </div>
-                  <div style={{ float: "right" }}>
-                    <InlineStack>
-                      {openStates.cookiesettings ? (
-                        <></>
-                      ) : (
-                        <div style={{ marginTop: "2px" }}>
-                          <Text variant="bodySm" as="p">
-                            Show settings
-                          </Text>
-                        </div>
-                      )}
-                      <Icon source={ChevronDownIcon} tone="base" />
-                    </InlineStack>
-                  </div>
-                </div>
-                <Text variant="bodySm" as="p">
-                  Showcase the products from the offer, together with the
-                  discount. Suited just below the product description.
-                  <Link href="#">
-                    <Text variant="headingSm" as="h5">
-                      Preview
-                    </Text>
-                  </Link>
-                </Text>
-              </BlockStack>
-            </div>
+//     const Productpage = (
+//       <div>
+//         <Card sectioned>
+//           <BlockStack gap="500">
+//             <div className="arrow-sign">
+//               <BlockStack gap={200}>
+//                 <div
+//                   onClick={() => handleToggle("cookiesettings")}
+//                   style={{ display: "inline-block", cursor: "pointer" }}
+//                 >
+//                   <div style={{ float: "left" }}>
+//                     <Text variant="headingSm" as="h6">
+//                       <InlineStack gap={300}>
+//                         {" "}
+//                         BOGO on Product Page
+//                         {formData.rules.product_page.status === "Active" ? (
+//                           <Badge tone="success">Active</Badge>
+//                         ) : (
+//                           <Badge>Inactive</Badge>
+//                         )}
+//                       </InlineStack>
+//                     </Text>
+//                   </div>
+//                   <div style={{ float: "right" }}>
+//                     <InlineStack>
+//                       {openStates.cookiesettings ? (
+//                         <></>
+//                       ) : (
+//                         <div style={{ marginTop: "2px" }}>
+//                           <Text variant="bodySm" as="p">
+//                             Show settings
+//                           </Text>
+//                         </div>
+//                       )}
+//                       <Icon source={ChevronDownIcon} tone="base" />
+//                     </InlineStack>
+//                   </div>
+//                 </div>
+//                 <Text variant="bodySm" as="p">
+//                   Showcase the products from the offer, together with the
+//                   discount. Suited just below the product description.
+//                   <Link href="#">
+//                     <Text variant="headingSm" as="h5">
+//                       Preview
+//                     </Text>
+//                   </Link>
+//                 </Text>
+//               </BlockStack>
+//             </div>
 
-            <Collapsible
-              open={openStates.cookiesettings}
-              id="productpage"
-              transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-              expandOnPrint
-            >
-              <BlockStack gap="400">
-                <Select
-                  label="Status"
-                  options={Status_options}
-                  onChange={(e) => {
-                    handleFocus("status");
-                    handleChange(e, "product_page", "status");
-                  }}
-                  value={formData.rules.product_page.status}
-                />
-                <TextField
-                  label="Offer title"
-                  autoComplete="off"
-                  onChange={(e) => {
-                    handleFocus("offer_title");
-                    handleChange(e, "product_page", "offer_title");
-                  }}
-                  value={formData.rules.product_page.offer_title}
-                />
-                <TextField
-                  label={`Button text`}
-                  autoComplete="off"
-                  onChange={(e) => {
-                    handleFocus("button_text");
-                    handleChange(e, "product_page", "button_text");
-                  }}
-                  value={formData.rules.product_page.button_text}
-                />
-                <TextField
-                  label={`Badge text`}
-                  autoComplete="off"
-                  onChange={(e) => {
-                    handleFocus("badge_text");
-                    handleChange(e, "product_page", "badge_text");
-                  }}
-                  value={formData.rules.product_page.badge_text}
-                />
-                <BlockStack gap={300}>
-                  <div
-                    class="discount-displayed"
-                    style={{
-                      paddingTop: "20px",
-                      borderBottom: "1px solid #ebebeb",
-                    }}
-                  ></div>
-                </BlockStack>
-                <BlockStack gap={200}>
-                  <div style={{ float: "left" }}>
-                    <Text variant="headingMd" as="h6">
-                      Appearance
-                    </Text>
-                    <Text variant="bodySm" as="p">
-                      These settings apply to offer badges, price badge and
-                      button.
-                    </Text>
-                  </div>
+//             <Collapsible
+//               open={openStates.cookiesettings}
+//               id="productpage"
+//               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+//               expandOnPrint
+//             >
+//               <BlockStack gap="400">
+//                 <Select
+//                   label="Status"
+//                   options={Status_options}
+//                   onChange={(e) => {
+//                     handleFocus("status");
+//                     handleChange(e, "product_page", "status");
+//                   }}
+//                   value={formData.rules.product_page.status}
+//                 />
+//                 <TextField
+//                   label="Offer title"
+//                   autoComplete="off"
+//                   onChange={(e) => {
+//                     handleFocus("offer_title");
+//                     handleChange(e, "product_page", "offer_title");
+//                   }}
+//                   value={formData.rules.product_page.offer_title}
+//                 />
+//                 <TextField
+//                   label={`Button text`}
+//                   autoComplete="off"
+//                   onChange={(e) => {
+//                     handleFocus("button_text");
+//                     handleChange(e, "product_page", "button_text");
+//                   }}
+//                   value={formData.rules.product_page.button_text}
+//                 />
+//                 <TextField
+//                   label={`Badge text`}
+//                   autoComplete="off"
+//                   onChange={(e) => {
+//                     handleFocus("badge_text");
+//                     handleChange(e, "product_page", "badge_text");
+//                   }}
+//                   value={formData.rules.product_page.badge_text}
+//                 />
+//                 <BlockStack gap={300}>
+//                   <div
+//                     class="discount-displayed"
+//                     style={{
+//                       paddingTop: "20px",
+//                       borderBottom: "1px solid #ebebeb",
+//                     }}
+//                   ></div>
+//                 </BlockStack>
+//                 <BlockStack gap={200}>
+//                   <div style={{ float: "left" }}>
+//                     <Text variant="headingMd" as="h6">
+//                       Appearance
+//                     </Text>
+//                     <Text variant="bodySm" as="p">
+//                       These settings apply to offer badges, price badge and
+//                       button.
+//                     </Text>
+//                   </div>
 
-                  <Grid>
-                    <Grid.Cell
-                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    >
-                      <div className="color_section">
-                        <TextField
-                          label={`Accent color`}
-                          type="text"
-                          onChange={(e) => {
-                            handleFocus("accent_color");
-                            handleChange(e, "product_page", "accent_color");
-                          }}
-                          value={formData.rules.product_page.accent_color}
-                          autoComplete="off"
-                          connectedLeft={
-                            <input
-                              style={{
-                                boxShadow:
-                                  formData.rules.product_page.accent_color ===
-                                  "#ffffff"
-                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                    : "none",
-                                width:
-                                  formData.rules.product_page.accent_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                                height:
-                                  formData.rules.product_page.accent_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                              }}
-                              type="color"
-                              value={formData.rules.product_page.accent_color}
-                              onChange={(e) =>
-                                handleColorChange(
-                                  e,
-                                  "accent_color",
-                                  "product_page",
-                                  "accent_color",
-                                )
-                              }
-                            />
-                          }
-                        />
-                      </div>
-                    </Grid.Cell>
-                    <Grid.Cell
-                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    >
-                      <div className="color_section">
-                        <TextField
-                          label={`Text color`}
-                          type="text"
-                          onChange={(e) => {
-                            handleFocus("text_color");
-                            handleChange(e, "product_page", "text_color");
-                          }}
-                          value={formData.rules.product_page.text_color}
-                          autoComplete="off"
-                          connectedLeft={
-                            <input
-                              style={{
-                                boxShadow:
-                                  formData.rules.product_page.text_color ===
-                                  "#ffffff"
-                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                    : "none",
-                                width:
-                                  formData.rules.product_page.text_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                                height:
-                                  formData.rules.product_page.text_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                              }}
-                              type="color"
-                              value={formData.rules.product_page.text_color}
-                              onChange={(e) =>
-                                handleColorChange(
-                                  e,
-                                  "text_color",
-                                  "product_page",
-                                  "text_color",
-                                )
-                              }
-                            />
-                          }
-                        />
-                      </div>
-                    </Grid.Cell>
-                  </Grid>
-                  <RangeSlider
-                    output
-                    label={
-                      <InlineStack style={{ margin: "0px" }}>
-                        Offer badge text size
-                        <Tooltip
-                          content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
-                        ></Tooltip>
-                      </InlineStack>
-                    }
-                    min={10}
-                    max={60}
-                    prefix="10px"
-                    suffix="16px"
-                    value={formData.rules.product_page.badge_size}
-                    onChange={(e) => {
-                      handleFocus("badge_size");
-                      handleChange(e, "product_page", "badge_size");
-                    }}
-                  />
-                </BlockStack>
-                <BlockStack gap={300}>
-                  <div
-                    className="discount-displayed"
-                    style={{
-                      paddingTop: "20px",
-                      borderBottom: "1px solid #ebebeb",
-                    }}
-                  ></div>
-                </BlockStack>
-                <div>
-                  <Text variant="headingSm" as="h6">
-                    Product card
-                  </Text>
-                  <Text variant="bodyMd" as="p">
-                    These settings apply to all BOGO offers on Product Page
-                  </Text>
-                </div>
-                <BlockStack gap={300}>
-                  <Checkbox
-                    label="Show shadow"
-                    checked={formData.rules.product_page.show_shadow}
-                    onChange={(e) => {
-                      handleFocus("show_shadow");
-                      handleChange(e, "product_page", "show_shadow");
-                    }}
-                  />
-                  <Checkbox
-                    label="Show border"
-                    checked={formData.rules.product_page.show_border}
-                    onChange={(e) => {
-                      handleFocus("show_border");
-                      handleChange(e, "product_page", "show_border");
-                    }}
-                  />
+//                   <Grid>
+//                     <Grid.Cell
+//                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//                     >
+//                       <div className="color_section">
+//                         <TextField
+//                           label={`Accent color`}
+//                           type="text"
+//                           onChange={(e) => {
+//                             handleFocus("accent_color");
+//                             handleChange(e, "product_page", "accent_color");
+//                           }}
+//                           value={formData.rules.product_page.accent_color}
+//                           autoComplete="off"
+//                           connectedLeft={
+//                             <input
+//                               style={{
+//                                 boxShadow:
+//                                   formData.rules.product_page.accent_color ===
+//                                   "#ffffff"
+//                                     ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                     : "none",
+//                                 width:
+//                                   formData.rules.product_page.accent_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                                 height:
+//                                   formData.rules.product_page.accent_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                               }}
+//                               type="color"
+//                               value={formData.rules.product_page.accent_color}
+//                               onChange={(e) =>
+//                                 handleColorChange(
+//                                   e,
+//                                   "accent_color",
+//                                   "product_page",
+//                                   "accent_color",
+//                                 )
+//                               }
+//                             />
+//                           }
+//                         />
+//                       </div>
+//                     </Grid.Cell>
+//                     <Grid.Cell
+//                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//                     >
+//                       <div className="color_section">
+//                         <TextField
+//                           label={`Text color`}
+//                           type="text"
+//                           onChange={(e) => {
+//                             handleFocus("text_color");
+//                             handleChange(e, "product_page", "text_color");
+//                           }}
+//                           value={formData.rules.product_page.text_color}
+//                           autoComplete="off"
+//                           connectedLeft={
+//                             <input
+//                               style={{
+//                                 boxShadow:
+//                                   formData.rules.product_page.text_color ===
+//                                   "#ffffff"
+//                                     ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                     : "none",
+//                                 width:
+//                                   formData.rules.product_page.text_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                                 height:
+//                                   formData.rules.product_page.text_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                               }}
+//                               type="color"
+//                               value={formData.rules.product_page.text_color}
+//                               onChange={(e) =>
+//                                 handleColorChange(
+//                                   e,
+//                                   "text_color",
+//                                   "product_page",
+//                                   "text_color",
+//                                 )
+//                               }
+//                             />
+//                           }
+//                         />
+//                       </div>
+//                     </Grid.Cell>
+//                   </Grid>
+//                   <RangeSlider
+//                     output
+//                     label={
+//                       <InlineStack style={{ margin: "0px" }}>
+//                         Offer badge text size
+//                         <Tooltip
+//                           content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
+//                         ></Tooltip>
+//                       </InlineStack>
+//                     }
+//                     min={10}
+//                     max={60}
+//                     prefix="10px"
+//                     suffix="16px"
+//                     value={formData.rules.product_page.badge_size}
+//                     onChange={(e) => {
+//                       handleFocus("badge_size");
+//                       handleChange(e, "product_page", "badge_size");
+//                     }}
+//                   />
+//                 </BlockStack>
+//                 <BlockStack gap={300}>
+//                   <div
+//                     className="discount-displayed"
+//                     style={{
+//                       paddingTop: "20px",
+//                       borderBottom: "1px solid #ebebeb",
+//                     }}
+//                   ></div>
+//                 </BlockStack>
+//                 <div>
+//                   <Text variant="headingSm" as="h6">
+//                     Product card
+//                   </Text>
+//                   <Text variant="bodyMd" as="p">
+//                     These settings apply to all BOGO offers on Product Page
+//                   </Text>
+//                 </div>
+//                 <BlockStack gap={300}>
+//                   <Checkbox
+//                     label="Show shadow"
+//                     checked={formData.rules.product_page.show_shadow}
+//                     onChange={(e) => {
+//                       handleFocus("show_shadow");
+//                       handleChange(e, "product_page", "show_shadow");
+//                     }}
+//                   />
+//                   <Checkbox
+//                     label="Show border"
+//                     checked={formData.rules.product_page.show_border}
+//                     onChange={(e) => {
+//                       handleFocus("show_border");
+//                       handleChange(e, "product_page", "show_border");
+//                     }}
+//                   />
 
-                  <Grid>
-                    <Grid.Cell
-                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    >
-                      <div className="color_section">
-                        <TextField
-                          label={`Border color`}
-                          type="text"
-                          onChange={(e) => {
-                            handleFocus("border_color");
-                            handleChange(e, "product_page", " border_color");
-                          }}
-                          value={formData.rules.product_page.border_color}
-                          autoComplete="off"
-                          connectedLeft={
-                            <input
-                              type="color"
-                              style={{
-                                boxShadow:
-                                  formData.rules.product_page.border_color ===
-                                  "#ffffff"
-                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                    : "none",
-                                width:
-                                  formData.rules.product_page.border_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                                height:
-                                  formData.rules.product_page.border_color ===
-                                  "#ffffff"
-                                    ? "34px"
-                                    : "38px",
-                              }}
-                              value={formData.rules.product_page.border_color}
-                              onChange={(e) =>
-                                handleColorChange(
-                                  e,
-                                  "border_color",
-                                  "product_page",
-                                  "border_color",
-                                )
-                              }
-                            />
-                          }
-                        />
-                      </div>
-                    </Grid.Cell>
-                    <Grid.Cell
-                      columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    ></Grid.Cell>
-                  </Grid>
-                </BlockStack>
-              </BlockStack>
-            </Collapsible>
-          </BlockStack>
-        </Card>
-      </div>
-    );
-    const CartPage = (
-      <div>
-        <Card sectioned>
-          <BlockStack gap="500">
-            <div className="arrow-sign">
-              <BlockStack gap={200}>
-                <div
-                  onClick={() => handleToggle("informativeCookieBanner")}
-                  style={{ display: "inline-block", cursor: "pointer" }}
-                >
-                  <div style={{ float: "left" }}>
-                    <Text variant="headingSm" as="h6">
-                      <InlineStack gap={300}>
-                        Cart Suggestion on Cart page
-                        {formData.rules.cart_page.status === "Active" ? (
-                          <Badge tone="success">Active</Badge>
-                        ) : (
-                          <Badge>Inactive</Badge>
-                        )}
-                      </InlineStack>
-                    </Text>
-                  </div>
-                  <div style={{ float: "right" }}>
-                    <InlineStack>
-                      {openStates.informativeCookieBanner ? (
-                        <> </>
-                      ) : (
-                        <div style={{ marginTop: "2px" }}>
-                          <Text variant="bodySm" as="p">
-                            Show settings
-                          </Text>
-                        </div>
-                      )}
-                      <Icon source={ChevronDownIcon} tone="base" />
-                    </InlineStack>
-                  </div>
-                </div>
-                <Text variant="bodySm" as="p">
-                  If your visitors are not required to give permission before
-                  their data can be used, you can display an informative banner.
-                  It will notify the visitors that by using your service, they
-                  accept your Privacy Policy.
-                  <Link href="#">
-                    <Text variant="headingSm" as="h5">
-                      Preview
-                    </Text>
-                  </Link>
-                </Text>
-              </BlockStack>
-            </div>
+//                   <Grid>
+//                     <Grid.Cell
+//                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//                     >
+//                       <div className="color_section">
+//                         <TextField
+//                           label={`Border color`}
+//                           type="text"
+//                           onChange={(e) => {
+//                             handleFocus("border_color");
+//                             handleChange(e, "product_page", " border_color");
+//                           }}
+//                           value={formData.rules.product_page.border_color}
+//                           autoComplete="off"
+//                           connectedLeft={
+//                             <input
+//                               type="color"
+//                               style={{
+//                                 boxShadow:
+//                                   formData.rules.product_page.border_color ===
+//                                   "#ffffff"
+//                                     ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                     : "none",
+//                                 width:
+//                                   formData.rules.product_page.border_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                                 height:
+//                                   formData.rules.product_page.border_color ===
+//                                   "#ffffff"
+//                                     ? "34px"
+//                                     : "38px",
+//                               }}
+//                               value={formData.rules.product_page.border_color}
+//                               onChange={(e) =>
+//                                 handleColorChange(
+//                                   e,
+//                                   "border_color",
+//                                   "product_page",
+//                                   "border_color",
+//                                 )
+//                               }
+//                             />
+//                           }
+//                         />
+//                       </div>
+//                     </Grid.Cell>
+//                     <Grid.Cell
+//                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//                     ></Grid.Cell>
+//                   </Grid>
+//                 </BlockStack>
+//               </BlockStack>
+//             </Collapsible>
+//           </BlockStack>
+//         </Card>
+//       </div>
+//     );
+//     const CartPage = (
+//       <div>
+//         <Card sectioned>
+//           <BlockStack gap="500">
+//             <div className="arrow-sign">
+//               <BlockStack gap={200}>
+//                 <div
+//                   onClick={() => handleToggle("informativeCookieBanner")}
+//                   style={{ display: "inline-block", cursor: "pointer" }}
+//                 >
+//                   <div style={{ float: "left" }}>
+//                     <Text variant="headingSm" as="h6">
+//                       <InlineStack gap={300}>
+//                         Cart Suggestion on Cart page
+//                         {formData.rules.cart_page.status === "Active" ? (
+//                           <Badge tone="success">Active</Badge>
+//                         ) : (
+//                           <Badge>Inactive</Badge>
+//                         )}
+//                       </InlineStack>
+//                     </Text>
+//                   </div>
+//                   <div style={{ float: "right" }}>
+//                     <InlineStack>
+//                       {openStates.informativeCookieBanner ? (
+//                         <> </>
+//                       ) : (
+//                         <div style={{ marginTop: "2px" }}>
+//                           <Text variant="bodySm" as="p">
+//                             Show settings
+//                           </Text>
+//                         </div>
+//                       )}
+//                       <Icon source={ChevronDownIcon} tone="base" />
+//                     </InlineStack>
+//                   </div>
+//                 </div>
+//                 <Text variant="bodySm" as="p">
+//                   If your visitors are not required to give permission before
+//                   their data can be used, you can display an informative banner.
+//                   It will notify the visitors that by using your service, they
+//                   accept your Privacy Policy.
+//                   <Link href="#">
+//                     <Text variant="headingSm" as="h5">
+//                       Preview
+//                     </Text>
+//                   </Link>
+//                 </Text>
+//               </BlockStack>
+//             </div>
 
-            <Collapsible
-              open={openStates.informativeCookieBanner}
-              id="basic-collapsible"
-              transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-              expandOnPrint
-            >
-              <BlockStack gap="400">
-                <Select
-                  label="Status"
-                  options={informative_Status_options}
-                  onChange={(e) => {
-                    handleFocus("status");
-                    handleChange(e, "cart_page", "status");
-                  }}
-                  value={formData.rules.cart_page.status}
-                />
-                <TextField
-                  label="Product suggestion format when there is a discount"
-                  onChange={(e) => {
-                    handleFocus("format");
-                    handleChange(e, "cart_page", "format");
-                  }}
-                  value={formData.rules.cart_page.format}
-                  autoComplete="off"
-                  helpText="Default is: You are eligible to get {{ quantity }} x {{ product }} with
-{{ value }} OFF!'"
-                />
+//             <Collapsible
+//               open={openStates.informativeCookieBanner}
+//               id="basic-collapsible"
+//               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+//               expandOnPrint
+//             >
+//               <BlockStack gap="400">
+//                 <Select
+//                   label="Status"
+//                   options={informative_Status_options}
+//                   onChange={(e) => {
+//                     handleFocus("status");
+//                     handleChange(e, "cart_page", "status");
+//                   }}
+//                   value={formData.rules.cart_page.status}
+//                 />
+//                 <TextField
+//                   label="Product suggestion format when there is a discount"
+//                   onChange={(e) => {
+//                     handleFocus("format");
+//                     handleChange(e, "cart_page", "format");
+//                   }}
+//                   value={formData.rules.cart_page.format}
+//                   autoComplete="off"
+//                   helpText="Default is: You are eligible to get {{ quantity }} x {{ product }} with
+// {{ value }} OFF!'"
+//                 />
 
-                <Divider />
+//                 <Divider />
 
-                <Text variant="headingSm" as="h6">
-                  Button
-                </Text>
-                <div className="aios-product-appearnce">
-                  <label>Type</label>
-                  <RadioButton
-                    label="
-                   Auto-detect theme style"
-                    id="disabled"
-                    name="accounts"
-                    onChange={(e) => {
-                      handleFocus("button_style");
-                      handleChange("auto-detect", "cart_page", "button_style");
-                    }}
-                    checked={
-                      formData.rules.cart_page.button_style === "auto-detect"
-                    }
-                  />
-                  <RadioButton
-                    label="Custom"
-                    onChange={(e) => {
-                      handleFocus("button_style");
-                      handleChange("custom", "cart_page", "button_style");
-                    }}
-                    checked={formData.rules.cart_page.button_style === "custom"}
-                    id="optional"
-                    name="accounts"
-                  />
-                </div>
-              </BlockStack>
-            </Collapsible>
-          </BlockStack>
-        </Card>
-      </div>
-    );
-    //     const ThankuPage = (
-    //       <div>
-    //         <Card sectioned>
-    //           <BlockStack gap="500">
-    //             <div className="arrow-sign">
-    //               <BlockStack gap={200}>
-    //                 <div
-    //                   onClick={() => handleToggle("thankubanner")}
-    //                   style={{ display: "inline-block", cursor: "pointer" }}
-    //                 >
-    //                   <div style={{ float: "left" }}>
-    //                     <Text variant="headingSm" as="h6">
-    //                       <InlineStack gap={300}>
-    //                         Post Purchase on Thank you page
-    //                         {formData.informative_banner_status === "Active" ? (
-    //                           <Badge tone="success">Active</Badge>
-    //                         ) : (
-    //                           <Badge>Inactive</Badge>
-    //                         )}
-    //                       </InlineStack>
-    //                     </Text>
-    //                   </div>
-    //                   <div style={{ float: "right" }}>
-    //                     <InlineStack>
-    //                       {openStates.thankubanner ? (
-    //                         <> </>
-    //                       ) : (
-    //                         <div style={{ marginTop: "2px" }}>
-    //                           <Text variant="bodySm" as="p">
-    //                             Show settings
-    //                           </Text>
-    //                         </div>
-    //                       )}
-    //                       <Icon source={ChevronDownIcon} tone="base" />
-    //                     </InlineStack>
-    //                   </div>
-    //                 </div>
-    //               </BlockStack>
-    //             </div>
+//                 <Text variant="headingSm" as="h6">
+//                   Button
+//                 </Text>
+//                 <div className="aios-product-appearnce">
+//                   <label>Type</label>
+//                   <RadioButton
+//                     label="
+//                    Auto-detect theme style"
+//                     id="disabled"
+//                     name="accounts"
+//                     onChange={(e) => {
+//                       handleFocus("button_style");
+//                       handleChange("auto-detect", "cart_page", "button_style");
+//                     }}
+//                     checked={
+//                       formData.rules.cart_page.button_style === "auto-detect"
+//                     }
+//                   />
+//                   <RadioButton
+//                     label="Custom"
+//                     onChange={(e) => {
+//                       handleFocus("button_style");
+//                       handleChange("custom", "cart_page", "button_style");
+//                     }}
+//                     checked={formData.rules.cart_page.button_style === "custom"}
+//                     id="optional"
+//                     name="accounts"
+//                   />
+//                 </div>
+//               </BlockStack>
+//             </Collapsible>
+//           </BlockStack>
+//         </Card>
+//       </div>
+//     );
+//     //     const ThankuPage = (
+//     //       <div>
+//     //         <Card sectioned>
+//     //           <BlockStack gap="500">
+//     //             <div className="arrow-sign">
+//     //               <BlockStack gap={200}>
+//     //                 <div
+//     //                   onClick={() => handleToggle("thankubanner")}
+//     //                   style={{ display: "inline-block", cursor: "pointer" }}
+//     //                 >
+//     //                   <div style={{ float: "left" }}>
+//     //                     <Text variant="headingSm" as="h6">
+//     //                       <InlineStack gap={300}>
+//     //                         Post Purchase on Thank you page
+//     //                         {formData.informative_banner_status === "Active" ? (
+//     //                           <Badge tone="success">Active</Badge>
+//     //                         ) : (
+//     //                           <Badge>Inactive</Badge>
+//     //                         )}
+//     //                       </InlineStack>
+//     //                     </Text>
+//     //                   </div>
+//     //                   <div style={{ float: "right" }}>
+//     //                     <InlineStack>
+//     //                       {openStates.thankubanner ? (
+//     //                         <> </>
+//     //                       ) : (
+//     //                         <div style={{ marginTop: "2px" }}>
+//     //                           <Text variant="bodySm" as="p">
+//     //                             Show settings
+//     //                           </Text>
+//     //                         </div>
+//     //                       )}
+//     //                       <Icon source={ChevronDownIcon} tone="base" />
+//     //                     </InlineStack>
+//     //                   </div>
+//     //                 </div>
+//     //               </BlockStack>
+//     //             </div>
 
-    //             <Collapsible
-    //               open={openStates.thankubanner}
-    //               id="basic-collapsible"
-    //               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-    //               expandOnPrint
-    //             >
-    //               <BlockStack gap="400">
-    //                 <Select
-    //                   label="Status"
-    //                   options={informative_Status_options}
-    //                   onChange={(e) => {
-    //                     handleFocus("informative_banner_status");
-    //                     handleChange(e, "informative_banner_status");
-    //                   }}
-    //                   value={formData.informative_banner_status}
-    //                 />
-    //                 <TextField
-    //                   label="Post Purchase offer title"
-    //                   onChange={(e) => {
-    //                     handleFocus("informative_banner_text");
-    //                     handleChange(e, "informative_banner_text");
-    //                   }}
-    //                   value={formData.informative_banner_text}
-    //                   autoComplete="off"
-    //                   helpText="Default is: Last chance to get {{ value }} OFF, if you buy {{ quantity }}"
-    //                 />
+//     //             <Collapsible
+//     //               open={openStates.thankubanner}
+//     //               id="basic-collapsible"
+//     //               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+//     //               expandOnPrint
+//     //             >
+//     //               <BlockStack gap="400">
+//     //                 <Select
+//     //                   label="Status"
+//     //                   options={informative_Status_options}
+//     //                   onChange={(e) => {
+//     //                     handleFocus("informative_banner_status");
+//     //                     handleChange(e, "informative_banner_status");
+//     //                   }}
+//     //                   value={formData.informative_banner_status}
+//     //                 />
+//     //                 <TextField
+//     //                   label="Post Purchase offer title"
+//     //                   onChange={(e) => {
+//     //                     handleFocus("informative_banner_text");
+//     //                     handleChange(e, "informative_banner_text");
+//     //                   }}
+//     //                   value={formData.informative_banner_text}
+//     //                   autoComplete="off"
+//     //                   helpText="Default is: Last chance to get {{ value }} OFF, if you buy {{ quantity }}"
+//     //                 />
 
-    //                 <TextField label={`"Accept" button`} autoComplete="off" />
-    //                 <Divider />
-    //                 <BlockStack gap={200}>
-    //                   <div
-    //                     onClick={() => handleToggle("generalDesignSettings")}
-    //                     style={{ display: "inline-block", cursor: "pointer" }}
-    //                   >
-    //                     <div style={{ float: "left" }}>
-    //                       <Text variant="headingMd" as="h6">
-    //                         Appearance
-    //                       </Text>
-    //                       <Text variant="bodyMd" as="h6">
-    //                         Accent
-    //                       </Text>
-    //                     </div>
-    //                   </div>
-    //                   <Grid>
-    //                     <Grid.Cell
-    //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-    //                     >
-    //                       <div className="color_section">
-    //                         <TextField
-    //                           label="Background"
-    //                           type="text"
-    //                           onChange={(e) => {
-    //                             handleFocus("Accent_color");
-    //                             handleChange(e, "Accent_color");
-    //                           }}
-    //                           value={formData.Accent_color}
-    //                           autoComplete="off"
-    //                           connectedLeft={
-    //                             <input
-    //                               type="color"
-    //                               value={formData.Accent_color}
-    //                               onChange={(e) => {
-    //                                 handleFocus("Accent_color");
-    //                                 handleColorChange(e, "Accent_color");
-    //                               }}
-    //                             />
-    //                           }
-    //                         />
-    //                       </div>
-    //                     </Grid.Cell>
-    //                     <Grid.Cell
-    //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-    //                     >
-    //                       <div className="color_section">
-    //                         <TextField
-    //                           label="Text"
-    //                           type="text"
-    //                           onChange={(e) => {
-    //                             handleFocus("text_color");
-    //                             handleChange(e, "text_color");
-    //                           }}
-    //                           value={formData.text_color}
-    //                           autoComplete="off"
-    //                           connectedLeft={
-    //                             <input
-    //                               type="color"
-    //                               value={formData.text_color}
-    //                               onChange={(e) => {
-    //                                 handleFocus("reject_text_color");
-    //                                 handleColorChange(e, "reject_text_color");
-    //                               }}
-    //                             />
-    //                           }
-    //                         />
-    //                       </div>
-    //                     </Grid.Cell>
-    //                   </Grid>
-    //                   <Text variant="bodyMd" as="h6">
-    //                     Widget Position
-    //                   </Text>
-    //                   <Divider />
-    //                   <Text variant="headingMd" as="h6">
-    //                     Advanced Settings
-    //                   </Text>
-    //                   <TextField
-    //                     label="Maximum acceptable discount
-    // "
-    //                     autoComplete="off"
-    //                     helpText="This setting will protect against situations where the discount would make the upsell unprofitable."
-    //                   />
-    //                   <TextField
-    //                     label="Bonus disclaimer text"
-    //                     multiline={4}
-    //                     autoComplete="off"
-    //                   />
-    //                 </BlockStack>
-    //               </BlockStack>
-    //             </Collapsible>
-    //           </BlockStack>
-    //         </Card>
-    //       </div>
-    //     );
-    const addCart = (
-      <div>
-        <Card sectioned>
-          <BlockStack gap="500">
-            <div className="arrow-sign">
-              <BlockStack gap={200}>
-                <div
-                  onClick={() => handleToggle("addCart")}
-                  style={{ display: "inline-block", cursor: "pointer" }}
-                >
-                  <div style={{ float: "left" }}>
-                    <Text variant="headingSm" as="h6">
-                      <InlineStack gap={300}>
-                        Pop-up on Add to Cart button
-                        {formData.rules.popup_cart.status === "Active" ? (
-                          <Badge tone="success">Active</Badge>
-                        ) : (
-                          <Badge>Inactive</Badge>
-                        )}
-                      </InlineStack>
-                    </Text>
-                  </div>
-                  <div style={{ float: "right" }}>
-                    <InlineStack>
-                      {openStates.addCart ? (
-                        <> </>
-                      ) : (
-                        <div style={{ marginTop: "2px" }}>
-                          <Text variant="bodySm" as="p">
-                            Show settings
-                          </Text>
-                        </div>
-                      )}
-                      <Icon source={ChevronDownIcon} tone="base" />
-                    </InlineStack>
-                  </div>
-                </div>
-                <Text variant="bodySm" as="p">
-                  Remind customers about this offer, if they missed the Classic
-                  widget on the product page.
-                  <Link href="#">
-                    <Text variant="headingSm" as="h5">
-                      Preview
-                    </Text>
-                  </Link>
-                </Text>
-              </BlockStack>
-            </div>
+//     //                 <TextField label={`"Accept" button`} autoComplete="off" />
+//     //                 <Divider />
+//     //                 <BlockStack gap={200}>
+//     //                   <div
+//     //                     onClick={() => handleToggle("generalDesignSettings")}
+//     //                     style={{ display: "inline-block", cursor: "pointer" }}
+//     //                   >
+//     //                     <div style={{ float: "left" }}>
+//     //                       <Text variant="headingMd" as="h6">
+//     //                         Appearance
+//     //                       </Text>
+//     //                       <Text variant="bodyMd" as="h6">
+//     //                         Accent
+//     //                       </Text>
+//     //                     </div>
+//     //                   </div>
+//     //                   <Grid>
+//     //                     <Grid.Cell
+//     //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//     //                     >
+//     //                       <div className="color_section">
+//     //                         <TextField
+//     //                           label="Background"
+//     //                           type="text"
+//     //                           onChange={(e) => {
+//     //                             handleFocus("Accent_color");
+//     //                             handleChange(e, "Accent_color");
+//     //                           }}
+//     //                           value={formData.Accent_color}
+//     //                           autoComplete="off"
+//     //                           connectedLeft={
+//     //                             <input
+//     //                               type="color"
+//     //                               value={formData.Accent_color}
+//     //                               onChange={(e) => {
+//     //                                 handleFocus("Accent_color");
+//     //                                 handleColorChange(e, "Accent_color");
+//     //                               }}
+//     //                             />
+//     //                           }
+//     //                         />
+//     //                       </div>
+//     //                     </Grid.Cell>
+//     //                     <Grid.Cell
+//     //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+//     //                     >
+//     //                       <div className="color_section">
+//     //                         <TextField
+//     //                           label="Text"
+//     //                           type="text"
+//     //                           onChange={(e) => {
+//     //                             handleFocus("text_color");
+//     //                             handleChange(e, "text_color");
+//     //                           }}
+//     //                           value={formData.text_color}
+//     //                           autoComplete="off"
+//     //                           connectedLeft={
+//     //                             <input
+//     //                               type="color"
+//     //                               value={formData.text_color}
+//     //                               onChange={(e) => {
+//     //                                 handleFocus("reject_text_color");
+//     //                                 handleColorChange(e, "reject_text_color");
+//     //                               }}
+//     //                             />
+//     //                           }
+//     //                         />
+//     //                       </div>
+//     //                     </Grid.Cell>
+//     //                   </Grid>
+//     //                   <Text variant="bodyMd" as="h6">
+//     //                     Widget Position
+//     //                   </Text>
+//     //                   <Divider />
+//     //                   <Text variant="headingMd" as="h6">
+//     //                     Advanced Settings
+//     //                   </Text>
+//     //                   <TextField
+//     //                     label="Maximum acceptable discount
+//     // "
+//     //                     autoComplete="off"
+//     //                     helpText="This setting will protect against situations where the discount would make the upsell unprofitable."
+//     //                   />
+//     //                   <TextField
+//     //                     label="Bonus disclaimer text"
+//     //                     multiline={4}
+//     //                     autoComplete="off"
+//     //                   />
+//     //                 </BlockStack>
+//     //               </BlockStack>
+//     //             </Collapsible>
+//     //           </BlockStack>
+//     //         </Card>
+//     //       </div>
+//     //     );
+//     const addCart = (
+//       <div>
+//         <Card sectioned>
+//           <BlockStack gap="500">
+//             <div className="arrow-sign">
+//               <BlockStack gap={200}>
+//                 <div
+//                   onClick={() => handleToggle("addCart")}
+//                   style={{ display: "inline-block", cursor: "pointer" }}
+//                 >
+//                   <div style={{ float: "left" }}>
+//                     <Text variant="headingSm" as="h6">
+//                       <InlineStack gap={300}>
+//                         Pop-up on Add to Cart button
+//                         {formData.rules.popup_cart.status === "Active" ? (
+//                           <Badge tone="success">Active</Badge>
+//                         ) : (
+//                           <Badge>Inactive</Badge>
+//                         )}
+//                       </InlineStack>
+//                     </Text>
+//                   </div>
+//                   <div style={{ float: "right" }}>
+//                     <InlineStack>
+//                       {openStates.addCart ? (
+//                         <> </>
+//                       ) : (
+//                         <div style={{ marginTop: "2px" }}>
+//                           <Text variant="bodySm" as="p">
+//                             Show settings
+//                           </Text>
+//                         </div>
+//                       )}
+//                       <Icon source={ChevronDownIcon} tone="base" />
+//                     </InlineStack>
+//                   </div>
+//                 </div>
+//                 <Text variant="bodySm" as="p">
+//                   Remind customers about this offer, if they missed the Classic
+//                   widget on the product page.
+//                   <Link href="#">
+//                     <Text variant="headingSm" as="h5">
+//                       Preview
+//                     </Text>
+//                   </Link>
+//                 </Text>
+//               </BlockStack>
+//             </div>
 
-            <Collapsible
-              open={openStates.addCart}
-              id="basic-collapsible"
-              transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-              expandOnPrint
-            >
-              <BlockStack gap="400">
-                <Select
-                  label="Status"
-                  options={informative_Status_options}
-                  onChange={(e) => {
-                    handleFocus("status");
-                    handleChange(e, "popup_cart", "status");
-                  }}
-                  value={formData.rules.popup_cart.status}
-                />
-                <TextField
-                  label="Pop-up title"
-                  onChange={(e) => {
-                    handleFocus("title");
-                    handleChange(e, "popup_cart", "title");
-                  }}
-                  value={formData.rules.popup_cart.title}
-                  autoComplete="off"
-                />
-                <TextField
-                  label="Button text"
-                  onChange={(e) => {
-                    handleFocus("text");
-                    handleChange(e, "popup_cart", "text");
-                  }}
-                  value={formData.rules.popup_cart.text}
-                  autoComplete="off"
-                />
+//             <Collapsible
+//               open={openStates.addCart}
+//               id="basic-collapsible"
+//               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+//               expandOnPrint
+//             >
+//               <BlockStack gap="400">
+//                 <Select
+//                   label="Status"
+//                   options={informative_Status_options}
+//                   onChange={(e) => {
+//                     handleFocus("status");
+//                     handleChange(e, "popup_cart", "status");
+//                   }}
+//                   value={formData.rules.popup_cart.status}
+//                 />
+//                 <TextField
+//                   label="Pop-up title"
+//                   onChange={(e) => {
+//                     handleFocus("title");
+//                     handleChange(e, "popup_cart", "title");
+//                   }}
+//                   value={formData.rules.popup_cart.title}
+//                   autoComplete="off"
+//                 />
+//                 <TextField
+//                   label="Button text"
+//                   onChange={(e) => {
+//                     handleFocus("text");
+//                     handleChange(e, "popup_cart", "text");
+//                   }}
+//                   value={formData.rules.popup_cart.text}
+//                   autoComplete="off"
+//                 />
 
-                <Divider />
+//                 <Divider />
 
-                <Text variant="headingSm" as="h6">
-                  Appearance
-                </Text>
-                <Text variant="headingSm" as="h6">
-                  Overlay
-                </Text>
-                <Grid>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Background"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("overlay_bgColor");
-                          handleChange(e, "popup_cart", "overlay_bgColor");
-                        }}
-                        value={formData.rules.popup_cart.overlay_bgColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            type="color"
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.overlay_bgColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.overlay_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.overlay_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            value={formData.rules.popup_cart.overlay_bgColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "overlay_bgColor",
-                                "popup_cart",
-                                "overlay_bgColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Text"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("overlay_textColor");
-                          handleChange(e, "popup_cart", "overlay_textColor");
-                        }}
-                        value={formData.rules.popup_cart.overlay_textColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.overlay_textColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.overlay_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.overlay_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            type="color"
-                            value={formData.rules.popup_cart.overlay_textColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "overlay_textColor",
-                                "popup_cart",
-                                "overlay_textColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                </Grid>
-                <Text variant="headingSm" as="h6">
-                  Button
-                </Text>
-                <Grid>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Background"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("button_bgColor");
-                          handleChange(e, "popup_cart", "button_bgColor");
-                        }}
-                        value={formData.rules.popup_cart.button_bgColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            type="color"
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.button_bgColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.button_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.button_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            value={formData.rules.popup_cart.button_bgColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "button_bgColor",
-                                "popup_cart",
-                                "button_bgColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Text"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("button_textColor");
-                          handleChange(e, "popup_cart", "button_textColor");
-                        }}
-                        value={formData.rules.popup_cart.button_textColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            type="color"
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.button_textColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.button_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.button_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            value={formData.rules.popup_cart.button_textColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "button_textColor",
-                                "popup_cart",
-                                "button_textColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                </Grid>
-                <Text variant="headingSm" as="h6">
-                  Variant selector
-                </Text>
-                <Grid>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Background"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("variant_bgColor");
-                          handleChange(e, "popup_cart", "variant_bgColor");
-                        }}
-                        value={formData.rules.popup_cart.variant_bgColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            type="color"
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.variant_bgColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.variant_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.variant_bgColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            value={formData.rules.popup_cart.variant_bgColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "variant_bgColor",
-                                "popup_cart",
-                                "variant_bgColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-                    <div className="color_section">
-                      <TextField
-                        label="Text"
-                        type="text"
-                        onChange={(e) => {
-                          handleFocus("variant_textColor");
-                          handleChange(e, "popup_cart", " variant_textColor");
-                        }}
-                        value={formData.rules.popup_cart.variant_textColor}
-                        autoComplete="off"
-                        connectedLeft={
-                          <input
-                            type="color"
-                            style={{
-                              boxShadow:
-                                formData.rules.popup_cart.variant_textColor ===
-                                "#ffffff"
-                                  ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-                                  : "none",
-                              width:
-                                formData.rules.popup_cart.variant_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                              height:
-                                formData.rules.popup_cart.variant_textColor ===
-                                "#ffffff"
-                                  ? "34px"
-                                  : "38px",
-                            }}
-                            value={formData.rules.popup_cart.variant_textColor}
-                            onChange={(e) =>
-                              handleColorChange(
-                                e,
-                                "variant_textColor",
-                                "popup_cart",
-                                "variant_textColor",
-                              )
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Grid.Cell>
-                </Grid>
-              </BlockStack>
-            </Collapsible>
-          </BlockStack>
-        </Card>
-      </div>
-    );
+//                 <Text variant="headingSm" as="h6">
+//                   Appearance
+//                 </Text>
+//                 <Text variant="headingSm" as="h6">
+//                   Overlay
+//                 </Text>
+//                 <Grid>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Background"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("overlay_bgColor");
+//                           handleChange(e, "popup_cart", "overlay_bgColor");
+//                         }}
+//                         value={formData.rules.popup_cart.overlay_bgColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             type="color"
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.overlay_bgColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.overlay_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.overlay_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             value={formData.rules.popup_cart.overlay_bgColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "overlay_bgColor",
+//                                 "popup_cart",
+//                                 "overlay_bgColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Text"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("overlay_textColor");
+//                           handleChange(e, "popup_cart", "overlay_textColor");
+//                         }}
+//                         value={formData.rules.popup_cart.overlay_textColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.overlay_textColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.overlay_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.overlay_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             type="color"
+//                             value={formData.rules.popup_cart.overlay_textColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "overlay_textColor",
+//                                 "popup_cart",
+//                                 "overlay_textColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                 </Grid>
+//                 <Text variant="headingSm" as="h6">
+//                   Button
+//                 </Text>
+//                 <Grid>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Background"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("button_bgColor");
+//                           handleChange(e, "popup_cart", "button_bgColor");
+//                         }}
+//                         value={formData.rules.popup_cart.button_bgColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             type="color"
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.button_bgColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.button_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.button_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             value={formData.rules.popup_cart.button_bgColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "button_bgColor",
+//                                 "popup_cart",
+//                                 "button_bgColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Text"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("button_textColor");
+//                           handleChange(e, "popup_cart", "button_textColor");
+//                         }}
+//                         value={formData.rules.popup_cart.button_textColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             type="color"
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.button_textColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.button_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.button_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             value={formData.rules.popup_cart.button_textColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "button_textColor",
+//                                 "popup_cart",
+//                                 "button_textColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                 </Grid>
+//                 <Text variant="headingSm" as="h6">
+//                   Variant selector
+//                 </Text>
+//                 <Grid>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Background"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("variant_bgColor");
+//                           handleChange(e, "popup_cart", "variant_bgColor");
+//                         }}
+//                         value={formData.rules.popup_cart.variant_bgColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             type="color"
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.variant_bgColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.variant_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.variant_bgColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             value={formData.rules.popup_cart.variant_bgColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "variant_bgColor",
+//                                 "popup_cart",
+//                                 "variant_bgColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
+//                     <div className="color_section">
+//                       <TextField
+//                         label="Text"
+//                         type="text"
+//                         onChange={(e) => {
+//                           handleFocus("variant_textColor");
+//                           handleChange(e, "popup_cart", " variant_textColor");
+//                         }}
+//                         value={formData.rules.popup_cart.variant_textColor}
+//                         autoComplete="off"
+//                         connectedLeft={
+//                           <input
+//                             type="color"
+//                             style={{
+//                               boxShadow:
+//                                 formData.rules.popup_cart.variant_textColor ===
+//                                 "#ffffff"
+//                                   ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+//                                   : "none",
+//                               width:
+//                                 formData.rules.popup_cart.variant_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                               height:
+//                                 formData.rules.popup_cart.variant_textColor ===
+//                                 "#ffffff"
+//                                   ? "34px"
+//                                   : "38px",
+//                             }}
+//                             value={formData.rules.popup_cart.variant_textColor}
+//                             onChange={(e) =>
+//                               handleColorChange(
+//                                 e,
+//                                 "variant_textColor",
+//                                 "popup_cart",
+//                                 "variant_textColor",
+//                               )
+//                             }
+//                           />
+//                         }
+//                       />
+//                     </div>
+//                   </Grid.Cell>
+//                 </Grid>
+//               </BlockStack>
+//             </Collapsible>
+//           </BlockStack>
+//         </Card>
+//       </div>
+//     );
 
-    const ApperanceDataTab = (
-      <div style={{ padding: "10px" }} className="SettingsDataTab_container">
-        <BlockStack gap={500}>
-          <div className="upper_section">
-            <Layout>
-              <Layout.Section variant="oneThird"></Layout.Section>
-              <Layout.Section variant="oneThird">{Productpage}</Layout.Section>
-              <Layout.Section variant="oneThird">{CartPage}</Layout.Section>
-              {/* <Layout.Section variant="oneThird">{ThankuPage}</Layout.Section> */}
-              <Layout.Section variant="oneThird">{addCart}</Layout.Section>
-            </Layout>
-          </div>
-        </BlockStack>
-      </div>
-    );
+//     const ApperanceDataTab = (
+//       <div style={{ padding: "10px" }} className="SettingsDataTab_container">
+//         <BlockStack gap={500}>
+//           <div className="upper_section">
+//             <Layout>
+//               <Layout.Section variant="oneThird"></Layout.Section>
+//               <Layout.Section variant="oneThird">{Productpage}</Layout.Section>
+//               <Layout.Section variant="oneThird">{CartPage}</Layout.Section>
+//               {/* <Layout.Section variant="oneThird">{ThankuPage}</Layout.Section> */}
+//               <Layout.Section variant="oneThird">{addCart}</Layout.Section>
+//             </Layout>
+//           </div>
+//         </BlockStack>
+//       </div>
+//     );
 
-    return (
-      <div className="aios_layout_spacer">
-        <Layout>
-          <Layout.Section variant="oneHalf">
-            <Layout>
-              <Layout.Section>{ApperanceDataTab}</Layout.Section>
-            </Layout>
-          </Layout.Section>
-          <Layout.Section variant="oneHalf">{leftPreviewLayout}</Layout.Section>
-        </Layout>
-        <PageActions
-          primaryAction={{
-            content: "Continue to Reviews",
-            onClick: handleContinueClick,
-          }}
-          secondaryActions={
-            <Button onClick={toggleModal} variant="primary" tone="critical">
-              Delete
-            </Button>
-          }
-        />
-      </div>
-    );
-  };
+//     return (
+//       <div className="aios_layout_spacer">
+//         <Layout>
+//           <Layout.Section variant="oneHalf">
+//             <Layout>
+//               <Layout.Section>{ApperanceDataTab}</Layout.Section>
+//             </Layout>
+//           </Layout.Section>
+//           <Layout.Section variant="oneHalf">{leftPreviewLayout}</Layout.Section>
+//         </Layout>
+//         <PageActions
+//           primaryAction={{
+//             content: "Continue to Reviews",
+//             onClick: handleContinueClick,
+//           }}
+//           secondaryActions={
+//             <Button onClick={toggleModal} variant="primary" tone="critical">
+//               Delete
+//             </Button>
+//           }
+//         />
+//       </div>
+//     );
+//   };
 
-  const getCustomerBuysText = () => {
-    const { chosen_type, qty } = formData?.rules?.customer_buy || {};
-    const eligibleProductsCount = buyProduct.length;
-
-    return chosen_type === "specific"
-      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
-      : "any product";
-  };
-  const getCustomerGetsText = () => {
-    const { chosen_type, qty } = formData?.rules?.customer_get || {};
-    const eligibleProductsCount = getProduct.length;
-
-    return chosen_type === "specific"
-      ? `${qty || 0} quantity of ${eligibleProductsCount} eligible products`
-      : "any product";
-  };
-  const ReviewsLayout = () => {
-    const options = [
-      { label: "Draft", value: "Draft" },
-      { label: "Active", value: "Active" },
-    ];
-    return (
-      <div className="aios_layout_spacer">
-        <Layout>
-          <Layout.Section>
-            <Layout>
-              <Layout.Section>
-                <Layout>
-                  <Layout.Section variant="oneThird">
-                    <Card>
-                      <InlineStack wrap={false} align="space-between">
-                        <Text variant="headingSm" as="h6">
-                          Products
-                        </Text>
-                        <div>
-                          <Button
-                            variant="plain"
-                            onClick={() => handleTab(1)}
-                            icon={EditIcon}
-                          />
-                        </div>
-                      </InlineStack>
-                      <Text variant="bodySm" as="p">
-                        Customer buys: {getCustomerBuysText()}
-                      </Text>
-                      Customer gets: {getCustomerGetsText()}
-                    </Card>
-                  </Layout.Section>
-                  <Layout.Section>
-                    <Card>
-                      <InlineStack wrap={false} align="space-between">
-                        <Text variant="headingSm" as="h6">
-                          Discount details
-                        </Text>
-                        <div>
-                          <Button
-                            variant="plain"
-                            onClick={() => handleTab(2)}
-                            icon={EditIcon}
-                          />
-                        </div>
-                      </InlineStack>
-                      {formData?.rules?.discount?.discount_amount}
-                      {formData?.rules?.discount?.discount_symbol} Discount
-                    </Card>
-                  </Layout.Section>
-                  <Layout.Section>
-                    <Card>
-                      <InlineStack wrap={false} align="space-between">
-                        <Text variant="headingSm" as="h6">
-                          Placements & Appearance
-                        </Text>
-                        <div>
-                          <Button
-                            variant="plain"
-                            onClick={() => handleTab(3)}
-                            icon={EditIcon}
-                          />
-                        </div>
-                      </InlineStack>
-                      <Box
-                        background="bg-surface"
-                        borderColor="border"
-                        borderWidth="025"
-                        borderRadius="100"
-                      >
-                        <a>
-                          <div className="aios_placements_reviews">
-                            <BlockStack gap="500">
-                              <InlineStack wrap={false} align="space-between">
-                                <Text variant="bodyMd" as="p">
-                                  BOGO on Product Page
-                                </Text>
-                                <div>
-                                  <Badge tone="success">Active</Badge>
-                                </div>
-                              </InlineStack>
-                            </BlockStack>
-                          </div>
-                        </a>
-                      </Box>
-                      <Box
-                        background="bg-surface"
-                        borderColor="border"
-                        borderWidth="025"
-                        borderRadius="100"
-                      >
-                        <a>
-                          <div className="aios_placements_reviews">
-                            <BlockStack gap="500">
-                              <InlineStack wrap={false} align="space-between">
-                                <Text variant="bodyMd" as="p">
-                                  Cart Suggestion on Cart page Success
-                                </Text>
-                                <div>
-                                  <Badge tone="success">Active</Badge>
-                                </div>
-                              </InlineStack>
-                            </BlockStack>
-                          </div>
-                        </a>
-                      </Box>
-                      <Box
-                        background="bg-surface"
-                        borderColor="border"
-                        borderWidth="025"
-                        borderRadius="100"
-                      >
-                        <a>
-                          <div className="aios_placements_reviews">
-                            <BlockStack gap="500">
-                              <InlineStack wrap={false} align="space-between">
-                                <Text variant="bodyMd" as="p">
-                                  Post Purchase on Thank you page
-                                </Text>
-                                <div>
-                                  <Badge tone="success">Active</Badge>
-                                </div>
-                              </InlineStack>
-                            </BlockStack>
-                          </div>
-                        </a>
-                      </Box>
-                      <Box
-                        background="bg-surface"
-                        borderColor="border"
-                        borderWidth="025"
-                        borderRadius="100"
-                      >
-                        <a>
-                          <div className="aios_placements_reviews">
-                            <BlockStack gap="500">
-                              <InlineStack wrap={false} align="space-between">
-                                <Text variant="bodyMd" as="p">
-                                  Pop-up on Add to Cart button
-                                </Text>
-                                <div>
-                                  <Badge tone="success">Inactive</Badge>
-                                </div>
-                              </InlineStack>
-                            </BlockStack>
-                          </div>
-                        </a>
-                      </Box>
-                    </Card>
-                  </Layout.Section>
-                </Layout>
-              </Layout.Section>
-            </Layout>
-          </Layout.Section>
-          <Layout.Section variant="oneThird">
-            <Layout>
-              <Layout.Section>
-                <Card>
-                  <Text variant="headingMd" as="h6">
-                    Offer status
-                  </Text>
-                  <Select
-                    options={options}
-                    value={formData.offer_status}
-                    onChange={(value) => {
-                      handleFocus("offer_status");
-                      handleChange(value, "offer_status");
-                    }}
-                  />
-                </Card>
-              </Layout.Section>
-              <Layout.Section variant="oneThird">
-                <Card>
-                  <Text variant="headingMd" as="h6">
-                    Internal name
-                  </Text>
-                  <TextField
-                    onChange={(e) => {
-                      handleFocus("internal_name");
-                      handleChange(e, "internal_name");
-                    }}
-                    value={formData.internal_name}
-                    autoComplete="off"
-                  />
-                </Card>
-              </Layout.Section>
-              <Layout.Section variant="oneThird">
-                <Card>
-                  <Text variant="headingMd" as="h6">
-                    Cart Label
-                  </Text>
-                  <TextField
-                    onChange={(e) => {
-                      handleFocus("cart_label");
-                      handleChange(e, "cart_label");
-                    }}
-                    value={formData.cart_label}
-                    helpText="Customize the text that shows up near the discount on the Cart page."
-                    autoComplete="off"
-                  />
-                </Card>
-              </Layout.Section>
-            </Layout>
-          </Layout.Section>
-        </Layout>
-        <PageActions
-          primaryAction={{
-            content: "Continue to Appearance",
-            onClick: handleContinueClick,
-          }}
-          secondaryActions={<Button onClick={handleSave}>Save</Button>}
-        />
-      </div>
-    );
-  };
+  
+  // const ReviewsLayout = () => {
+  //   const options = [
+  //     { label: "Draft", value: "Draft" },
+  //     { label: "Active", value: "Active" },
+  //   ];
+  //   return (
+  //     <div className="aios_layout_spacer">
+  //       <Layout>
+  //         <Layout.Section>
+  //           <Layout>
+  //             <Layout.Section>
+  //               <Layout>
+  //                 <Layout.Section variant="oneThird">
+  //                   <Card>
+  //                     <InlineStack wrap={false} align="space-between">
+  //                       <Text variant="headingSm" as="h6">
+  //                         Products
+  //                       </Text>
+  //                       <div>
+  //                         <Button
+  //                           variant="plain"
+  //                           onClick={() => handleTab(1)}
+  //                           icon={EditIcon}
+  //                         />
+  //                       </div>
+  //                     </InlineStack>
+  //                     <Text variant="bodySm" as="p">
+  //                       Customer buys: {getCustomerBuysText()}
+  //                     </Text>
+  //                     Customer gets: {getCustomerGetsText()}
+  //                   </Card>
+  //                 </Layout.Section>
+  //                 <Layout.Section>
+  //                   <Card>
+  //                     <InlineStack wrap={false} align="space-between">
+  //                       <Text variant="headingSm" as="h6">
+  //                         Discount details
+  //                       </Text>
+  //                       <div>
+  //                         <Button
+  //                           variant="plain"
+  //                           onClick={() => handleTab(2)}
+  //                           icon={EditIcon}
+  //                         />
+  //                       </div>
+  //                     </InlineStack>
+  //                     {formData?.rules?.discount?.discount_amount}
+  //                     {formData?.rules?.discount?.discount_symbol} Discount
+  //                   </Card>
+  //                 </Layout.Section>
+  //                 <Layout.Section>
+  //                   <Card>
+  //                     <InlineStack wrap={false} align="space-between">
+  //                       <Text variant="headingSm" as="h6">
+  //                         Placements & Appearance
+  //                       </Text>
+  //                       <div>
+  //                         <Button
+  //                           variant="plain"
+  //                           onClick={() => handleTab(3)}
+  //                           icon={EditIcon}
+  //                         />
+  //                       </div>
+  //                     </InlineStack>
+  //                     <Box
+  //                       background="bg-surface"
+  //                       borderColor="border"
+  //                       borderWidth="025"
+  //                       borderRadius="100"
+  //                     >
+  //                       <a>
+  //                         <div className="aios_placements_reviews">
+  //                           <BlockStack gap="500">
+  //                             <InlineStack wrap={false} align="space-between">
+  //                               <Text variant="bodyMd" as="p">
+  //                                 BOGO on Product Page
+  //                               </Text>
+  //                               <div>
+  //                                 <Badge tone="success">Active</Badge>
+  //                               </div>
+  //                             </InlineStack>
+  //                           </BlockStack>
+  //                         </div>
+  //                       </a>
+  //                     </Box>
+  //                     <Box
+  //                       background="bg-surface"
+  //                       borderColor="border"
+  //                       borderWidth="025"
+  //                       borderRadius="100"
+  //                     >
+  //                       <a>
+  //                         <div className="aios_placements_reviews">
+  //                           <BlockStack gap="500">
+  //                             <InlineStack wrap={false} align="space-between">
+  //                               <Text variant="bodyMd" as="p">
+  //                                 Cart Suggestion on Cart page Success
+  //                               </Text>
+  //                               <div>
+  //                                 <Badge tone="success">Active</Badge>
+  //                               </div>
+  //                             </InlineStack>
+  //                           </BlockStack>
+  //                         </div>
+  //                       </a>
+  //                     </Box>
+  //                     <Box
+  //                       background="bg-surface"
+  //                       borderColor="border"
+  //                       borderWidth="025"
+  //                       borderRadius="100"
+  //                     >
+  //                       <a>
+  //                         <div className="aios_placements_reviews">
+  //                           <BlockStack gap="500">
+  //                             <InlineStack wrap={false} align="space-between">
+  //                               <Text variant="bodyMd" as="p">
+  //                                 Post Purchase on Thank you page
+  //                               </Text>
+  //                               <div>
+  //                                 <Badge tone="success">Active</Badge>
+  //                               </div>
+  //                             </InlineStack>
+  //                           </BlockStack>
+  //                         </div>
+  //                       </a>
+  //                     </Box>
+  //                     <Box
+  //                       background="bg-surface"
+  //                       borderColor="border"
+  //                       borderWidth="025"
+  //                       borderRadius="100"
+  //                     >
+  //                       <a>
+  //                         <div className="aios_placements_reviews">
+  //                           <BlockStack gap="500">
+  //                             <InlineStack wrap={false} align="space-between">
+  //                               <Text variant="bodyMd" as="p">
+  //                                 Pop-up on Add to Cart button
+  //                               </Text>
+  //                               <div>
+  //                                 <Badge tone="success">Inactive</Badge>
+  //                               </div>
+  //                             </InlineStack>
+  //                           </BlockStack>
+  //                         </div>
+  //                       </a>
+  //                     </Box>
+  //                   </Card>
+  //                 </Layout.Section>
+  //               </Layout>
+  //             </Layout.Section>
+  //           </Layout>
+  //         </Layout.Section>
+  //         <Layout.Section variant="oneThird">
+  //           <Layout>
+  //             <Layout.Section>
+  //               <Card>
+  //                 <Text variant="headingMd" as="h6">
+  //                   Offer status
+  //                 </Text>
+  //                 <Select
+  //                   options={options}
+  //                   value={formData.offer_status}
+  //                   onChange={(value) => {
+  //                     handleFocus("offer_status");
+  //                     handleChange(value, "offer_status");
+  //                   }}
+  //                 />
+  //               </Card>
+  //             </Layout.Section>
+  //             <Layout.Section variant="oneThird">
+  //               <Card>
+  //                 <Text variant="headingMd" as="h6">
+  //                   Internal name
+  //                 </Text>
+  //                 <TextField
+  //                   onChange={(e) => {
+  //                     handleFocus("internal_name");
+  //                     handleChange(e, "internal_name");
+  //                   }}
+  //                   value={formData.internal_name}
+  //                   autoComplete="off"
+  //                 />
+  //               </Card>
+  //             </Layout.Section>
+  //             <Layout.Section variant="oneThird">
+  //               <Card>
+  //                 <Text variant="headingMd" as="h6">
+  //                   Cart Label
+  //                 </Text>
+  //                 <TextField
+  //                   onChange={(e) => {
+  //                     handleFocus("cart_label");
+  //                     handleChange(e, "cart_label");
+  //                   }}
+  //                   value={formData.cart_label}
+  //                   helpText="Customize the text that shows up near the discount on the Cart page."
+  //                   autoComplete="off"
+  //                 />
+  //               </Card>
+  //             </Layout.Section>
+  //           </Layout>
+  //         </Layout.Section>
+  //       </Layout>
+  //       <PageActions
+  //         primaryAction={{
+  //           content: "Continue to Appearance",
+  //           onClick: handleContinueClick,
+  //         }}
+  //         secondaryActions={<Button onClick={handleSave}>Save</Button>}
+  //       />
+  //     </div>
+  //   );
+  // };
 
   const getPrimaryActionContent = () => {
     let content;
@@ -2695,26 +4543,26 @@ const EditDiscountType = () => {
       {activeTab === 1 && (
         <div>
           {upsellType === "bogo" && (
-            <BogoProducts />
-            // <BundleProducts
-            //   formData={formData}
-            //   handleChange={handleChange}
-            //   handleFocus={handleFocus}
-            //   handleColorChange={handleColorChange}
-            //   leftPreviewLayout={leftPreviewLayout}
-            //   handleContinueClick={handleContinueClick}
-            //   handleDelete={handleDelete}
-            //   selectProduct={selectProduct}
-            //   product={product}
-            // />
+            <BogoProducts  toggleModal={toggleModal} getCollections={getCollections}  handleFocus={handleFocus} buyCollections ={buyCollections} getProduct={getProduct} buyProduct={buyProduct}   selectProduct={selectProduct} selectCollection={selectCollection}  handleContinueClick={handleContinueClick}  leftPreviewLayout={leftPreviewLayout} handleDelete={handleDelete}  handleChange={handleChange} formData={formData}  handleCollectionDelete={handleCollectionDelete} />
+         
           )}
-          {/* {type === "other" && <AllCustomer />} */}
+    
         </div>
       )}
-      {activeTab === 2 && <div>{upsellType === "bogo" && <Discount />}</div>}
-      {activeTab === 3 && <div>{upsellType === "bogo" && <Apperance />}</div>}
+      {activeTab === 2 && <div>{upsellType === "bogo" && <Discount
+      handleFocus={handleFocus}
+      toggleModal={toggleModal}
+            isFirstButtonActive={isFirstButtonActive}
+              handleSecondButtonClick={handleSecondButtonClick}
+              handleFirstButtonClick={handleFirstButtonClick}
+              leftPreviewLayout={leftPreviewLayout}
+              handleChange={handleChange}
+              formData={formData}
+              handleContinueClick={handleContinueClick}
+            />}</div>}
+      {activeTab === 3 && <div>{upsellType === "bogo" && <Apperance handleFocus={handleFocus} toggleModal={toggleModal} openStates ={openStates } handleToggle={handleToggle} leftPreviewLayout={leftPreviewLayout}handleContinueClick={handleContinueClick} handleChange={handleChange} formData={formData}  handleColorChange={handleColorChange}/>}</div>}
       {activeTab === 4 && (
-        <div>{upsellType === "bogo" && <ReviewsLayout />}</div>
+        <div>{upsellType === "bogo" && <ReviewsLayout handleFocus={handleFocus}  toggleModal={toggleModal}  handleTab ={handleTab} handleSave={handleSave} getCollections={getCollections} buyCollections ={buyCollections} getProduct={getProduct} buyProduct={buyProduct}handleChange={handleChange} formData={formData} />}</div>
       )}
       {activeField && (
         <div className="contextual-frame">

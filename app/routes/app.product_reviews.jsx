@@ -7,10 +7,14 @@ import {
   ResourceList,
   Avatar,
   Spinner,
+  List,
+  Divider,
   Badge,
   DatePicker,
   Card,
+  Modal,
   Text,
+  DropZone,
   OptionList,
   Page,
   TextField,
@@ -33,6 +37,7 @@ import {
   EmptyState,
   Icon,
   Thumbnail,
+  Checkbox,
 } from "@shopify/polaris";
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
@@ -40,6 +45,8 @@ import {
   ImageIcon,
   ImportIcon,
   StarIcon,
+  NoteIcon,
+  FileIcon,
   CalendarIcon,
   ExportIcon,
   ArrowDownIcon,
@@ -48,6 +55,7 @@ import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css";
+
 import ReviewsWidget from "./components/ReviewsWidget";
 import StarRatings from "./components/StarRatings";
 import HappyCustomers from "./components/HappyCustomersPage";
@@ -132,7 +140,7 @@ export const loader = async ({ request }) => {
     form_btn_bg: "#000000",
 
     // all reviews badge
-   
+
     badge_layout: "horizontal",
     badge_style: "light",
     custom_widget_alignment: "Center",
@@ -177,12 +185,11 @@ export const loader = async ({ request }) => {
     margin_top_homepage: 10,
     margin_bottom_homepage: 10,
     // publishing
-    autopublish_reviews:"Don't auto Publish",
-
+    autopublish_reviews: "Don't auto Publish",
 
     // reviewscarousel
     reviews_carousel_option: "automatically",
-   
+
     carousel_title: "Our Customers Love Us",
     carousel_title_alignment: "Center",
     carousel_title_size: 28,
@@ -356,7 +363,6 @@ export function ReviewList({ reviews }) {
     data.length === 0 ? (
       <EmptyState
         heading="No product reviews yet"
-        
         image="https://cdn.shopify.com/s/files/1/0854/6615/3247/files/reviews.svg?v=1721279077"
       >
         <p>Please add reviews</p>
@@ -364,11 +370,10 @@ export function ReviewList({ reviews }) {
     ) : undefined;
 
   const resourceName = { singular: "product", plural: "products" };
-  const handleReviewNavigate = (url, id) =>{
-    shopify.loading(true)
-    navigate(`${url}${id}`)
-  
-  }
+  const handleReviewNavigate = (url, id) => {
+    shopify.loading(true);
+    navigate(`${url}${id}`);
+  };
 
   return (
     <Card padding={0}>
@@ -389,7 +394,7 @@ export function ReviewList({ reviews }) {
             <ResourceItem
               id={id}
               key={id}
-              onClick={() =>handleReviewNavigate(url, id)}
+              onClick={() => handleReviewNavigate(url, id)}
               media={media}
               accessibilityLabel={`View details for ${title}`}
             >
@@ -1469,7 +1474,6 @@ function ProductReviews() {
   };
 
   const handleChange = (value, property) => {
-   
     setFormData((formData) => ({
       ...formData,
       [property]: value,
@@ -1533,7 +1537,7 @@ function ProductReviews() {
           <Layout>
             {selectedWidget === "ReviewsWidget" && (
               <ReviewsWidget
-              shop={shopName}
+                shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1550,7 +1554,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "ReviewsCarousel" && (
               <ReviewsCarousel
-              shop={shopName}
+                shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1568,7 +1572,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "FeaturedReviews" && (
               <FeaturedReviews
-              shop={shopName}
+                shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1577,7 +1581,7 @@ function ProductReviews() {
             )}
             {selectedWidget === "AllReviewsBadge" && (
               <AllreviewsBadge
-              shop={shopName}
+                shop={shopName}
                 formData={formData}
                 handleChange={handleChange}
                 handleFocus={handleFocus}
@@ -1679,7 +1683,95 @@ function ProductReviews() {
   };
 
   const Importtab = () => {
+    const [files, setFiles] = useState([]);
     const [importBanner, setImportBanner] = useState(true);
+    const [showImportModal, setShowImportModal] = useState(false);
+    const handleImportModal = () => {
+      setShowImportModal(true);
+    };
+
+    const [rejectedFiles, setRejectedFiles] = useState([]);
+    const handleDrop = useCallback(
+      async (_dropFiles, acceptedFiles, _rejectedFiles) => {
+        setFiles((files) => [...files, ...acceptedFiles]);
+        setRejectedFiles(rejectedFiles);
+      },
+      [],
+    );
+
+    const uploadedFiles = files.length > 0 && (
+      <div>
+        {files.map((file, index) => (
+          <div
+            key={index}
+            style={{ display: "flex", gap: "10px", alignItems: "center" }}
+          >
+            <Thumbnail size="small" alt={file.name} source={FileIcon} />
+            <div>
+              {file.name}{" "}
+              <Text variant="bodySm" as="p">
+                {file.size} bytes
+              </Text>
+            </div>
+            <Button>Remove</Button>
+          </div>
+        ))}
+      </div>
+    );
+    const fileUpload = !files.length && <DropZone.FileUpload />;
+    const ImportModal = (
+      <div className="modals">
+        <Frame>
+          <Modal
+            open={showImportModal}
+            onClose={() => setShowImportModal(false)}
+            title="Import reviews from CSV (All-In-one Store Template)"
+            primaryAction={{
+              content: "Import",
+              onAction: "",
+              loading: "",
+            }}
+            secondaryActions={[
+              {
+                content: "Close",
+                onAction: () => setShowImportModal(false),
+              },
+            ]}
+          >
+            <Modal.Section>
+              <BlockStack gap="300">
+                <Box padding="100">
+                  <Text variant="bodyMd" as="p">
+                    Instructions:
+                  </Text>
+                  <List type="number">
+                    <List.Item>Download this empty template</List.Item>
+                    <List.Item>Fill in the fields as explained in</List.Item>
+                    <List.Item>
+                      Upload it by clicking Add File section below.
+                    </List.Item>
+                  </List>
+                </Box>
+              </BlockStack>
+              <Divider />
+
+              <Box padding="300">
+                <BlockStack gap="200">
+                  {files.length > 0 ? (
+                    uploadedFiles
+                  ) : (
+                    <DropZone accept=".csv" type="file" onDrop={handleDrop}>
+                      {fileUpload}
+                    </DropZone>
+                  )}
+                  <Checkbox label="I confirm that the imported reviews are for my products or I have permission to use them."></Checkbox>
+                </BlockStack>
+              </Box>
+            </Modal.Section>
+          </Modal>
+        </Frame>
+      </div>
+    );
     return (
       <div className="import-tab">
         <BlockStack gap="400">
@@ -1732,10 +1824,11 @@ function ProductReviews() {
                     style={{ borderRadius: "8px" }}
                   />
                   <Text variant="p">
-                    Import reviews from a CSV file in the Vitals format:
+                    Import reviews from a CSV file in the All-in-one Store
+                    format:
                   </Text>
                 </InlineGrid>
-                <Button>Import</Button>
+                <Button onClick={handleImportModal}>Import</Button>
               </InlineGrid>
             </BlockStack>
           </Card>
@@ -1772,7 +1865,7 @@ function ProductReviews() {
                 <InlineGrid columns="45px 1fr" alignItems="center" gap="200">
                   <Thumbnail source={ExportIcon} size="small" />
                   <Text variant="p">
-                    Export all reviews from Vitals to a CSV file.
+                    Export all reviews from All-in-one Store to a CSV file.
                   </Text>
                 </InlineGrid>
                 <Button>Export</Button>
@@ -1780,6 +1873,7 @@ function ProductReviews() {
             </BlockStack>
           </Card>
         </BlockStack>
+        {ImportModal}
       </div>
     );
   };
@@ -1825,14 +1919,14 @@ function ProductReviews() {
     },
   ];
 
-  useEffect(()=>{
-    shopify.loading(false)
-  },[])
+  useEffect(() => {
+    shopify.loading(false);
+  }, []);
   const handleClick = () => {
     navigate("/app");
     shopify.loading(true);
   };
- const appName = "Product Reviews"
+  const appName = "Product Reviews";
 
   return (
     <div className="Produyct-reviews">
@@ -1843,7 +1937,7 @@ function ProductReviews() {
         primaryAction={
           status ? (
             <DeactivatePopover
-            type={appName}
+              type={appName}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
@@ -1856,7 +1950,6 @@ function ProductReviews() {
             }
           )
         }
-     
       >
         <div className="product-reviews">
           <BlockStack gap="200">

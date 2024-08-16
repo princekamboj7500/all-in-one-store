@@ -142,7 +142,7 @@ function Hide_Dynamic_Checkout_Buttons(props) {
                                         The same for coupon codes: if your customers have a coupon code, they will not be able to enter it in the payment gateway, only when they return to continue the normal checkout flow. This might hurt the conversion rate as well.
                                     </List.Item>
                                     <List.Item>
-                                        Discount apps (such as the Product Bundle and Volume Discount apps in Vitals and other discount apps) will not work on a checkout flow that started from Dynamic Checkout buttons.
+                                        Discount apps (such as the Product Bundle and Volume Discount apps in All-In-One Store  and other discount apps) will not work on a checkout flow that started from Dynamic Checkout buttons.
                                     </List.Item>
                                     <List.Item>
                                         If PayPal / Apple Pay / Google Pay / Amazon Pay is not your only payment method, do not let your customers think so. This, as well, might hurt your conversion rate.
@@ -196,7 +196,7 @@ function Hide_Dynamic_Checkout_Buttons(props) {
                                         </Text>
                                         <BlockStack gap="200">
                                             <Text as="p" fontWeight="reguler">
-                                                We know how complex Vitals is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
+                                                We know how complex All-In-One Store  is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
                                             </Text>
 
                                         </BlockStack>
