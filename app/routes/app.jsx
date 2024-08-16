@@ -11,7 +11,7 @@ export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 export const loader = async ({ request }) => {
   const { billing, session  } = await authenticate.admin(request);
   const appTest = true;
- 
+
 
   await billing.require({
     plans: [MONTHLY_PLAN],
@@ -39,6 +39,9 @@ export default function App() {
 
 // Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {
+ 
+  const error = useRouteError();
+  console.log("Error occurred:", error);
   return boundary.error(useRouteError());
 }
 

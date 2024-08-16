@@ -13,7 +13,10 @@
 .upsell_chart_data  .app_upsell_text.Polaris-Link--monochrome{
   font-weight: var(--p-font-weight-semibold);
 }
-gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Title {
+.upsell_search_bar{
+  margin:20px 0;
+}
+.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Title {
   font-size: 25px;
   display: inline;
   margin-right: var(--p-space-200);

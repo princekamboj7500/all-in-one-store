@@ -3,12 +3,12 @@
 client_id = "30e55710145993ddb5716e3a7c3e50c3"
 name = "droptracking-dev"
 handle = "droptracking-dev"
-application_url = "https://observer-pb-scenic-authentic.trycloudflare.com"
+application_url = "https://housewives-medium-differ-renew.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "test-all-in-one-store.myshopify.com"
+dev_store_url = "droptrackingapp.myshopify.com"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -16,13 +16,18 @@ scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_pro
 
 [auth]
 redirect_urls = [
-  "https://observer-pb-scenic-authentic.trycloudflare.com/auth/callback",
-  "https://observer-pb-scenic-authentic.trycloudflare.com/auth/shopify/callback",
-  "https://observer-pb-scenic-authentic.trycloudflare.com/api/auth/callback"
+  "https://housewives-medium-differ-renew.trycloudflare.com/auth/callback",
+  "https://housewives-medium-differ-renew.trycloudflare.com/auth/shopify/callback",
+  "https://housewives-medium-differ-renew.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-10"
+
+[app_proxy]
+url = "https://housewives-medium-differ-renew.trycloudflare.com/api"
+subpath = "aios"
+prefix = "a"
 
 [pos]
 embedded = false

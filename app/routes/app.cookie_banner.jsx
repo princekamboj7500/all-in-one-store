@@ -648,7 +648,7 @@ function CookieBanner(props) {
                     </InlineStack>
 
                     <Text variant="bodyMd" as="p">
-                      {`Enable the setting in Shopify to show the Vitals Consent Banner. Find the setting under the More actions menu > Use custom cookie banner. Confirm the regions you want to show the cookie banner.`}
+                      {`Enable the setting in Shopify to show the All-In-One Store Consent Banner. Find the setting under the More actions menu > Use custom cookie banner. Confirm the regions you want to show the cookie banner.`}
                     </Text>
 
                     <Text variant="bodyMd" as="p">

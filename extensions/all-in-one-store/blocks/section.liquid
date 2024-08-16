@@ -19,7 +19,7 @@ if(scrollTop == undefined){
 }
 var stickyCart ={{ app.metafields.StickyAddCart |json  }};
 
-if(scrollTop == undefined){
+if(stickyCart == undefined){
     window.StickyCart ={}
 }else{
    window.StickyCart   = stickyCart.items ;
@@ -84,9 +84,16 @@ if(HideDynamicCheckout == undefined){
 var productReviews ={{ app.metafields.ProductReviews |json  }};
 
 if(productReviews == undefined){
-  window.productReviews  ={}
+  window.productReviews  = {}
 }else{
-  window.productReviews = productReviews.items ;
+  window.productReviews = productReviews.items;
+}
+var upsellBuilder ={{ app.metafields.UpsellBuilder | json  }};
+
+if(upsellBuilder == undefined){
+  window.upsellBuilder  = {}
+}else{
+  window.upsellBuilder = upsellBuilder.items;
 }
 
 window.status = "{{ app.metafields.AllInOneStore.status}}"

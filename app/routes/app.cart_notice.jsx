@@ -339,7 +339,7 @@ function CartNotice(props) {
                                         </Text>
                                         <BlockStack gap="200">
                                             <Text as="p" fontWeight="reguler">
-                                                We know how complex Vitals is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
+                                                We know how complex All-In-One Store is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
                                             </Text>
 
                                         </BlockStack>

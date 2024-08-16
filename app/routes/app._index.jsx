@@ -112,7 +112,7 @@ export default function Index() {
           <InlineStack align="space-between" blockAlign="center">
             <BlockStack gap="200">
               <Text variant="headingSm" as="h6">
-                How is your experience with Vitals?
+                How is your experience with All-In-One Store?
               </Text>
               <Text as="p" tone="subdued">
                 Rate us by clicking on the stars on the right.

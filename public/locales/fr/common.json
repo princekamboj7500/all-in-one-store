@@ -1,0 +1,15 @@
+{
+    "Homepage":{
+        "estimatetitle":"Digital Product",
+        "estimatedesc":"This is where to define the estimated date of procesing, estimated date of delivery and the delayed Estimated Delivery,",
+        "table":"All Digital Products",
+        "tableImage":"Image",
+        "tableproduct":"Product",
+        "tablevariant":"Connected Variants",
+        "tableedit":"Actions",
+        "button":"Add Product",
+        "SearchItems":"Search items"
+   }
+
+
+}

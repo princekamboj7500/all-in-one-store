@@ -10,8 +10,10 @@ import {
   Badge,
   DatePicker,
   Card,
+  EmptySearchResult,
   IndexTable,
   Text,
+  ChoiceList,
   useIndexResourceState,
   OptionList,
   Page,
@@ -24,6 +26,7 @@ import {
   Listbox,
   Tabs,
   Box,
+  Filters,
   Layout,
   Toast,
   Grid,
@@ -34,6 +37,8 @@ import {
   ActionList,
   Icon,
   Thumbnail,
+  Checkbox,
+  Divider,
 } from "@shopify/polaris";
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
@@ -41,10 +46,11 @@ import {
   ImageIcon,
   ImportIcon,
   StarIcon,
+  SearchIcon,
   CalendarIcon,
   ExportIcon,
   ArrowDownIcon,
-  DeleteIcon
+  DeleteIcon,
 } from "@shopify/polaris-icons";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
@@ -88,149 +94,47 @@ export const loader = async ({ request }) => {
   const metafielData = result.data.currentAppInstallation.metafields.edges;
 
   const defaultSettings = {
-    app_name: "ProductReviews",
+    app_name: "UpsellBuilder",
     app_status: false,
-    star_shape: "Rounded",
-    widget_star_color: "#ffce07",
-
-    reviews_layout: "Grid_view",
-    show_rating_filterbar: 1,
-    show_reviewbox_whenzero: 1,
-    hide_review_mainwidget: 0,
-    desktop_min_reviews: 20,
-    desktop_max_reviews: 100,
-    mobile_min_reviews: 10,
-    mobile_max_reviews: 50,
-
-    show_reviews_date: 1,
-
-    date_format: "yyyy-mm-dd",
-    reviewer_name_display: "Show full names",
-    verified_icon: 1,
-    verified_icon_color: "#00a332",
-    reviewer_name_color: "#222222",
-    reviewer_text_color: "#5e5e5e",
-    review_card_bg: "#ffffff",
-    review_card_shadow: "#eaeaea",
-    review_date: "#737373",
-
-    avatar_bg: "#ffce07",
-    avatar_icon_color: "#222222",
-    storyreply_title_color: "#5e5e5e",
-    storyreply_text_color: "#5e5e5e",
-    storyreply_card_bg: "#f7f7f7",
-    form_allow_img: 0,
-    form_text_color: "#5e5e5e",
-    form_bg_color: "red",
-    form_btn_text: "#ffffff",
-    form_btn_bg: "#000000",
-
-    // all reviews badge
-    display_badge_automatically: 0,
-    badge_layout: "horizontal",
-    badge_style: "light",
-    custom_widget_alignment: "Center",
-    badge_show_bg: 1,
-    custom_bg_color: "#f8f8f8",
-    badge_show_border: 1,
-    custom_border_color: "#aeaeae",
-    show_review_count: 1,
-    review_count_color: "#222222",
-    badge_radius: 12,
-    rating_box_text_color: "#ffffff",
-    rating_box_bg_color: "#222222",
-    badge_star_color: "#ffce07",
-    show_collected_by_vitals: 1,
-    badge_margin_left: 16,
-    badge_margin_right: 16,
-    badge_margin_top: 24,
-    badge_margin_bottom: 24,
-
-    //happy customers
-    activate_happy_customer_page: 1,
-    happy_customer_page_title: "Happy Customers",
-    happy_customer_page_description:
-      "Customers from all over the world love our products!",
-    happy_customer_reviews_layout: "Grid_view",
-    happy_customer_show_filterbar: 1,
-    happy_customer_min_reviews_desktop: 20,
-    happy_customer_min_reviews_mobile: 10,
-
-    // starRatings
-    display_star_productpage: 1,
-    star_size_productpage: 19,
-    star_alignment_productpage: "Left",
-    star_rating_format_productpage:
-      "{{ stars }} {{ averageRating }} ({{ totalReviews }} {{ reviewsTranslation }})",
-    margin_top_productpage: 10,
-    margin_bottom_productpage: 10,
-    display_star_homepage: 1,
-    star_size_homepage: 19,
-    star_alignment_homepage: "Center",
-    star_rating_format_homepage: "{{ stars }} ({{ totalReviews }})",
-    margin_top_homepage: 10,
-    margin_bottom_homepage: 10,
-
-    // rewviewscarousel
-    reviews_carousel_option: "automatically",
-    display_carousel_homepage: 1,
-    carousel_title: "Our Customers Love Us",
-    carousel_title_alignment: "Center",
-    carousel_title_size: 28,
-    carousel_layout: "textcards",
-    carousel_max_width: 1200,
-    carousel_columns_desktop: 3,
-    carousel_max_text_rows: 3,
-    carousel_reviews_alignment: "Center",
-    carousel_img_ratio: "Square",
-    carousel_margin_top: 4,
-    carousel_margin_bottom: 4,
-    carousel_margin_top_mobile: 4,
-    carousel_margin_bottom_mobile: 4,
-    carouselcard_text_color: "#000000",
-    carouselcard_bg_color: "#ffffff",
-    carouselcard_stars_color: "#000000",
-    carouselcard_show_shadow: 0,
-    carouselcard_show_border: 1,
-    carouselcard_border_color: "#7d4343",
-    carouselcard_radius: 4,
-    carousel_arrow: "arrow2",
-
-    // translation
-    translation_reviews: "reviews",
-    translation_see_more_reviews: "See more reviews",
-    translation_write_review: "Write a Review",
-    translation_share_experience: "Share your experience",
-    translation_rating: "Rating",
-    translation_name: "Name",
-    translation_review: "Review",
-    translation_love_to_see_picture: "We'd love to see a picture",
-    translation_submit_review: "Submit Review",
-    translation_cancel: "cancel",
-    translation_no_reviews_yet: "No reviews yet. Be the first to add a review.",
-    translation_thankyou_for_review: "Thank you for adding your review!",
-    translation_only_image_supported:
-      "Only image file types are supported for upload",
-    translation_email: "E-mail",
-    translation_review_not_added:
-      "The review could not be added. If the problem persists, please contact us.",
-    translation_store_reply: "Store reply",
-    translation_verified_buyer: "Verified buyer",
-    translation_collected_by: "Collected by",
-    translation_From_no_of_reviews: "From {{reviews_count}} reviews",
-
-    //Featured Reviews
-    featured_reviews_layout: "Grid_view",
-    featured_show_filterbar: 1,
-    featured_desktop_min_reviews: 20,
-    featured_desktop_max_reviews: 100,
-    featured_mobile_min_reviews: 10,
-    featured_mobile_max_reviews: 50,
+    discount: true,
+    variantbgcolor: "#ffffff",
+    variantactivebgcolor: "#f6f6f6",
+    varianttextcolor: "#f4f4f4",
+    show_compare_price: true,
+    desktop_margin_top: 10,
+    desktop_margin_bottom: 16,
+    mobile_margin_top: 10,
+    mobile_margin_bottom: 16,
+    translation_you_save: "You save:",
+    translation_stock: "Out of stock",
+    translation_item: "This item:",
+    translation_total_price: "Total Price:",
+    translation_cart: "Add to cart",
+    translation_for: "for",
+    translation_with: "with",
+    translation_off: "Off",
+    translation_each: "each",
+    translation_buy: "Buy",
+    translation_subtotal: "Subtotal",
+    translation_discount: "Discount",
+    translation_price: "Old price",
+    translation_quantity: "Quantity",
+    translation_and: "and",
+    translation_charge: "Free of charge",
+    translation_free: "Free",
+    translation_claim: "Claim gift",
+    translation_gift: "Gift",
+    translation_msg: "Your product has been added to the cart.",
+    translation_save: "save",
+    translation_per_item: "Per item:",
+    translation_swap: "Swap item",
+    translation_see: "See more",
+    translation_less: "See less",
   };
 
   const appName =
     metafielData.length > 0
-      ? metafielData.filter((item) => item.node.namespace === "ProductReviews")
+      ? metafielData.filter((item) => item.node.namespace === "UpsellBuilder")
       : [];
 
   let appSettings =
@@ -321,7 +225,6 @@ export const loader = async ({ request }) => {
     },
   });
 
-
   return {
     data,
     getUpsells,
@@ -335,68 +238,939 @@ export const loader = async ({ request }) => {
   };
 };
 
-export function ReviewList({ reviews }) {
-  const navigate = useNavigate();
-
-  const [data, setData] = useState(reviews);
-
-  let products = [];
-  if (data.length > 0) {
-    products = data.map((item) => ({
-      id: item.product_id,
-      url: `/app/productreview/`,
-      title: item.product_title,
-      totalRating: item.averageRating,
-      image: item.product_image,
-      reviews: item.count,
-    }));
-  }
-
-  const resourceName = { singular: "product", plural: "products" };
-
+export function GeneralSettings({
+  data,
+  handleChange,
+  handleColorChange,
+  handleFocus,
+}) {
   return (
-    <Card padding={0}>
-      <ResourceList
-        items={products}
-        renderItem={function renderItem(item) {
-          const { id, url, title, totalRating, image, reviews } = item;
-          const media = (
-            <Thumbnail
-              source={image || ImageIcon}
-              size="small"
-              alt="Black choker necklace"
-            />
-          );
+    <div className="SettingsDataTab_container">
+      <BlockStack gap="400">
+        <InlineGrid columns={["oneThird", "twoThirds"]}>
+          <Text variant="headingMd" as="h6">
+            Combine discount
+          </Text>
+          <Layout>
+            <Layout.Section>
+              <Card roundedAbove="sm">
+                <BlockStack gap="300">
+                  <div className="checkbox_section">
+                    <BlockStack gap="400">
+                      <Checkbox
+                        checked={data.discount}
+                        onChange={(e) => {
+                          handleFocus("discount");
+                          handleChange(e, "discount");
+                        }}
+                        label="Allow customers to combine the  All-In-One Store discounts with other discount codes"
+                        helpText="Only combinable discounts can be used together. Some combinations, such as multiple discounts on the same product"
+                      />
+                    </BlockStack>
+                  </div>
+                </BlockStack>
+              </Card>
+            </Layout.Section>
+          </Layout>
+        </InlineGrid>
+        <InlineGrid columns={["oneThird", "twoThirds"]}>
+          <Text variant="headingMd" as="h6">
+            Look and Feel
+          </Text>
+          <Layout>
+            <Layout.Section>
+              <Card roundedAbove="sm">
+                <BlockStack gap="300">
+                  <div className="checkbox_section">
+                    <BlockStack gap="400">
+                      <div className="color_section">
+                        <TextField
+                          label="Variant selector background color"
+                          type="text"
+                          onChange={(e) => {
+                            handleFocus("variantbgcolor");
+                            handleChange(e, "variantbgcolor");
+                          }}
+                          value={data.variantbgcolor}
+                          autoComplete="off"
+                          connectedLeft={
+                            <input
+                              type="color"
+                              style={{
+                                boxShadow:
+                                  data.variantbgcolor === "#ffffff"
+                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                    : "none",
+                                width:
+                                  data.variantbgcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                                height:
+                                  data.variantbgcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                              }}
+                              value={data.variantbgcolor}
+                              onChange={(e) => {
+                                handleFocus("variantbgcolor");
+                                handleColorChange(e, "variantbgcolor");
+                              }}
+                            />
+                          }
+                        />
+                      </div>
+                      <div className="color_section">
+                        <TextField
+                          label="Variant selector active background color"
+                          type="text"
+                          onChange={(e) => {
+                            handleFocus("variantactivebgcolor");
+                            handleChange(e, "variantactivebgcolor");
+                          }}
+                          value={data.variantactivebgcolor}
+                          autoComplete="off"
+                          connectedLeft={
+                            <input
+                              type="color"
+                              value={data.variantactivebgcolor}
+                              onChange={(e) => {
+                                handleFocus("variantactivebgcolor");
+                                handleColorChange(e, "variantactivebgcolor");
+                              }}
+                              style={{
+                                boxShadow:
+                                  data.variantactivebgcolor === "#ffffff"
+                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                    : "none",
+                                width:
+                                  data.variantactivebgcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                                height:
+                                  data.variantactivebgcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                              }}
+                            />
+                          }
+                        />
+                      </div>
+                      <div className="color_section">
+                        <TextField
+                          label="Variant selector text color"
+                          type="text"
+                          onChange={(e) => {
+                            handleFocus("varianttextcolor");
+                            handleChange(e, "varianttextcolor");
+                          }}
+                          value={data.varianttextcolor}
+                          autoComplete="off"
+                          connectedLeft={
+                            <input
+                              type="color"
+                              value={data.varianttextcolor}
+                              onChange={(e) => {
+                                handleFocus("varianttextcolor");
+                                handleColorChange(e, "varianttextcolor");
+                              }}
+                              style={{
+                                boxShadow:
+                                  data.varianttextcolor === "#ffffff"
+                                    ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
+                                    : "none",
+                                width:
+                                  data.varianttextcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                                height:
+                                  data.varianttextcolor === "#ffffff"
+                                    ? "34px"
+                                    : "38px",
+                              }}
+                            />
+                          }
+                        />
+                      </div>
+                      <Checkbox
+                        checked={data.show_compare_price}
+                        onChange={(e) => {
+                          handleFocus("show_compare_price");
+                          handleChange(e, "show_compare_price");
+                        }}
+                        label="Show the Compare-at price next to the Current price"
+                        helpText="Only combinable discounts can be used together. Some combinations, such as multiple discounts on the same product"
+                      />
+                      <Divider />
+                      <Text variant="bodyLg" as="p">
+                        Volume Discounts
+                      </Text>
+                      <BlockStack gap="200">
+                        <Box
+                          background="bg-surface-secondary"
+                          padding="300"
+                          borderRadius="200"
+                        >
+                          <BlockStack gap="200">
+                            <Text
+                              variant="headingMd"
+                              as="h6"
+                              fontWeight="regular"
+                            >
+                              On desktop
+                            </Text>
+                            <InlineGrid
+                              columns={{
+                                sm: "2",
+                              }}
+                              gap={300}
+                            >
+                              <TextField
+                                type="number"
+                                onChange={(e) => {
+                                  handleFocus("desktop_margin_top");
+                                  handleChange(e, "desktop_margin_top");
+                                }}
+                                value={data.desktop_margin_top}
+                                label={`Margin top`}
+                              />
+                              <TextField
+                                type="number"
+                                onChange={(e) => {
+                                  handleFocus("desktop_margin_bottom");
+                                  handleChange(e, "desktop_margin_bottom");
+                                }}
+                                value={data.desktop_margin_bottom}
+                                label={`Margin bottom`}
+                              />
+                            </InlineGrid>
+                          </BlockStack>
+                        </Box>
+                        <Box
+                          background="bg-surface-secondary"
+                          padding="300"
+                          borderRadius="200"
+                        >
+                          <BlockStack gap="200">
+                            <Text
+                              variant="headingMd"
+                              as="h6"
+                              fontWeight="regular"
+                            >
+                              On Mobile
+                            </Text>
+                            <InlineGrid
+                              columns={{
+                                sm: "2",
+                              }}
+                              gap={300}
+                            >
+                              <TextField
+                                type="number"
+                                onChange={(e) => {
+                                  handleFocus("mobile_margin_top");
+                                  handleChange(e, "mobile_margin_top");
+                                }}
+                                value={data.mobile_margin_top}
+                                label={`Margin top`}
+                              />
+                              <TextField
+                                type="number"
+                                onChange={(e) => {
+                                  handleFocus("mobile_margin_bottom");
+                                  handleChange(e, "mobile_margin_bottom");
+                                }}
+                                value={data.mobile_margin_bottom}
+                                label={`Margin bottom`}
+                              />
+                            </InlineGrid>
+                          </BlockStack>
+                        </Box>
+                      </BlockStack>
+                    </BlockStack>
+                  </div>
+                </BlockStack>
+              </Card>
+            </Layout.Section>
+            <Layout.Section>
+              <Card roundedAbove="sm">
+                <BlockStack gap="300">
+                  <Text variant="headingMd" as="h5">
+                    Translations
+                  </Text>
+                  <div className="checkbox_section">
+                    <BlockStack gap="400">
+                      <TextField
+                        label="You Save "
+                        onChange={(e) => {
+                          handleFocus("translation_you_save");
+                          handleChange(e, "translation_you_save");
+                        }}
+                        value={data.translation_you_save}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Out of stock "
+                        onChange={(e) => {
+                          handleFocus("translation_stock");
+                          handleChange(e, "translation_stock");
+                        }}
+                        value={data.translation_stock}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="This Item "
+                        onChange={(e) => {
+                          handleFocus("translation_item");
+                          handleChange(e, "translation_item");
+                        }}
+                        value={data.translation_item}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Total price "
+                        onChange={(e) => {
+                          handleFocus("translation_total_price");
+                          handleChange(e, "translation_total_price");
+                        }}
+                        value={data.translation_total_price}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Add to cart "
+                        onChange={(e) => {
+                          handleFocus("translation_cart");
+                          handleChange(e, "translation_cart");
+                        }}
+                        value={data.translation_cart}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="For "
+                        onChange={(e) => {
+                          handleFocus("translation_for");
+                          handleChange(e, "translation_for");
+                        }}
+                        value={data.translation_for}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="With "
+                        onChange={(e) => {
+                          handleFocus("translation_with");
+                          handleChange(e, "translation_with");
+                        }}
+                        value={data.translation_with}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Off "
+                        onChange={(e) => {
+                          handleFocus("translation_off");
+                          handleChange(e, "translation_off");
+                        }}
+                        value={data.translation_off}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Each"
+                        onChange={(e) => {
+                          handleFocus("translation_each");
+                          handleChange(e, "translation_each");
+                        }}
+                        value={data.translation_each}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Buy "
+                        onChange={(e) => {
+                          handleFocus("translation_buy");
+                          handleChange(e, "translation_buy");
+                        }}
+                        value={data.translation_buy}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Subtotal "
+                        onChange={(e) => {
+                          handleFocus("translation_subtotal");
+                          handleChange(e, "translation_subtotal");
+                        }}
+                        value={data.translation_subtotal}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Discount "
+                        onChange={(e) => {
+                          handleFocus("translation_discount");
+                          handleChange(e, "translation_discount");
+                        }}
+                        value={data.translation_discount}
+                        autoComplete="off"
+                      />
 
-          return (
-            <ResourceItem
-              id={id}
-              key={id}
-              onClick={() => navigate(`${url}${id}`)}
-              media={media}
-              accessibilityLabel={`View details for ${title}`}
-            >
-              <Text variant="bodyMd" fontWeight="bold" as="h3">
-                {" "}
-                {title}{" "}
-              </Text>
-              <div style={{ marginTop: "5px", display: "flex", gap: "12px" }}>
-                <Badge>
-                  Reviews <b>{reviews}</b>
-                </Badge>
-                <Badge>
-                  Rating <b>{totalRating}</b>
-                </Badge>
-              </div>
-            </ResourceItem>
-          );
-        }}
-        resourceName={resourceName}
-        alternateTool={<Button variant="primary">Import reviews</Button>}
-      />
-    </Card>
+                      <TextField
+                        label="Old price "
+                        onChange={(e) => {
+                          handleFocus("translation_price");
+                          handleChange(e, "translation_price");
+                        }}
+                        value={data.translation_price}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Quantity "
+                        onChange={(e) => {
+                          handleFocus("translation_quantity");
+                          handleChange(e, "translation_quantity");
+                        }}
+                        value={data.translation_quantity}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="And"
+                        onChange={(e) => {
+                          handleFocus("translation_and");
+                          handleChange(e, "translation_and");
+                        }}
+                        value={data.translation_and}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Free of charge"
+                        onChange={(e) => {
+                          handleFocus("translation_charge");
+                          handleChange(e, "translation_charge");
+                        }}
+                        value={data.translation_charge}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Free "
+                        onChange={(e) => {
+                          handleFocus("translation_free");
+                          handleChange(e, "translation_free");
+                        }}
+                        value={data.translation_free}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Claim gift "
+                        onChange={(e) => {
+                          handleFocus("translation_claim");
+                          handleChange(e, "translation_claim");
+                        }}
+                        value={data.translation_claim}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Gift "
+                        onChange={(e) => {
+                          handleFocus("translation_gift");
+                          handleChange(e, "translation_gift");
+                        }}
+                        value={data.translation_gift}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Your product has been added to cartt "
+                        onChange={(e) => {
+                          handleFocus("translation_msg");
+                          handleChange(e, "translation_msg");
+                        }}
+                        value={data.translation_msg}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Save "
+                        onChange={(e) => {
+                          handleFocus("translation_save");
+                          handleChange(e, "translation_save");
+                        }}
+                        value={data.translation_save}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Per item "
+                        onChange={(e) => {
+                          handleFocus("translation_per_item");
+                          handleChange(e, "translation_per_item");
+                        }}
+                        value={data.translation_per_item}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="Swap item "
+                        onChange={(e) => {
+                          handleFocus("translation_swap");
+                          handleChange(e, "translation_swap");
+                        }}
+                        value={data.translation_swap}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="See more "
+                        onChange={(e) => {
+                          handleFocus("translation_see");
+                          handleChange(e, "translation_see");
+                        }}
+                        value={data.translation_see}
+                        autoComplete="off"
+                      />
+                      <TextField
+                        label="See less "
+                        onChange={(e) => {
+                          handleFocus("translation_less");
+                          handleChange(e, "translation_less");
+                        }}
+                        value={data.translation_less}
+                        autoComplete="off"
+                      />
+                    </BlockStack>
+                  </div>
+                </BlockStack>
+              </Card>
+            </Layout.Section>
+          </Layout>
+        </InlineGrid>
+      </BlockStack>
+    </div>
   );
 }
+
+export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName}) => {
+  const resourceName = {
+    singular: "bundle",
+    plural: "bundles",
+  };
+  const [upsellList, setUpsellList] = useState(data);
+  const [queryValue, setQueryValue] = useState("");
+  const [queryLoading, setQueryLoading] = useState(false);
+  const [availability, setAvailability] = useState([]);
+  const [buttonLoader, setButtonLoader] = useState(false);
+  const handleAvailabilityChange = useCallback(async (value) => {
+    setAvailability(value);
+   
+    setQueryLoading(true);
+    const payload = {
+      action: "offer_types",
+      type: value,
+   
+    };
+    try {
+      const response = await fetch(`/api/get-filter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setUpsellList(data.data);
+      setQueryLoading(false);
+    } catch (error) {
+      console.error("API call failed:", error);
+    }
+  }, []);
+
+  const handleFiltersQueryChange = async(value) => {
+    console.log("testingggg_____",value , queryValue);
+    
+    setQueryValue(value);
+    
+    try {
+      // setButtonLoader(true);
+      setQueryLoading(true);
+      const response = await fetch(
+        `/api/getfilter?type=${value}&from=upsell`,
+      );
+      const data = await response.json();
+      if (data.success) {
+        setUpsellList(data.data);
+        setButtonLoader(false);
+        setQueryLoading(false);
+      } else {
+        setUpsellList([]);
+        setButtonLoader(false);
+        setQueryLoading(false);
+      }
+    } catch (error) {
+      setButtonLoader(false);
+      setQueryLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+  const handleLinkClick = () => {
+    shopify.loading(true);
+  };
+  const handleAvailabilityRemove = useCallback(() => {
+    setAvailability([]);
+    setFilteredReviews();
+  }, []);
+
+
+  useEffect(()=>{
+    console.log("queryLoading" , queryLoading);
+    
+  },[queryLoading])
+
+  const handleQueryValueRemove = useCallback(() => {
+    setQueryValue("");
+    setFilteredReviews();
+  }, []);
+  const handleFiltersClearAll = useCallback(() => {
+    handleAvailabilityRemove();
+
+    handleQueryValueRemove();
+  }, [handleAvailabilityRemove, handleQueryValueRemove]);
+
+  const handleAction = async (actionType, store) => {
+    const selectedProductIds = selectedResources;
+    setButtonLoader(true);
+    setQueryLoading(true);
+    const datasend = {
+      offer_status: "Draft",
+    };
+    const data = {
+      actionType,
+      store: store,
+      ids: selectedProductIds,
+      data: datasend,
+    };
+
+    const response = await fetch("/api/upsell-save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const result = await response.json();
+    if (result.success) {
+      setActive(true);
+      setQueryLoading(false)
+      setButtonLoader(false);
+      setUpsellList(result.data);
+      setMsgData(` ${actionType.toUpperCase()} Successfully`);
+    } else {
+      setButtonLoader(false);
+      setActive(true);
+      setUpsellList(data);
+      setQueryLoading(false)
+      setError(true);
+      setMsgData("There is some error while update");
+    }
+  };
+
+  const bulkActions = [
+    {
+      content: "Activate",
+      loading: queryLoading,
+      onAction: () => handleAction("activated", shopName),
+    },
+    {
+      content: "Deactivate",
+      loading: queryLoading,
+      onAction: () => handleAction("deactivated", shopName),
+    },
+    {
+      icon: DeleteIcon,
+      destructive: true,
+      content: "Delete ",
+      loading: queryLoading,
+      onAction: () => handleAction("deleted", shopName),
+    },
+  ];
+  const { selectedResources, allResourcesSelected, handleSelectionChange } =
+    useIndexResourceState(upsellList);
+
+  const filters = [
+    {
+      key: "offertypes",
+      label: "Offer Types",
+      filter: (
+        <ChoiceList
+          title="Offer Types"
+          titleHidden
+          choices={[
+            { label: "Product bundle", value: "Product bundle" },
+            { label: "Volume Discount", value: "Volume Discount" },
+            { label: "Buy X Get Y", value: "BOGO" },
+          ]}
+          selected={availability || []}
+          onChange={handleAvailabilityChange}
+          allowMultiple
+        />
+      ),
+    },
+  ];
+
+  const appliedFilters = [];
+  if (!isEmpty(availability)) {
+    const key = "rating";
+    appliedFilters.push({
+      key,
+      label: disambiguateLabel(key, availability),
+      onRemove: handleAvailabilityRemove,
+    });
+  }  const emptyStateMarkup = (
+    <EmptySearchResult
+      title={"No upsells found"}
+     
+      withIllustration
+    />
+  );
+
+  const rowMarkup = upsellList.map(
+    ({ id, discount_type, internal_name, rules, offer_status }, index) => {
+      let bundleName;
+      if (discount_type === "BOGO") {
+        bundleName = "XY";
+      }
+      const buy_products = rules.customer_buy.products;
+      const get_products = rules.customer_get.products;
+      const customerBuySelectType = rules.customer_buy.chosen_type;
+      const customerGetSelectType = rules.customer_get.chosen_type;
+      const renderCustomerBuyContent = () => {
+        if (customerBuySelectType === "any") {
+          return (
+            <div className="upsell_buy_bundles">
+              <div className="">AnyProduct</div>
+            </div>
+          );
+        } else if (customerBuySelectType === "specific") {
+          return (
+            <div className="upsell_buy_bundles">
+              <div className="">{buy_products.length} Products Selected</div>
+            </div>
+          );
+        }
+      };
+      const renderCustomerGetContent = () => {
+        if (customerGetSelectType === "any") {
+          return (
+            <div className="upsell_buy_bundles">
+              <div className="">AnyProduct</div>
+            </div>
+          );
+        } else if (customerGetSelectType === "specific") {
+          return (
+            <div className="upsell_buy_bundles">
+              <div className="">{get_products.length} Products Selected</div>
+            </div>
+          );
+        }
+      };
+
+      return (
+        <IndexTable.Row
+          id={id}
+          key={id}
+          selected={selectedResources.includes(id)}
+          position={index}
+        >
+          <IndexTable.Cell>
+            <Link
+              removeUnderline
+              monochrome
+              dataPrimaryLink
+              url={`/app/edit/bogo/${id}`}
+              onClick={handleLinkClick}
+            >
+              <div className="aios_upsell_list_name">
+                <div
+                  className={`upsell_bundle_name ${offer_status === "Active" ? `upsell_active_bundle` : ""} `}
+                >
+                  <span className="upsell_bundle_name_type">
+                    {bundleName}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </IndexTable.Cell>
+          <IndexTable.Cell>
+            <BlockStack gap="200">
+              <InlineStack wrap="false" gap="200" blockAlign="center">
+                <Text variant="headingMd" as="h5">
+                  {internal_name}
+                </Text>
+                {offer_status === "Active" ? (
+                  <Badge tone="warning">
+                    -{rules?.discount?.discount_amount}
+                    {rules?.discount?.discount_symbol}
+                  </Badge>
+                ) : (
+                  <Badge>
+                    -{rules?.discount?.discount_amount}
+                    {rules?.discount?.discount_symbol}
+                  </Badge>
+                )}
+              </InlineStack>
+              <InlineStack wrap="false" gap="200" blockAlign="center">
+                {renderCustomerBuyContent()} + {renderCustomerGetContent()}
+              </InlineStack>
+            </BlockStack>
+          </IndexTable.Cell>
+          <IndexTable.Cell>{}</IndexTable.Cell>
+          <IndexTable.Cell>
+            <Text as="span" alignment="end" numeric>
+              {discount_type}
+            </Text>
+          </IndexTable.Cell>
+          <IndexTable.Cell>{}</IndexTable.Cell>
+          <IndexTable.Cell>{}</IndexTable.Cell>
+        </IndexTable.Row>
+      );
+    },
+  );
+
+  return (
+    <div className="upsell-Offers">
+      <Card>
+        {/* {upsellList.length > 0 ? ( */}
+          <>
+            <Filters
+              queryValue={queryValue}
+              queryPlaceholder="Search items"
+              filters={filters}
+              appliedFilters={appliedFilters}
+              onQueryChange={handleFiltersQueryChange}
+              onQueryClear={handleQueryValueRemove}
+              onClearAll={handleFiltersClearAll}
+              loading={queryLoading}
+            />
+            <Button variant="primary" onClick={handleCreate}>
+              Create Offer
+            </Button>
+            <div className="upsell_search_bar">
+              {/* <InlineStack
+                wrap={false}
+                blockAlign="center"
+                gap="200"
+                align="space-between"
+              >
+                <div className="search_filter" style={{ width: "88%" }}>
+                  <TextField
+                    type="text"
+                    prefix={<Icon source={SearchIcon} tone="base" />}
+                    autoComplete="off"
+                  />
+                </div>
+                <Button variant="primary" onClick={handleCreate}>
+                  Create Offer
+                </Button>
+              </InlineStack> */}
+              <IndexTable
+                resourceName={resourceName}
+                itemCount={upsellList.length}
+                selectedItemsCount={
+                  allResourcesSelected ? "All" : selectedResources.length
+                }
+                emptyState={emptyStateMarkup}
+                loading={queryLoading}
+                onSelectionChange={handleSelectionChange}
+                headings={[
+                  { title: "" },
+                  { title: "Name" },
+                  { title: "Impressions" },
+                  { title: "Clicks" },
+                  { title: "Click Rate" },
+                  { title: "Orders" },
+                  { title: "Revenue" },
+                ]}
+                bulkActions={bulkActions}
+              >
+                {rowMarkup}
+              </IndexTable>
+            </div>
+          </>
+        {/* ) : (
+          <div className="aios-upsell-grid">
+            <Box borderColor="border" borderRadius="100" borderWidth="025">
+              <Box padding="400">
+                <Text variant="headingSm" as="h6" alignment="center">
+                  Buy X, Get Y
+                </Text>
+              </Box>
+              <Link url="/app/create/bogo" onClick={handleLinkClick}>
+                <Box padding="400">
+                  <img src={bogo} className="upsell_bundle_images" />
+                </Box>
+              </Link>
+            </Box>
+          </div>
+        )} */}
+      </Card>
+      <Layout.Section>
+        <Card roundedAbove="sm">
+          <BlockStack gap="300">
+            <Text variant="headingSm" as="h6" fontWeight="semibold">
+              Publish and position
+            </Text>
+
+            <Box
+              background="bg-surface-secondary"
+              padding="200"
+              borderRadius="200"
+            >
+              <BlockStack gap={200}>
+                <Text variant="headingSm" as="h6" fontWeight="regular">
+                  Display manually
+                </Text>
+                <Text
+                  variant="headingSm"
+                  as="p"
+                  fontWeight="regular"
+                  tone="subdued"
+                >
+                  Place the Reviews Carousel manually on your homepage or
+                  other pages using the Shopify editor .
+                </Text>
+                <InlineStack align="start">
+                  <ButtonGroup>
+                    <Button
+                      onClick={handleUpsellBuilderClick}
+                      accessibilityLabel="Go to editor"
+                    >
+                      Go to Shopify Editor
+                    </Button>
+                  </ButtonGroup>
+                </InlineStack>
+              </BlockStack>
+            </Box>
+          </BlockStack>
+        </Card>
+      </Layout.Section>
+    </div>
+  );
+  function isEmpty(value) {
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    } else {
+      return value === "" || value == null;
+    }
+  }
+  function disambiguateLabel(key, value) {
+    switch (key) {
+      case "rating":
+        return `Rating is  ${value}`;
+      case "source":
+        return `Source is is  ${value}`;
+      // return value.map((val) => `Source is   ${val}`).join(", ");
+      case "status":
+        return `Status is  ${value}`;
+      default:
+        return value.toString();
+    }
+  }
+};
+
 
 export const AnalyticsDataTab = ({ data, reviews }) => {
   const [activeLine, setActiveLine] = useState(null);
@@ -1329,7 +2103,6 @@ function UpsellBuilder() {
   } = useLoaderData();
   const [upsellList, setUpsellList] = useState(getUpsells);
 
-  const [analyticsChartData, setAnalyticsChartData] = useState([]);
   const [formData, setFormData] = useState(data);
   const [status, setStatus] = useState(data.app_status);
   const [active, setActive] = useState(false);
@@ -1344,22 +2117,6 @@ function UpsellBuilder() {
     [],
   );
   const [buttonLoader, setButtonLoader] = useState(false);
-  const [selectedWidget, setSelectedWidget] = useState("ReviewsWidget");
-
-  const handleOptionChange = (selected) => {
-    setSelectedWidget(selected[0]);
-  };
-
-  const widgetoptions = [
-    { value: "ReviewsWidget", label: "Reviews Widget" },
-    { value: "StarRatings", label: "Star Ratings" },
-    { value: "ReviewsCarousel", label: "Reviews Carousel" },
-    { value: "HappyCustomers", label: "Happy Customers Page" },
-    { value: "FeaturedReviews", label: "Featured Reviews" },
-    { value: "AllReviewsBadge", label: "All Reviews Badge" },
-    { value: "Publishing", label: "Publishing" },
-    { value: "Translations", label: "Translations" },
-  ];
 
   const handleToggleStatus = async () => {
     setButtonLoading(true);
@@ -1374,7 +2131,6 @@ function UpsellBuilder() {
     };
 
     try {
-      
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -1483,270 +2239,22 @@ function UpsellBuilder() {
     }));
   }, []);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     shopify.loading(false);
-  })
+  });
   const handleFocus = (fieldName) => {
     setActiveField(fieldName);
   };
-  const handleLinkClick = () => {
+ 
+  const handleCreate = () => {
     shopify.loading(true);
+    navigate("/app/create/upsell_builder/all");
   };
 
-
-
-
-  const Offers = () => {
-    const resourceName = {
-      singular: "bundle",
-      plural: "bundles",
-    };
-
-    const handleAction = async (actionType,  store) => {
-      const selectedProductIds = selectedResources;
-      // setButtonLoader(true);
-      console.log(selectedProductIds,"selectedProductIds----")
-  const datasend={
-   offer_status:"Draft"
-
-  }
-      const data = {
-        actionType,
-         store: store,
-        ids: selectedProductIds,
-        data:datasend
-      };
-
-
-      const response = await fetch("/api/upsell-save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const result = await response.json();
-      if (result.success) {
-        setActive(true);
-
-        setButtonLoader(false);
-        setUpsellList(result.data);
-        setMsgData(` ${actionType.toUpperCase()} Successfully`);
-      } else {
-        setButtonLoader(false);
-        setActive(true);
-
-        setError(true);
-        setMsgData("There is some error while update");
-      }
-    };
-
-    const bundles = [
-      {
-        id: "1",
-        title: "Product Bundle",
-        image: product_bundle,
-      },
-      {
-        id: "2",
-        title: "Product Bundle",
-        image: product_bundle,
-      },
-      {
-        id: "3",
-        title: "Product Bundle",
-        image: product_bundle,
-      },
-    ];
-
-    const bulkActions = [
-      {
-        content: 'Activate',
-        loading: buttonLoader,
-        onAction: () => handleAction("activated", shopName),
-      },
-      {
-        content: 'Deactivate',
-        loading: buttonLoader,
-        onAction: () => handleAction("deactivated", shopName),
-      },
-      {
-        icon: DeleteIcon,
-        destructive: true,
-        content: 'Delete ',
-        loading: buttonLoader,
-        onAction: () => handleAction("deleted",  shopName),
-      },
-    ];
-    const { selectedResources, allResourcesSelected, handleSelectionChange } =
-      useIndexResourceState(upsellList);
-    // const rowMarkup = bundles.map(({ id,discount_type, internal_name, rules, offer_status}, index) => (
-    //   <IndexTable.Row
-    //     id={id}
-    //     key={id}
-    //     selected={selectedResources.includes(id)}
-    //     position={index}
-    //   >
-    //     <div className="aios-upsells-list">
-    //       <div className="aios_upsell_name">
-
-    //       </div>
-    //       <Text variant="headingSm" as="h6" alignment="center">
-    //             {internal_name}
-    //           </Text>
-
-    //     </div>
-    //   </IndexTable.Row>
-    // ));
-
-    const rowMarkup = upsellList.map(
-      ({ id, discount_type, internal_name, rules, offer_status }, index) => {
-        let bundleName;
-        if (discount_type === "BOGO") {
-          bundleName = "XY";
-        }
-        const buy_products = rules.customer_buy.products;
-        const get_products = rules.customer_get.products;
-        const customerBuySelectType = rules.customer_buy.chosen_type;
-        const customerGetSelectType = rules.customer_get.chosen_type;
-        const renderCustomerBuyContent = () => {
-          if (customerBuySelectType === "any") {
-            return (
-              <div className="upsell_buy_bundles">
-                <div className="">AnyProduct</div>
-              </div>
-            );
-          } else if (customerBuySelectType === "specific") {
-            return (
-              <div className="upsell_buy_bundles">
-                <div className="">{buy_products.length} Products Selected</div>
-              </div>
-            );
-          }
-        };
-        const renderCustomerGetContent = () => {
-          if (customerGetSelectType === "any") {
-            return (
-              <div className="upsell_buy_bundles">
-                <div className="">AnyProduct</div>
-              </div>
-            );
-          } else if (customerGetSelectType === "specific") {
-            return (
-              <div className="upsell_buy_bundles">
-                <div className="">{get_products.length} Products Selected</div>
-              </div>
-            );
-          }
-        };
-        console.log(selectedResources,"selectedResources--")
-
-        return (
-          <IndexTable.Row
-            id={id}
-            key={id}
-            selected={selectedResources.includes(id)}
-            position={index}
-          >
-            <IndexTable.Cell>
-            <Link
-            removeUnderline
-            monochrome
-            dataPrimaryLink
-            url={`/app/edit/bogo/${id}`}
-            onClick={handleLinkClick}
-          >
-              <div className="aios_upsell_list_name">
-                <div
-                  className={`upsell_bundle_name ${offer_status === "Active" ? `upsell_active_bundle` : ""} `}
-                >
-                  <span className="upsell_bundle_name_type">{bundleName}</span>
-                </div>
-              </div>
-              </Link>
-            </IndexTable.Cell>
-            <IndexTable.Cell>
-              <BlockStack gap="200">
-                <InlineStack wrap="false" gap="200" blockAlign="center">
-                  <Text variant="headingMd" as="h5">
-                    {internal_name}
-                  </Text>
-                  {offer_status === "Active" ? (
-                    <Badge tone="warning">
-                      -{rules?.discount?.discount_amount}
-                      {rules?.discount?.discount_symbol}
-                    </Badge>
-                  ) : (
-                    <Badge>
-                      -{rules?.discount?.discount_amount}
-                      {rules?.discount?.discount_symbol}
-                    </Badge>
-                  )}
-                </InlineStack>
-                <InlineStack wrap="false" gap="200" blockAlign="center">
-                  {renderCustomerBuyContent()} + {renderCustomerGetContent()}
-                </InlineStack>
-              </BlockStack>
-            </IndexTable.Cell>
-            <IndexTable.Cell>{}</IndexTable.Cell>
-            <IndexTable.Cell>
-              <Text as="span" alignment="end" numeric>
-                {discount_type}
-              </Text>
-            </IndexTable.Cell>
-            <IndexTable.Cell>{}</IndexTable.Cell>
-            <IndexTable.Cell>{}</IndexTable.Cell>
-          </IndexTable.Row>
-        );
-      },
-    );
-
-    return (
-      <div style={{ padding: "10px" }} className="upsell-Offers">
-        <Card>
-          {upsellList.length > 0 ? (
-            <IndexTable
-              resourceName={resourceName}
-              itemCount={upsellList.length}
-              selectedItemsCount={
-                allResourcesSelected ? "All" : selectedResources.length
-              }
-              onSelectionChange={handleSelectionChange}
-              headings={[
-                { title: "" },
-                { title: "Name" },
-                { title: "Impressions" },
-                { title: "Clicks" },
-                { title: "Click Rate" },
-                { title: "Orders" },
-                { title: "Revenue" },
-              ]}
-              bulkActions={bulkActions}
-            >
-              {rowMarkup}
-            </IndexTable>
-          ) : (
-            <div className="aios-upsell-grid">
-              <Box borderColor="border" borderRadius="100" borderWidth="025">
-                <Box padding="400">
-                  <Text variant="headingSm" as="h6" alignment="center">
-                    Buy X, Get Y
-                  </Text>
-                </Box>
-                <Link url="/app/create/bogo" onClick={handleLinkClick}>
-                  <Box padding="400">
-                    <img src={bogo} className="upsell_bundle_images" />
-                  </Box>
-                </Link>
-              </Box>
-            </div>
-          )}
-        </Card>
-      </div>
+  const handleUpsellBuilderClick = () => {
+    window.open(
+      `https://admin.shopify.com/store/${shopName.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/upsellbuilder&target=newAppsSection`,
+      "__blank",
     );
   };
 
@@ -1804,7 +2312,7 @@ function UpsellBuilder() {
                     style={{ borderRadius: "8px" }}
                   />
                   <Text variant="p">
-                    Import reviews from a CSV file in the Vitals format:
+                    Import reviews from a CSV file in the All-In-One Store  format:
                   </Text>
                 </InlineGrid>
                 <Button>Import</Button>
@@ -1844,7 +2352,7 @@ function UpsellBuilder() {
                 <InlineGrid columns="45px 1fr" alignItems="center" gap="200">
                   <Thumbnail source={ExportIcon} size="small" />
                   <Text variant="p">
-                    Export all reviews from Vitals to a CSV file.
+                    Export all reviews from All-In-One Store  to a CSV file.
                   </Text>
                 </InlineGrid>
                 <Button>Export</Button>
@@ -1862,16 +2370,23 @@ function UpsellBuilder() {
       content: "Offers",
       accessibilityLabel: "Offers",
       panelID: "Offers",
-      component: <Offers />,
+      component: <Offers data={getUpsells} handleCreate={handleCreate} handleUpsellBuilderClick={handleUpsellBuilderClick} shopName={shopName}/>,
       dummy: "",
     },
-    // {
-    //   id: "General Settings",
-    //   content: "General Settings",
-    //   panelID: "General Settings",
-    //   component: <ReviewList reviews={productReviews} />,
-    //   dummy: "",
-    // },
+    {
+      id: "General Settings",
+      content: "General Settings",
+      panelID: "General Settings",
+      component: (
+        <GeneralSettings
+          data={formData}
+          handleChange={handleChange}
+          handleColorChange={handleColorChange}
+          handleFocus={handleFocus}
+        />
+      ),
+      dummy: "",
+    },
     // {
     //   id: "Excluded Products",
     //   content: "Excluded Products",
@@ -1889,12 +2404,13 @@ function UpsellBuilder() {
     //   ),
     //   dummy: "",
     // },
-  ]
-  const handleClick =()=>{
+  ];
+  const handleClick = () => {
     shopify.loading(true);
     navigate("/app");
-  }
-  const appName = "Upsell Builder"
+  };
+  const appName = "Upsell Builder";
+ 
   return (
     <div className="Produyct-reviews">
       <Page
@@ -1904,7 +2420,7 @@ function UpsellBuilder() {
         primaryAction={
           status ? (
             <DeactivatePopover
-            type={appName}
+              type={appName}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
@@ -1917,7 +2433,6 @@ function UpsellBuilder() {
             }
           )
         }
-      
       >
         <div className="product-reviews">
           <BlockStack gap="200">
@@ -1964,7 +2479,7 @@ function UpsellBuilder() {
                         Clicks
                       </Text>
                       <Text as="p" variant="headingLg">
-                      0
+                        0
                       </Text>
                       <span
                         style={{ paddingBottom: "10px", display: "block" }}
@@ -1987,7 +2502,7 @@ function UpsellBuilder() {
                           <Icon source={StarIcon} tone="base" />
                         </span>
                         <Text as="p" variant="headingLg">
-                         0
+                          0
                         </Text>
                       </InlineStack>
                       <span
@@ -2057,5 +2572,13 @@ function UpsellBuilder() {
       </Page>
     </div>
   );
+
+  function isEmpty(value) {
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    } else {
+      return value === "" || value == null;
+    }
+  }
 }
 export default UpsellBuilder;
