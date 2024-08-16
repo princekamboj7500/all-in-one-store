@@ -397,7 +397,7 @@ export const action = async ({ request }) => {
        created_at: new Date(),
       shopify_discount_id: bogoCreateId,
     };
-    const updateDiscounts = await prisma.UpsellBuilder.update({
+    const updateDiscounts = await db.UpsellBuilder.update({
       where: {
         id: discount.id,
       },
@@ -505,7 +505,7 @@ export const action = async ({ request }) => {
         created_at: new Date(),
         shopify_discount_id: bogoCreateId,
       };
-      const updateDiscounts = await prisma.UpsellBuilder.update({
+      const updateDiscounts = await db.UpsellBuilder.update({
         where: {
           id: id,
         },
@@ -527,7 +527,7 @@ export const action = async ({ request }) => {
         created_at: new Date(),
         shopify_discount_id: bogoCreateId,
       };
-      const updateDiscounts = await prisma.UpsellBuilder.update({
+      const updateDiscounts = await db.UpsellBuilder.update({
         where: {
           id: id,
         },
@@ -550,7 +550,7 @@ export const action = async ({ request }) => {
         created_at: new Date(),
         shopify_discount_id: null,
       };
-      const updateDiscounts = await prisma.UpsellBuilder.update({
+      const updateDiscounts = await db.UpsellBuilder.update({
         where: {
           id: id,
         },
@@ -570,7 +570,7 @@ export const action = async ({ request }) => {
         created_at: new Date(),
         shopify_discount_id: null,
       };
-      const updateDiscounts = await prisma.UpsellBuilder.update({
+      const updateDiscounts = await db.UpsellBuilder.update({
         where: {
           id: id,
         },
@@ -596,7 +596,7 @@ export const action = async ({ request }) => {
       discountId = BoGoId;
     }
 
-    const addDiscounts = await prisma.UpsellBuilder.create({
+    const addDiscounts = await db.UpsellBuilder.create({
       data: {
         store: data.store,
         discount_type: data.discount_type,
@@ -625,7 +625,7 @@ export const action = async ({ request }) => {
         existData.shopify_discount_id,
       );
     }
-    const updateDiscounts = await prisma.UpsellBuilder.deleteMany({
+    const updateDiscounts = await db.UpsellBuilder.deleteMany({
       where: {
         id: id,
       },
@@ -683,7 +683,7 @@ export const action = async ({ request }) => {
       },
     });
     processDiscounts(findDiscountIds, "deactivated");
-    const updateDiscounts = await prisma.UpsellBuilder.updateMany({
+    const updateDiscounts = await db.UpsellBuilder.updateMany({
       where: {
         id: {
           in: ids,
@@ -703,7 +703,7 @@ export const action = async ({ request }) => {
       data: updateddata,
     });
   } else if (actionType == "deleted") {
-    const updateDiscounts = await prisma.UpsellBuilder.deleteMany({
+    const updateDiscounts = await db.UpsellBuilder.deleteMany({
       where: {
         id: {
           in: ids,
@@ -722,7 +722,7 @@ export const action = async ({ request }) => {
       data: updateddata,
     });
   } else {
-    const updateDiscounts = await prisma.UpsellBuilder.updateMany({
+    const updateDiscounts = await db.UpsellBuilder.updateMany({
       where: {
         id: id,
       },
