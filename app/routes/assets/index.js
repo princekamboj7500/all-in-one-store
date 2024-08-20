@@ -1,6 +1,7 @@
 export { default as upsell } from './upsell-builder.svg';
 export { default as product } from './product_1.png';
-
+export { default as bogoproduct } from './product_1.jpg';
+export { default as bogoproduct2 } from './product2.png';
 export { default as scroll } from './scroll.svg';
 export { default as sticky} from './sticky.svg';
 export { default as search} from './search.svg';

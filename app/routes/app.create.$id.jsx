@@ -44,7 +44,7 @@ import {
   ImageIcon,
 } from "@shopify/polaris-icons";
 import DiscardModal from "./components/DiscardModal";
-import {product} from "./assets"
+import {product, bogoproduct, bogoproduct2} from "./assets"
 export const loader = async ({ request, params }) => {
   const type = params.id;
 
@@ -1950,9 +1950,8 @@ function BuilderCreate() {
                   <span>BUY 1</span>
                 </div>
                 <div className="buy_box_image">
-                  <img
-                    className="preview_image"
-                    src={product}
+                  <img className="preview_image" width="200" height="200"
+                    src={bogoproduct}
                   />
                   <div className="buy_box_content">
                     <div className="buy_box_title">Product A</div>
@@ -1988,7 +1987,7 @@ function BuilderCreate() {
                 <div className="buy_box_image">
                   <img
                     className="preview_image"
-                    src="https://d3acrzpqhtrug6.cloudfront.net/img/product-2.png"
+                    src={bogoproduct2}
                   />
                   <div className="buy_box_content">
                     <select>

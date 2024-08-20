@@ -482,6 +482,7 @@ export const action = async ({ request }) => {
   };
 
   if (actionType === "update") {
+    console.log("heloo___")
     const existData = await db.UpsellBuilder.findFirst({
       where: {
         id: id,
@@ -494,7 +495,7 @@ export const action = async ({ request }) => {
       const bogoBuy = await BogoDiscountDeleteShopify(
         existData.shopify_discount_id,
       );
-      const bogoCreateId = await BogoDiscountCreateShopify();
+      const bogoCreateId = await BogoDiscountCreateShopify(data);
       const updatedData = {
         store: data.store,
         discount_type: data.discount_type,
@@ -515,7 +516,7 @@ export const action = async ({ request }) => {
       existData.shopify_discount_id == null &&
       data.offer_status == "Active"
     ) {
-      const bogoCreateId = await BogoDiscountCreateShopify();
+      const bogoCreateId = await BogoDiscountCreateShopify(data);
 
       const updatedData = {
         store: data.store,
@@ -592,7 +593,7 @@ export const action = async ({ request }) => {
     let discountId = null;
 
     if (data.offer_status === "Active") {
-      const BoGoId = await BogoDiscountCreateShopify();
+      const BoGoId = await BogoDiscountCreateShopify(data);
       discountId = BoGoId;
     }
 
