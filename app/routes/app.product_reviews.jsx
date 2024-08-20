@@ -1685,9 +1685,19 @@ function ProductReviews() {
   const Importtab = () => {
     const [files, setFiles] = useState([]);
     const [importBanner, setImportBanner] = useState(true);
+    const [checkImport, setcheckImport] = useState(false);
+    const [exportBanner, setExportBanner] = useState(false);
+    const [Buttonloading, setButtonLoading] = useState(false);
     const [showImportModal, setShowImportModal] = useState(false);
     const handleImportModal = () => {
       setShowImportModal(true);
+    };
+    const handleExportModal = () => {
+      console.log("heloo");
+      setExportBanner(true);
+    };
+    const handleCheckChange = (newChecked) => {
+      setcheckImport(newChecked);
     };
 
     const [rejectedFiles, setRejectedFiles] = useState([]);
@@ -1698,7 +1708,10 @@ function ProductReviews() {
       },
       [],
     );
-
+    const handleRemove = (indexToRemove) => {
+      setFiles((prevFiles) => prevFiles.filter((_, index) => index !== indexToRemove));
+    };
+    
     const uploadedFiles = files.length > 0 && (
       <div>
         {files.map((file, index) => (
@@ -1713,11 +1726,42 @@ function ProductReviews() {
                 {file.size} bytes
               </Text>
             </div>
-            <Button>Remove</Button>
+            <Button onClick={() => handleRemove(index)}>Remove</Button>
           </div>
         ))}
       </div>
     );
+    const handleImport = async () => {
+      setButtonLoading(true);
+
+      const formData = new FormData();
+
+      files.forEach((file, index) => {
+        formData.append(`files`, file);
+      });
+
+      formData.append("store_name", shopName);
+
+      try {
+        const response = await fetch(`/api/import-reviews`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setButtonLoading(false);
+          setMsgData("Import Successfully");
+          setActive(true);
+          setShowImportModal(false);
+        } else {
+          setButtonLoading(false);
+          setMsgData("There is Error while Import");
+          setActive(true);
+        }
+      } catch (err) {}
+    };
     const fileUpload = !files.length && <DropZone.FileUpload />;
     const ImportModal = (
       <div className="modals">
@@ -1728,8 +1772,9 @@ function ProductReviews() {
             title="Import reviews from CSV (All-In-one Store Template)"
             primaryAction={{
               content: "Import",
-              onAction: "",
-              loading: "",
+              onAction: handleImport,
+              disabled: files.length === 0 || !checkImport,
+              loading: Buttonloading,
             }}
             secondaryActions={[
               {
@@ -1745,7 +1790,9 @@ function ProductReviews() {
                     Instructions:
                   </Text>
                   <List type="number">
-                    <List.Item>Download this empty template</List.Item>
+                    <List.Item>Download this empty template
+                      <a href="https://cdn.shopify.com/s/files/1/0654/5388/3651/files/aios-reviews-template.csv?v=1724129630"target="_blank">aios-review-template.csv</a>
+                      </List.Item>
                     <List.Item>Fill in the fields as explained in</List.Item>
                     <List.Item>
                       Upload it by clicking Add File section below.
@@ -1764,9 +1811,43 @@ function ProductReviews() {
                       {fileUpload}
                     </DropZone>
                   )}
-                  <Checkbox label="I confirm that the imported reviews are for my products or I have permission to use them."></Checkbox>
+                  <Checkbox
+                    checked={checkImport}
+                    onChange={handleCheckChange}
+                    label="I confirm that the imported reviews are for my products or I have permission to use them."
+                  ></Checkbox>
                 </BlockStack>
               </Box>
+            </Modal.Section>
+          </Modal>
+        </Frame>
+      </div>
+    );
+
+    const ExportModal = (
+      <div className="modals">
+        <Frame>
+          <Modal
+            open={exportBanner}
+            onClose={() => setExportBanner(false)}
+            title="Export Product Reviews?"
+            primaryAction={{
+              content: "Export",
+              onAction: handleImport,
+              loading: Buttonloading,
+            }}
+            secondaryActions={[
+              {
+                content: "Close",
+                onAction: () => setShowImportModal(false),
+              },
+            ]}
+          >
+            <Modal.Section>
+              <p>
+                Are you sure you want to export all the reviews in a .csv file
+                now? Please note that you can only export once every 30 minutes.
+              </p>
             </Modal.Section>
           </Modal>
         </Frame>
@@ -1790,7 +1871,7 @@ function ProductReviews() {
               </p>
             </Banner>
           )}
-          <Card padding="400">
+          {/* <Card padding="400">
             <BlockStack gap="400">
               <Text variant="p" fontWeight="bold">
                 Import reviews from a CSV export from another app:
@@ -1805,7 +1886,7 @@ function ProductReviews() {
                 <Button>Yotpo</Button>
               </ButtonGroup>
             </BlockStack>
-          </Card>
+          </Card> */}
           <Card>
             <BlockStack gap={300}>
               <InlineGrid
@@ -1832,7 +1913,7 @@ function ProductReviews() {
               </InlineGrid>
             </BlockStack>
           </Card>
-          <Card>
+          {/* <Card>
             <BlockStack gap={300}>
               <InlineGrid
                 columns={{ sm: "1fr auto", xs: "1fr" }}
@@ -1851,8 +1932,8 @@ function ProductReviews() {
                 <Button>Import from AliExpress</Button>
               </InlineGrid>
             </BlockStack>
-          </Card>
-          <Card>
+          </Card> */}
+          {/* <Card>
             <BlockStack gap={300}>
               <InlineGrid
                 columns={{ sm: "1fr auto", xs: "1fr" }}
@@ -1868,12 +1949,13 @@ function ProductReviews() {
                     Export all reviews from All-in-one Store to a CSV file.
                   </Text>
                 </InlineGrid>
-                <Button>Export</Button>
+                <Button onClick={handleExportModal}>Export</Button>
               </InlineGrid>
             </BlockStack>
-          </Card>
+          </Card> */}
         </BlockStack>
         {ImportModal}
+        {ExportModal}
       </div>
     );
   };

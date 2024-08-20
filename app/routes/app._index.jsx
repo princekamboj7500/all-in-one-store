@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   useActionData,
   useLoaderData,
+  useNavigate,
   useNavigation,
   useSubmit,
 } from "@remix-run/react";
@@ -77,7 +78,7 @@ export const loader = async ({ request }) => {
 };
 
 export default function Index() {
-  const nav = useNavigation();
+  const nav = useNavigate();
   const { storeName, status, currentTheme } = useLoaderData();
   const actionData = useActionData();
   const submit = useSubmit();
@@ -102,6 +103,10 @@ export default function Index() {
   const handleClick = () => {
      shopify.loading(true);
   };
+  const handleCreate = () =>{
+    nav("/app/create/upsell_builder/all")
+    shopify.loading(true);
+  }
   return (
     <Page>
       <BlockStack gap="500">
@@ -288,12 +293,12 @@ export default function Index() {
                 <Link
                   removeUnderline
                   monochrome
-                  url="https://help.shopify.com/manual"
+                  url="/app/upsell_builder"
                 >
                   Upsell Builder
                 </Link>
                 <Button
-                  onClick={() => {}}
+                  onClick={handleCreate}
                   accessibilityLabel="Create new offer"
                 >
                   Create new offer
