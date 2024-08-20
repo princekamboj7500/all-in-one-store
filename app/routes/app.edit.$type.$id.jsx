@@ -46,6 +46,7 @@ import {
   ImageIcon,
 } from "@shopify/polaris-icons";
 import DiscardModal from "./components/DiscardModal";
+import {product, bogoproduct, bogoproduct2} from "./assets"
 export const loader = async ({ request, params }) => {
   const upsellId = params.id;
 
@@ -2388,7 +2389,7 @@ const EditDiscountType = () => {
                 <div className="buy_box_image">
                   <img
                     className="preview_image"
-                    src="https://d3acrzpqhtrug6.cloudfront.net/img/product-2.png"
+                    src={bogoproduct}
                   />
                   <div className="buy_box_content">
                     <div className="buy_box_title">Product A</div>
@@ -2424,7 +2425,7 @@ const EditDiscountType = () => {
                 <div className="buy_box_image">
                   <img
                     className="preview_image"
-                    src="https://d3acrzpqhtrug6.cloudfront.net/img/product-2.png"
+                    src={bogoproduct2}
                   />
                   <div className="buy_box_content">
                     <select>
