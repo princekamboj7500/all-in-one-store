@@ -1025,7 +1025,18 @@ export function Apperance({ handleFocus,toggleModal, openStates, handleToggle, l
     { label: "Active", value: "Active" },
     { label: "Inactive", value: "Inactive" },
   ];
-
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(codeSnippet)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Reset the copied state after 2 seconds
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
   const informative_Status_options = [
     { label: "Select an option", value: "Select an option" },
     { label: "Active", value: "Active" },
@@ -1414,6 +1425,39 @@ export function Apperance({ handleFocus,toggleModal, openStates, handleToggle, l
             expandOnPrint
           >
             <BlockStack gap="400">
+            <div
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  width: "fit-content",
+                }}
+              >
+                <p>
+                  To display Bogo on cart page place the following code in your
+                  file BOGO on cart page:
+                </p>
+                <pre
+                  style={{
+                    background: "#f4f4f4",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {codeSnippet}
+                </pre>
+                <Button
+                  onClick={handleCopy}
+                  style={{
+                    marginTop: "10px",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {copied ? "Copied!" : "Copy Code"}
+                </Button>
+              </div>
               <Select
                 label="Status"
                 options={informative_Status_options}
