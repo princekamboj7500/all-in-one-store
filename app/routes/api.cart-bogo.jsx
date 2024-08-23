@@ -1,17 +1,15 @@
-import db from "../db.server";
-
 import { json } from "@remix-run/node";
 import { unauthenticated } from "../shopify.server";
-export const loader = async ({ request, params }) => {
+import db from "../db.server";
+export const action = async ({ request }) => {
+  const payload = await request.json();
+console.log("heloo")
   const url = new URL(request.url);
   const shopName = url.searchParams.get("shop");
-  const type = url.searchParams.get("type");
-
-  const product_id = url.searchParams.get("product_id");
-
+  const productId = url.searchParams.get("id");
+  const cartItems = payload.data.items;
 
   const { admin, session } = await unauthenticated.admin(shopName);
-
   const getAllCollections = async () => {
     const response = await admin.graphql(
       `#graphql
@@ -30,7 +28,6 @@ export const loader = async ({ request, params }) => {
     const data = await response.json();
     return data;
   };
-
   const getProducts = async (query) => {
     const response = await admin.graphql(
       `#graphql
@@ -66,7 +63,6 @@ export const loader = async ({ request, params }) => {
     const data = await response.json();
     return data;
   };
-
   const getCollections = async (query) => {
     const response = await admin.graphql(
       `#graphql
@@ -108,7 +104,6 @@ export const loader = async ({ request, params }) => {
     const data = await response.json();
     return data;
   };
-
   const getAnyProducts = async (id) => {
     const response = await admin.graphql(
       `#graphql
@@ -152,37 +147,46 @@ export const loader = async ({ request, params }) => {
 
     return data;
   };
+  const type = "bogo";
+  const filteredData = cartItems
+    .filter((item) => !item.properties._BOGO)
+    .map((item) => item.product_id);
   
-  const response = await admin.graphql(
-    `#graphql
-    query {
-    product(id: "gid://shopify/Product/${product_id}") {
-      title
-      collections(first:5){
-        edges{
-          node{
-            id
+
+
+
+  try {
+    const resultsArray = [];
+    // for (const productId of filteredData) {
+   
+      const response = await admin.graphql(
+        `#graphql
+      query {
+        product(id: "gid://shopify/Product/${productId}") {
+          title
+          collections(first: 5) {
+            edges {
+              node {
+                id
+              }
+            }
           }
         }
+      }`,
+      );
+
+      const collections = await response.json();
+    
+      let filter_query = [
+        { "rules.customer_buy.products": `gid://shopify/Product/${productId}` },
+        { "rules.customer_buy.chosen_type": "any" },
+      ];
+
+      if (collections.data.product.collections.edges.length) {
+        collections.data.product.collections.edges.forEach((c) => {
+          filter_query.push({ "rules.customer_buy.collections": c.node.id });
+        });
       }
-    }
-  }`,
-  );
-  const collections = await response.json();
-  
-  let filter_query = [
-    { "rules.customer_buy.products": `gid://shopify/Product/${product_id}` },
-    { "rules.customer_buy.chosen_type": "any" },
-  ];
-  if (collections.data.product.collections.edges.length) {
-    collections.data.product.collections.edges.map((c) => {
-      filter_query.push({ "rules.customer_buy.collections": c.node.id });
-    });
-  }
-
-
-    try {
-   
       const results = await db.$runCommandRaw({
         find: "UpsellBuilder",
         filter: {
@@ -192,14 +196,16 @@ export const loader = async ({ request, params }) => {
           $or: filter_query,
         },
       });
-
+     
+      console.log(`Filter Query for Product ID ${productId}:`, filter_query);
+      
+     
       const anyRule = results.cursor.firstBatch.filter(
-        (r) => r.rules.customer_buy.chosen_type == "any",
+        (r) => r.rules.customer_buy.chosen_type === "any",
       );
       const specificRule = results.cursor.firstBatch.filter(
-        (r) => r.rules.customer_buy.chosen_type == "specific",
+        (r) => r.rules.customer_buy.chosen_type === "specific",
       );
-
       let selected_rule = null;
       if (results.cursor.firstBatch.length) {
         if (specificRule.length) {
@@ -207,54 +213,46 @@ export const loader = async ({ request, params }) => {
         } else if (anyRule.length) {
           selected_rule = anyRule[0];
         }
-
         let products_filter = selected_rule.rules.customer_get.products;
         if (products_filter.length) {
           products_filter = products_filter
-            .map((v) => {
-              return "id:" + v.replace("gid://shopify/Product/", "");
-            })
+            .map((v) => "id:" + v.replace("gid://shopify/Product/", ""))
             .join(" OR ");
-          var products = await getProducts(products_filter);
-         
-        
+          const products = await getProducts(products_filter);
+
           selected_rule.rules.customer_get.products =
             products.data.products.edges;
         }
 
         let collections_filter = selected_rule.rules.customer_get.collections;
-       
         if (collections_filter.length) {
           collections_filter = collections_filter
-            .map((v) => {
-              return "id:" + v.replace("gid://shopify/Collection/", "");
-            })
+            .map((v) => "id:" + v.replace("gid://shopify/Collection/", ""))
             .join(" OR ");
-    
-          var Collections = await getCollections(collections_filter);
-      
-          // selected_rule.rules.customer_get.collections =
-          //   Collections.data.collections.edges[0].node.products.edges;
-          
+
+          const collections = await getCollections(collections_filter);
+
           let combinedProducts = [
             ...selected_rule.rules.customer_get.products,
-            ...Collections.data.collections.edges[0].node.products.edges
-          ];  
+            ...collections.data.collections.edges[0].node.products.edges,
+          ];
           let uniqueProducts = [];
           let uniqueIds = [];
-        
-          combinedProducts.forEach(product => {
+
+          combinedProducts.forEach((product) => {
             if (!uniqueIds.includes(product.node.id)) {
               uniqueIds.push(product.node.id);
               uniqueProducts.push(product);
             }
           });
+
           selected_rule.rules.customer_get.products = uniqueProducts;
         }
 
-        if (selected_rule.rules.customer_get.chosen_type == "any") {
+        // Handle case where chosen_type is "any"
+        if (selected_rule.rules.customer_get.chosen_type === "any") {
           const anyCollections = await getAllCollections();
-         const collectionCount = anyCollections.data.collections.edges;
+          const collectionCount = anyCollections.data.collections.edges;
           const idAndCounts = collectionCount.map((c) => ({
             id: c.node.id,
             count: c.node.productsCount.count,
@@ -267,24 +265,46 @@ export const loader = async ({ request, params }) => {
           );
 
           const getAllProducts = await getAnyProducts(allProductsFilter);
-       
+
           selected_rule.rules.customer_get.products =
             getAllProducts.data.collections.edges[0].node.products.edges;
         }
-
+        console.log(productId,"productId____");
+        console.log(selected_rule,"selected_rule___________")
         return json({
           success: true,
+          product_id:productId,
           discount: selected_rule,
-         
         });
-      } else {
-        return json({ success: false, discount: {} });
-      }
-    } catch (error) {
-      console.log(error,"error___")
-      return json({ success: false,data:"not exits", error: error.message });
-    }
-
    
-  
+        // resultsArray.push({
+        //   product_id: productId,
+        //   data: selected_rule,
+        // });
+       
+     
+      } else {
+        return json({
+          success: true,
+          discount: {},
+        });
+       
+      }
+    // }
+    // return json({
+    //   success: true,
+    //   discount: resultsArray,
+    // });
+    
+  } catch (err) {
+    console.error(`Error processing product ID ${productId}:`, err);
+    resultsArray.push({
+      product_id: productId,
+      error: err.message,
+    });
+    return json({
+      success: false,
+      discount: resultsArray,
+    });
+  }
 };

@@ -354,6 +354,7 @@ export const action = async ({ request }) => {
     );
 
     const result = await response.json();
+    console.log(result.data.discountAutomaticBxgyCreate,"result_____")
 
     return result.data.discountAutomaticBxgyCreate.automaticDiscountNode.id;
   };
@@ -488,10 +489,12 @@ export const action = async ({ request }) => {
         id: id,
       },
     });
+    console.log(existData,"existData___")
     if (
       existData.shopify_discount_id != null &&
       data.offer_status == "Active"
     ) {
+      console.log("hello comes in it___")
       const bogoBuy = await BogoDiscountDeleteShopify(
         existData.shopify_discount_id,
       );
@@ -517,7 +520,7 @@ export const action = async ({ request }) => {
       data.offer_status == "Active"
     ) {
       const bogoCreateId = await BogoDiscountCreateShopify(data);
-
+    console.log(bogoCreateId,"bogoCreateId_______")
       const updatedData = {
         store: data.store,
         discount_type: data.discount_type,
