@@ -1025,6 +1025,8 @@ export function Apperance({ handleFocus,toggleModal, openStates, handleToggle, l
     { label: "Active", value: "Active" },
     { label: "Inactive", value: "Inactive" },
   ];
+   const codeSnippet =
+    '<div class="aios_cart_bogo" id="{{ item.product_id  }}"></div>';
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     navigator.clipboard
