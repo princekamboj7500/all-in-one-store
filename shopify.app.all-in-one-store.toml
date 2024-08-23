@@ -3,12 +3,12 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://manner-pubmed-solved-pool.trycloudflare.com"
+application_url = "https://plaintiff-inspection-belt-plots.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "testing-aios.myshopify.com"
+dev_store_url = "droptrackingapp.myshopify.com"
 include_config_on_deploy = true
 
 [access_scopes]
@@ -17,9 +17,9 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://manner-pubmed-solved-pool.trycloudflare.com/auth/callback",
-  "https://manner-pubmed-solved-pool.trycloudflare.com/auth/shopify/callback",
-  "https://manner-pubmed-solved-pool.trycloudflare.com/api/auth/callback"
+  "https://plaintiff-inspection-belt-plots.trycloudflare.com/auth/callback",
+  "https://plaintiff-inspection-belt-plots.trycloudflare.com/auth/shopify/callback",
+  "https://plaintiff-inspection-belt-plots.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -30,7 +30,7 @@ api_version = "2024-04"
   compliance_topics = [ "customers/redact", "customers/data_request", "shop/redact" ]
 
 [app_proxy]
-url = "https://manner-pubmed-solved-pool.trycloudflare.com/api"
+url = "https://plaintiff-inspection-belt-plots.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

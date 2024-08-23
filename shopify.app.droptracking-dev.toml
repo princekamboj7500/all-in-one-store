@@ -3,30 +3,29 @@
 client_id = "30e55710145993ddb5716e3a7c3e50c3"
 name = "droptracking-dev"
 handle = "droptracking-dev"
-application_url = "https://provide-si-memo-transaction.trycloudflare.com"
+application_url = "https://hart-bridges-much-christopher.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
 dev_store_url = "droptrackingapp.myshopify.com"
-include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_content,write_discounts,read_locales,read_online_store_pages,read_orders,read_products,read_script_tags,read_themes,write_content,write_online_store_pages,write_script_tags"
+scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_products,read_script_tags,read_themes,write_content,write_discounts,write_online_store_pages,write_script_tags"
 
 [auth]
 redirect_urls = [
-  "https://provide-si-memo-transaction.trycloudflare.com/auth/callback",
-  "https://provide-si-memo-transaction.trycloudflare.com/auth/shopify/callback",
-  "https://provide-si-memo-transaction.trycloudflare.com/api/auth/callback"
+  "https://hart-bridges-much-christopher.trycloudflare.com/auth/callback",
+  "https://hart-bridges-much-christopher.trycloudflare.com/auth/shopify/callback",
+  "https://hart-bridges-much-christopher.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-10"
 
 [app_proxy]
-url = "https://provide-si-memo-transaction.trycloudflare.com/api"
+url = "https://hart-bridges-much-christopher.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

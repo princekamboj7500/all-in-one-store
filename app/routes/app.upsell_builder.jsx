@@ -99,7 +99,7 @@ export const loader = async ({ request }) => {
     discount: true,
     variantbgcolor: "#ffffff",
     variantactivebgcolor: "#f6f6f6",
-    varianttextcolor: "#f4f4f4",
+    varianttextcolor: "#202020",
     show_compare_price: true,
     desktop_margin_top: 10,
     desktop_margin_bottom: 16,
