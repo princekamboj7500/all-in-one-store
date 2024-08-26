@@ -50,7 +50,7 @@ import { useNavigate, useLoaderData } from "@remix-run/react";
 import "./assets/style.css";
 import DeactivatePopover from "./components/DeactivatePopover";
 import DiscardModal from "./components/DiscardModal";
-
+import { product, bogoproduct, bogoproduct2 } from "./assets";
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   let storeName = session.shop.split(".")[0];
@@ -980,7 +980,9 @@ function CookieBanner(props) {
                     <div className="all_preview_image">
                       <img
                         className="preview_image"
-                        src="https://d3acrzpqhtrug6.cloudfront.net/img/product-2.png"
+                        src={bogoproduct}
+                        width="200"
+                       height="200"
                       />
                     </div>
                     <div className="all_preview_body">
