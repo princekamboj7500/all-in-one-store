@@ -17,7 +17,7 @@ import {
 } from "@shopify/polaris";
 import "./assets/style.css";
 import { useState, useCallback, useEffect } from "react";
-
+import { product, bogoproduct, bogoproduct2 } from "./assets";
 import { authenticate } from "../shopify.server";
 
 import { useNavigate, useLoaderData } from "@remix-run/react";
@@ -90,8 +90,7 @@ export const loader = async ({ request }) => {
     try {
       data = JSON.parse(appSettings);
     } catch (error) {
-   
-      data = {}; 
+      data = {};
     }
   } else {
     data = appSettings;
@@ -102,7 +101,6 @@ export const loader = async ({ request }) => {
 
 export default function ScrollToTop() {
   const navigate = useNavigate();
-
 
   const { data } = useLoaderData();
   const [status, setStatus] = useState(data.app_status);
@@ -207,7 +205,6 @@ export default function ScrollToTop() {
     );
 
     const handleDeactivateClick = useCallback(() => {
-  
       setIsActivated(false);
       setPopoverActive(true);
     }, []);
@@ -296,7 +293,6 @@ export default function ScrollToTop() {
       data: formData,
     };
 
-  
     const response = await fetch("/api/save", {
       method: "POST",
       headers: {
@@ -374,7 +370,7 @@ export default function ScrollToTop() {
     shopify.loading(true);
   };
 
-  const appName = "Scroll to Top Button"
+  const appName = "Scroll to Top Button";
   return (
     <Page
       backAction={{ content: "Back", onAction: handleClick }}
@@ -388,7 +384,7 @@ export default function ScrollToTop() {
       primaryAction={
         status ? (
           <DeactivatePopover
-          type={appName}
+            type={appName}
             handleToggleStatus={handleToggleStatus}
             buttonLoading={buttonloading}
           />
@@ -500,7 +496,9 @@ export default function ScrollToTop() {
                 <div className="all_preview_image">
                   <img
                     className="preview_image"
-                    src="https://d3acrzpqhtrug6.cloudfront.net/img/product-2.png"
+                    src={bogoproduct}
+                     width="200"
+                    height="200"
                   />
                 </div>
                 <div className="all_preview_body">

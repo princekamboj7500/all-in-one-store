@@ -3,7 +3,7 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://plaintiff-inspection-belt-plots.trycloudflare.com"
+application_url = "https://sheffield-gone-geneva-agricultural.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://plaintiff-inspection-belt-plots.trycloudflare.com/auth/callback",
-  "https://plaintiff-inspection-belt-plots.trycloudflare.com/auth/shopify/callback",
-  "https://plaintiff-inspection-belt-plots.trycloudflare.com/api/auth/callback"
+  "https://sheffield-gone-geneva-agricultural.trycloudflare.com/auth/callback",
+  "https://sheffield-gone-geneva-agricultural.trycloudflare.com/auth/shopify/callback",
+  "https://sheffield-gone-geneva-agricultural.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -30,7 +30,7 @@ api_version = "2024-04"
   compliance_topics = [ "customers/redact", "customers/data_request", "shop/redact" ]
 
 [app_proxy]
-url = "https://plaintiff-inspection-belt-plots.trycloudflare.com/api"
+url = "https://sheffield-gone-geneva-agricultural.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 
