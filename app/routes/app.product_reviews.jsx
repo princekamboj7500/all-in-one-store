@@ -1834,35 +1834,35 @@ function ProductReviews() {
 
   
 
-    const ExportModal = (
-      <div className="modals">
-        <Frame>
-          <Modal
-            open={exportBanner}
-            onClose={() => setExportBanner(false)}
-            title="Export Product Reviews?"
-            primaryAction={{
-              content: "Export",
-              onAction: handleExportReviews,
-              loading: Buttonloading,
-            }}
-            secondaryActions={[
-              {
-                content: "Close",
-                onAction: () => setShowImportModal(false),
-              },
-            ]}
-          >
-            <Modal.Section>
-              <p>
-                Are you sure you want to export all the reviews in a .csv file
-                now? Please note that you can only export once every 30 minutes.
-              </p>
-            </Modal.Section>
-          </Modal>
-        </Frame>
-      </div>
-    );
+    // const ExportModal = (
+    //   <div className="modals">
+    //     <Frame>
+    //       <Modal
+    //         open={exportBanner}
+    //         onClose={() => setExportBanner(false)}
+    //         title="Export Product Reviews?"
+    //         primaryAction={{
+    //           content: "Export",
+    //           onAction: handleExportReviews,
+    //           loading: Buttonloading,
+    //         }}
+    //         secondaryActions={[
+    //           {
+    //             content: "Close",
+    //             onAction: () => setShowImportModal(false),
+    //           },
+    //         ]}
+    //       >
+    //         <Modal.Section>
+    //           <p>
+    //             Are you sure you want to export all the reviews in a .csv file
+    //             now? Please note that you can only export once every 30 minutes.
+    //           </p>
+    //         </Modal.Section>
+    //       </Modal>
+    //     </Frame>
+    //   </div>
+    // );
     return (
       <div className="import-tab">
         <BlockStack gap="400">
@@ -1965,7 +1965,7 @@ function ProductReviews() {
           </Card> */}
         </BlockStack>
         {ImportModal}
-        {ExportModal}
+    
       </div>
     );
   };
