@@ -1,33 +1,6 @@
 import db from "../db.server";
 
-// const updateReview = async (product_id, store_name, updateData) => {
-//   try {
-//     const review = await db.Reviews.findFirst({
-//       where: {
-//         product_id,
-//         store_name,
-//       },
-//     });
 
-
-//     if (review) {
-//       const updatedReview = await db.Reviews.update({
-//         where: {
-//           id: review.id,
-//         },
-//         data: updateData,
-//       });
-
-//       console.log("Updated Review:", updatedReview);
-//       return { success: true, data: updatedReview };
-//     } else {
-//       return { success: false, error: "Review not found" };
-//     }
-//   } catch (error) {
-//     console.error("Error updating review:", error);
-//     return { success: false, error: "Failed to update review" };
-//   }
-// };
 
 export const action = async ({ request }) => {
   const reqData = await request.json();

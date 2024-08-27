@@ -90,7 +90,7 @@ export const action = async ({ request }) => {
         );
         const test = await createMetafield.json();
       } catch (err) {
-        console.log(err);
+      
       }
       return json({
         success: true,

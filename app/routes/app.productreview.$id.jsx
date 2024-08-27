@@ -224,12 +224,12 @@ const ProductReview = () => {
       console.error("API call failed:", error);
     }
   }, []);
-
+ 
   const handleFiltersQueryChange = useCallback(async (value) => {
     setQueryValue(value);
     setButtonLoader(true);
     try {
-      const response = await fetch(`/api/getfilter?type=${value}`);
+      const response = await fetch(`/api/getfilter?type=${value}&id=${productId}`);
       const data = await response.json();
       if (data.success) {
         setFilteredReviews(data.data);

@@ -15,7 +15,7 @@ export const action = async ({ request }) => {
 
     let data ;
     if(action =="offer_types"){
-        console.log(type)
+        
         try{
             data = await db.UpsellBuilder.findMany({
                 where:{
@@ -25,9 +25,9 @@ export const action = async ({ request }) => {
                       },
                 }
             })  
-            console.log(data,"data___")
+       
         }catch(err){
-            console.log(err)
+         
         }
        
     }

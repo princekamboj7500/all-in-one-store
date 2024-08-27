@@ -52,7 +52,7 @@ import {
         navigate("/app/upsell_builder");
       };
       const handleLinkClick = (id) => {
-        console.log("heloo")
+        
         shopify.loading(true);
         navigate(`/app/create/${id}`);
        
@@ -91,7 +91,7 @@ import {
      
       </Card>
   </Grid.Cell>
-  <Grid.Cell columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}>
+  {/* <Grid.Cell columnSpan={{xs: 6, sm: 3, md: 3, lg: 6, xl: 6}}>
   <Card>
     
               <Box background="bg-surface">
@@ -118,7 +118,7 @@ import {
           
           </Card> 
     
-    </Grid.Cell>
+    </Grid.Cell> */}
   </Grid>
     
         

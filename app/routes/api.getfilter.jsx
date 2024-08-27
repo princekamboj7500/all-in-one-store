@@ -7,12 +7,13 @@ export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
   const url = new URL(request.url);
   const typeParam = url.searchParams.get("type");
+  const pro_id = url.searchParams.get("id");
+  
   const queryParam = `%${typeParam}%`;
   const fromParam = url.searchParams.get("from");
-  console.log(typeof typeParam, "typeParam___");
-  console.log(queryParam, "queryParam___");
-  console.log(typeParam,"typeParam__")
+ 
   try {
+
     if (fromParam && queryParam == "%%") {
      
       const getUpsells = await db.UpsellBuilder.findMany({
@@ -29,6 +30,7 @@ export const loader = async ({ request }) => {
       const searchQuery = await db.UpsellBuilder.findMany({
         where: {
           store_name: session.shop,
+        
           OR: [
             {
               internal_name: {
@@ -53,9 +55,11 @@ export const loader = async ({ request }) => {
         );
       }
     } else{
+   
       const searchQuery = await db.Reviews.findMany({
         where: {
           store_name: session.shop,
+          product_id :pro_id,
           OR: [
             {
               name: {

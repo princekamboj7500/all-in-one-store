@@ -556,7 +556,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
     setInputValues((prevState) => {
       return { ...prevState, since: value };
     });
-    console.log("handleStartInputValueChange, validDate", value);
+
     if (isValidDate(value)) {
       const newSince = parseYearMonthDayDateString(value);
       setActiveDateRange((prevState) => {
@@ -1394,7 +1394,7 @@ function ProductReviews() {
     };
 
     try {
-      console.log(dataToSend, "dataToSend");
+      
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -1693,7 +1693,7 @@ function ProductReviews() {
       setShowImportModal(true);
     };
     const handleExportModal = () => {
-      console.log("heloo");
+      
       setExportBanner(true);
     };
     const handleCheckChange = (newChecked) => {
@@ -1709,9 +1709,11 @@ function ProductReviews() {
       [],
     );
     const handleRemove = (indexToRemove) => {
-      setFiles((prevFiles) => prevFiles.filter((_, index) => index !== indexToRemove));
+      setFiles((prevFiles) =>
+        prevFiles.filter((_, index) => index !== indexToRemove),
+      );
     };
-    
+
     const uploadedFiles = files.length > 0 && (
       <div>
         {files.map((file, index) => (
@@ -1790,9 +1792,15 @@ function ProductReviews() {
                     Instructions:
                   </Text>
                   <List type="number">
-                    <List.Item>Download this empty template
-                      <a href="https://cdn.shopify.com/s/files/1/0654/5388/3651/files/aios-reviews-template.csv?v=1724129630"target="_blank">aios-review-template.csv</a>
-                      </List.Item>
+                    <List.Item>
+                      Download this empty template
+                      <a
+                        href="https://cdn.shopify.com/s/files/1/0654/5388/3651/files/aios-reviews-template.csv?v=1724129630"
+                        target="_blank"
+                      >
+                        aios-review-template.csv
+                      </a>
+                    </List.Item>
                     <List.Item>Fill in the fields as explained in</List.Item>
                     <List.Item>
                       Upload it by clicking Add File section below.
@@ -1824,6 +1832,8 @@ function ProductReviews() {
       </div>
     );
 
+  
+
     const ExportModal = (
       <div className="modals">
         <Frame>
@@ -1833,7 +1843,7 @@ function ProductReviews() {
             title="Export Product Reviews?"
             primaryAction={{
               content: "Export",
-              onAction: handleImport,
+              onAction: handleExportReviews,
               loading: Buttonloading,
             }}
             secondaryActions={[

@@ -354,7 +354,7 @@ export const action = async ({ request }) => {
     );
 
     const result = await response.json();
-    console.log(result.data.discountAutomaticBxgyCreate,"result_____")
+ 
 
     return result.data.discountAutomaticBxgyCreate.automaticDiscountNode.id;
   };
@@ -382,7 +382,7 @@ export const action = async ({ request }) => {
     const data = await response.json();
   };
   const processDiscounts = async (discounts, type) => {
-    console.log(discounts,"discounts___")
+   
     if(type =="activated"){
     for (const discount of discounts) {
       const discountId = discount.shopify_discount_id;
@@ -406,7 +406,7 @@ export const action = async ({ request }) => {
     });
       } else {
         const data = await bogoDiscountActivateShopify(discountId);
-        console.log(data);
+        
       }
     }
   }else{
@@ -416,7 +416,7 @@ export const action = async ({ request }) => {
         // await handleNullDiscountId();
       } else {
         const data = await bogoDiscountDeactivateShopify(discountId);
-        console.log(data);
+       
       }
     }
   }
@@ -479,22 +479,22 @@ export const action = async ({ request }) => {
     );
 
     const data = await response.json();
-    console.log(data,"data_____")
+  
   };
 
   if (actionType === "update") {
-    console.log("heloo___")
+ 
     const existData = await db.UpsellBuilder.findFirst({
       where: {
         id: id,
       },
     });
-    console.log(existData,"existData___")
+  
     if (
       existData.shopify_discount_id != null &&
       data.offer_status == "Active"
     ) {
-      console.log("hello comes in it___")
+   
       const bogoBuy = await BogoDiscountDeleteShopify(
         existData.shopify_discount_id,
       );
@@ -520,7 +520,7 @@ export const action = async ({ request }) => {
       data.offer_status == "Active"
     ) {
       const bogoCreateId = await BogoDiscountCreateShopify(data);
-    console.log(bogoCreateId,"bogoCreateId_______")
+   
       const updatedData = {
         store: data.store,
         discount_type: data.discount_type,
@@ -637,7 +637,7 @@ export const action = async ({ request }) => {
     return json({
       success: true,
       message: "Deleted successfully",
-      data: addDiscounts,
+      
     });
   } else if (actionType == "activated") {
  const findDiscountIds = await db.UpsellBuilder.findMany({

@@ -43,6 +43,39 @@ import {
 
 export const loader = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
+  const response = await admin.graphql(`query {
+    currentAppInstallation {
+      id
+      metafields(first: 8) {
+        edges {
+          node {
+            namespace
+            key
+            value
+          }
+        }
+      }
+    }
+
+  }`);
+const result = await response.json();
+const appId = result.data.currentAppInstallation.id;
+const metafielData = result.data.currentAppInstallation.metafields.edges;
+let activeApp =0;
+if(metafielData){
+  const trueAppStatuses = metafielData.filter(item => {
+    try {
+      const parsedValue = JSON.parse(item.node.value);
+      return parsedValue.app_status === true;
+    } catch (e) {
+      return false;
+    }
+  });
+  activeApp = trueAppStatuses.length;
+}
+
+
+
 
   let storeName = session.shop.split(".")[0];
   const getThemes = await admin.rest.resources.Theme.all({
@@ -74,12 +107,12 @@ export const loader = async ({ request }) => {
   const status = findAppStatus(themeBlock);
 
 
-  return { storeName, status, currentTheme };
+  return { storeName, status, currentTheme, activeApp };
 };
 
 export default function Index() {
   const nav = useNavigate();
-  const { storeName, status, currentTheme } = useLoaderData();
+  const { storeName, status, currentTheme, activeApp } = useLoaderData();
   const actionData = useActionData();
   const submit = useSubmit();
   const [isBannerVisible, setIsBannerVisible] = useState(status);
@@ -182,7 +215,7 @@ export default function Index() {
                 Active apps
               </Text>
               <Text variant="headingLg" as="h5">
-                0
+             {activeApp}
               </Text>
             </BlockStack>
           </Card>
@@ -197,95 +230,7 @@ export default function Index() {
             </BlockStack>
           </Card>
         </InlineGrid>
-        <div className="vitals_app_card">
-          <Card roundedAbove="sm">
-            <BlockStack gap="200">
-              <InlineGrid columns="1fr auto">
-                <Link
-                  removeUnderline
-                  monochrome
-                  url="https://help.shopify.com/manual"
-                >
-                  Visitor Replays
-                </Link>
-              </InlineGrid>
-              <div className="vitals_app_body">
-                <InlineStack align="space-between" blockAlign="center">
-                  <InlineStack align="space-between" blockAlign="center">
-                    <BlockStack gap="20">
-                      <Text as="p" fontWeight="medium" tone="subdued">
-                        Recordings
-                      </Text>
-                      <Text variant="heading2xl" as="h3">
-                        0
-                      </Text>
-                      <Text variant="bodySm" as="p">
-                        Last 7 Days
-                      </Text>
-                    </BlockStack>
-                    <Icon source={ChartLineIcon} tone="base" />
-                  </InlineStack>
-
-                  <BlockStack gap="200">
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Link 
-                        removeUnderline
-                        className="app_upsell"
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        Live visitors
-                      </Link>
-                      <Link
-                        removeUnderline
-                        className="app_upsell_text"
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        0
-                      </Link>
-                    </InlineStack>
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Link
-                        removeUnderline
-                        className="app_upsell"
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        Completed orders
-                      </Link>
-                      <Link
-                        removeUnderline
-                        className="app_upsell_text"
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        0
-                      </Link>
-                    </InlineStack>
-                    <InlineStack align="space-between" blockAlign="center">
-                      <Link
-                        removeUnderline
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        Added to cart
-                      </Link>
-                      <Link
-                        className="app_upsell_text"
-                        removeUnderline
-                        monochrome
-                        url="https://help.shopify.com/manual"
-                      >
-                        0
-                      </Link>
-                    </InlineStack>
-                  </BlockStack>
-                </InlineStack>
-              </div>
-            </BlockStack>
-          </Card>
-        </div>
+       
         <div className="vitals_app_card">
           <Card roundedAbove="sm">
             <BlockStack gap="200">

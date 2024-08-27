@@ -54,6 +54,7 @@ export const loader = async ({ request, params }) => {
                               id
                               title
                               price
+                                inventoryQuantity
                           }
                       }
                   }
@@ -92,6 +93,7 @@ export const loader = async ({ request, params }) => {
                                 node {
                                     id
                                     title
+                                    inventoryQuantity
                                     price
                                 }
                             }
@@ -130,15 +132,18 @@ export const loader = async ({ request, params }) => {
                       }
                         hasOnlyDefaultVariant
                         hasOutOfStockVariants
+                      
                         variants(first: 100) {
                             edges {
                                 node {
                                     id
                                     title
                                     price
+                                      inventoryQuantity
                                 }
                             }
                         }
+
                     }
                 }
               }
@@ -281,7 +286,7 @@ export const loader = async ({ request, params }) => {
         return json({ success: false, discount: {} });
       }
     } catch (error) {
-      console.log(error,"error___")
+
       return json({ success: false,data:"not exits", error: error.message });
     }
 

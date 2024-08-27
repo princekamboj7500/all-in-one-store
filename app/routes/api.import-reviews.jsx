@@ -87,6 +87,6 @@ export const action = async ({ request }) => {
     insertReviews(keyValueData, storeName);
     return json({ success: true });
   } catch (err) {
-    console.log(err);
+  
   }
 };
