@@ -188,27 +188,9 @@ export default function Index() {
           </Text>
         </Box>
 
-        <InlineGrid gap="400" columns={4}>
-          <Card background="bg-surface-secondary">
-            <BlockStack gap="200">
-              <Text as="h3" variant="headingSm" fontWeight="medium">
-                Sales (assisted)
-              </Text>
-              <Text variant="headingLg" as="h5">
-                0
-              </Text>
-            </BlockStack>
-          </Card>
-          <Card background="bg-surface-secondary">
-            <BlockStack gap="200">
-              <Text as="h3" variant="headingSm" fontWeight="medium">
-                Orders (assisted)
-              </Text>
-              <Text variant="headingLg" as="h5">
-                0
-              </Text>
-            </BlockStack>
-          </Card>
+        <InlineGrid gap="400" columns={1}>
+          
+        
           <Card background="bg-surface-secondary">
             <BlockStack gap="200">
               <Text as="h3" variant="headingSm" fontWeight="medium">
@@ -219,16 +201,7 @@ export default function Index() {
               </Text>
             </BlockStack>
           </Card>
-          <Card background="bg-surface-secondary">
-            <BlockStack gap="200">
-              <Text as="h3" variant="headingSm" fontWeight="medium">
-                Captured emails
-              </Text>
-              <Text variant="headingLg" as="h5">
-                0
-              </Text>
-            </BlockStack>
-          </Card>
+      
         </InlineGrid>
        
         <div className="vitals_app_card">
