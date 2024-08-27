@@ -68,7 +68,7 @@ export const loader = async ({ request }) => {
   } else {
     data = appSettings;
   }
-  console.log(data, "data");
+
   return { data };
 };
 

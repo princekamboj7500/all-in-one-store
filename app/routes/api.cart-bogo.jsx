@@ -3,7 +3,7 @@ import { unauthenticated } from "../shopify.server";
 import db from "../db.server";
 export const action = async ({ request }) => {
   const payload = await request.json();
-console.log("heloo")
+
   const url = new URL(request.url);
   const shopName = url.searchParams.get("shop");
   const productId = url.searchParams.get("id");
@@ -197,7 +197,7 @@ console.log("heloo")
         },
       });
      
-      console.log(`Filter Query for Product ID ${productId}:`, filter_query);
+    
       
      
       const anyRule = results.cursor.firstBatch.filter(
@@ -269,8 +269,7 @@ console.log("heloo")
           selected_rule.rules.customer_get.products =
             getAllProducts.data.collections.edges[0].node.products.edges;
         }
-        console.log(productId,"productId____");
-        console.log(selected_rule,"selected_rule___________")
+
         return json({
           success: true,
           product_id:productId,

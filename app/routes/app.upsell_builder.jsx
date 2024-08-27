@@ -747,6 +747,10 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
   const [queryLoading, setQueryLoading] = useState(false);
   const [availability, setAvailability] = useState([]);
   const [buttonLoader, setButtonLoader] = useState(false);
+  const [active, setActive] = useState(false);
+  const [error, setError] = useState("");
+  const [msgData, setMsgData] = useState("");
+  const [activeField, setActiveField] = useState(false);
   const handleAvailabilityChange = useCallback(async (value) => {
     setAvailability(value);
    
@@ -777,7 +781,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
   }, []);
 
   const handleFiltersQueryChange = async(value) => {
-    console.log("testingggg_____",value , queryValue);
+  
     
     setQueryValue(value);
     
@@ -812,10 +816,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
   }, []);
 
 
-  useEffect(()=>{
-    console.log("queryLoading" , queryLoading);
-    
-  },[queryLoading])
+
 
   const handleQueryValueRemove = useCallback(() => {
     setQueryValue("");
@@ -829,8 +830,8 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
 
   const handleAction = async (actionType, store) => {
     const selectedProductIds = selectedResources;
-    setButtonLoader(true);
-    setQueryLoading(true);
+     setQueryLoading(true);
+ 
     const datasend = {
       offer_status: "Draft",
     };
@@ -852,14 +853,18 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
       throw new Error("Network response was not ok");
     }
     const result = await response.json();
+   
+    
+    setQueryLoading(false);
     if (result.success) {
+      
       setActive(true);
-      setQueryLoading(false)
-      setButtonLoader(false);
+    
+      setQueryLoading(false);
       setUpsellList(result.data);
       setMsgData(` ${actionType.toUpperCase()} Successfully`);
     } else {
-      setButtonLoader(false);
+     
       setActive(true);
       setUpsellList(data);
       setQueryLoading(false)
@@ -871,19 +876,19 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
   const bulkActions = [
     {
       content: "Activate",
-      loading: queryLoading,
+      // loading: queryLoading,
       onAction: () => handleAction("activated", shopName),
     },
     {
       content: "Deactivate",
-      loading: queryLoading,
+      // loading: queryLoading,
       onAction: () => handleAction("deactivated", shopName),
     },
     {
       icon: DeleteIcon,
       destructive: true,
       content: "Delete ",
-      loading: queryLoading,
+      // loading: queryLoading,
       onAction: () => handleAction("deleted", shopName),
     },
   ];
@@ -910,7 +915,10 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
       ),
     },
   ];
-
+  const toggleActive = useCallback(
+    () => setActive((prevActive) => !prevActive),
+    [],
+  );
   const appliedFilters = [];
   if (!isEmpty(availability)) {
     const key = "rating";
@@ -926,7 +934,11 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
       withIllustration
     />
   );
-
+  const toastMarkup = active ? (
+    <Frame>
+      <Toast content={msgData} onDismiss={toggleActive} error={error} />
+    </Frame>
+  ) : null;
   const rowMarkup = upsellList.map(
     ({ id, discount_type, internal_name, rules, offer_status }, index) => {
       let bundleName;
@@ -1031,9 +1043,10 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
   );
 
   return (
+    <>
     <div className="upsell-Offers">
       <Card>
-        {/* {upsellList.length > 0 ? ( */}
+        
           <>
             <Filters
               queryValue={queryValue}
@@ -1043,7 +1056,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
               onQueryChange={handleFiltersQueryChange}
               onQueryClear={handleQueryValueRemove}
               onClearAll={handleFiltersClearAll}
-              loading={queryLoading}
+             loading={queryLoading}
             />
             <Button variant="primary" onClick={handleCreate}>
               Create Offer
@@ -1073,7 +1086,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
                   allResourcesSelected ? "All" : selectedResources.length
                 }
                 emptyState={emptyStateMarkup}
-                loading={queryLoading}
+                // loading={queryLoading}
                 onSelectionChange={handleSelectionChange}
                 headings={[
                   { title: "" },
@@ -1147,7 +1160,10 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
           </BlockStack>
         </Card>
       </Layout.Section>
+     
     </div>
+     {toastMarkup}
+     </>
   );
   function isEmpty(value) {
     if (Array.isArray(value)) {
