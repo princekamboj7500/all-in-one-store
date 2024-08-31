@@ -156,7 +156,7 @@ export const action = async ({ request }) => {
 
 
   try {
-    const resultsArray = [];
+  
     // for (const productId of filteredData) {
    
       const response = await admin.graphql(
@@ -276,10 +276,7 @@ export const action = async ({ request }) => {
           discount: selected_rule,
         });
    
-        // resultsArray.push({
-        //   product_id: productId,
-        //   data: selected_rule,
-        // });
+      
        
      
       } else {
@@ -289,21 +286,14 @@ export const action = async ({ request }) => {
         });
        
       }
-    // }
-    // return json({
-    //   success: true,
-    //   discount: resultsArray,
-    // });
+ 
     
   } catch (err) {
     console.error(`Error processing product ID ${productId}:`, err);
-    resultsArray.push({
-      product_id: productId,
-      error: err.message,
-    });
+   
     return json({
       success: false,
-      discount: resultsArray,
+      discount: err,
     });
   }
 };
