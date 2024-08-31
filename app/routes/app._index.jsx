@@ -46,7 +46,7 @@ export const loader = async ({ request }) => {
   const response = await admin.graphql(`query {
     currentAppInstallation {
       id
-      metafields(first: 8) {
+      metafields(first: 20) {
         edges {
           node {
             namespace
@@ -61,6 +61,7 @@ export const loader = async ({ request }) => {
 const result = await response.json();
 const appId = result.data.currentAppInstallation.id;
 const metafielData = result.data.currentAppInstallation.metafields.edges;
+
 let activeApp =0;
 if(metafielData){
   const trueAppStatuses = metafielData.filter(item => {
