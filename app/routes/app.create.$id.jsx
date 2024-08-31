@@ -858,7 +858,7 @@ export function Appearance({
   handleColorChange,
 }) {
   const codeSnippet =
-    '<div class="aios_cart_bogo" id="{{ item.product_id  }}"></div>';
+    '<div class="aios_cart_bogo" id="{{ item.product_id  }}" data-key="{{ item.key}}"></div>';
   const Status_options = [
     { label: "Select an option", value: "Select an option" },
     { label: "Active", value: "Active" },

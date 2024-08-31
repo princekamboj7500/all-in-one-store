@@ -3,7 +3,7 @@ import { unauthenticated } from "../shopify.server";
 import db from "../db.server";
 export const action = async ({ request }) => {
   const payload = await request.json();
-
+console.log("heloo__")
   const url = new URL(request.url);
   const shopName = url.searchParams.get("shop");
   const productId = url.searchParams.get("id");
