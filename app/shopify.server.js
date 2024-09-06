@@ -39,57 +39,6 @@ const shopify = shopifyApp({
     afterAuth: async ({ session }) => {
       shopify.registerWebhooks({ session });
 
-      const response = await admin.graphql(`query {
-        currentAppInstallation {
-          id
-          metafields(first: 6) {
-            edges {
-              node {
-                namespace
-                key
-                value
-              }
-            }
-          }
-        }
-      }`);
-      const result = await response.json();
-      const appId = result.data.currentAppInstallation.id;
-
-      try {
-        const createMetafield = await admin.graphql(
-          `#graphql
-    mutation CreateAppDataMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
-    metafieldsSet(metafields: $metafieldsSetInput) {
-    metafields {
-      id
-      namespace
-      key
-    }
-    userErrors {
-      field
-      message
-    }
-    }
-    }`,
-          {
-            variables: {
-              metafieldsSetInput: [
-                {
-                  namespace: "AllInOneStore",
-                  key: "status",
-                  type: "boolean",
-                  value: "false",
-                  ownerId: appId,
-                },
-              ],
-            },
-          },
-        );
-        const response = await createMetafield.json();
-      } catch (err) {
-       
-      }
     },
   },
   future: {
