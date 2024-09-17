@@ -22,7 +22,7 @@ import { authenticate } from "../shopify.server";
 
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
-
+import { useTranslation } from "react-i18next";
 import { XIcon } from "@shopify/polaris-icons";
 import {
   SvgIcon1,
@@ -101,7 +101,7 @@ export const loader = async ({ request }) => {
 
 export default function ScrollToTop() {
   const navigate = useNavigate();
-
+	let { t } = useTranslation();
   const { data } = useLoaderData();
   const [status, setStatus] = useState(data.app_status);
   const [activeField, setActiveField] = useState(null);
@@ -218,7 +218,7 @@ export default function ScrollToTop() {
       <>
         {isActivated ? (
           <Button onClick={togglePopoverActive} disclosure>
-            Active
+             {`${t('defaultSettings.active')}`}
           </Button>
         ) : (
           <Button
@@ -226,7 +226,7 @@ export default function ScrollToTop() {
             tone="success"
             onClick={handleActivateClickAgain}
           >
-            Activate
+           {`${t('defaultSettings.Activate')}`}  
           </Button>
         )}
       </>
@@ -244,7 +244,7 @@ export default function ScrollToTop() {
             >
               <Card>
                 <Button onClick={handleDeactivateClick} tone="critical">
-                  Deactivate Scroll To Top Button
+                 {`${t('defaultSettings.scrolltop')}`}
                 </Button>
               </Card>
             </Popover>
@@ -266,7 +266,7 @@ export default function ScrollToTop() {
                       fontWeight="regular"
                       variant="headingMd"
                     >
-                      What went wrong?{" "}
+                      {`${t('defaultSettings.wentwrong')}`}{" "}
                     </Text>
                     <div>
                       <Icon source={XIcon}></Icon>
@@ -374,23 +374,22 @@ export default function ScrollToTop() {
   return (
     <Page
       backAction={{ content: "Back", onAction: handleClick }}
-      title="Scroll to Top Button"
+      title={t('ScrollTop.appTitle')}
       subtitle={
         <Text variant="bodyLg" as="h6">
-          Help your customers get back easily to the top of the page, where they
-          can see the product photos and purchase options.
+         {`${t('Homepage.paragraphnew2')}`}
         </Text>
       }
       primaryAction={
         status ? (
           <DeactivatePopover
-            type={appName}
+            type={t('ScrollTop.appTitle')}
             handleToggleStatus={handleToggleStatus}
             buttonLoading={buttonloading}
           />
         ) : (
           {
-            content: "Activate App",
+            content:t('defaultSettings.activateBtn'),
             tone: "success",
             onAction: handleToggleStatus,
             loading: buttonloading,
@@ -405,14 +404,14 @@ export default function ScrollToTop() {
               <Card roundedAbove="sm">
                 <BlockStack gap="300">
                   <Text variant="headingMd" as="h6">
-                    Settings
+                    {`${t('defaultSettings.settings')}`}
                   </Text>
                   <Box paddingBlockStart="200">
                     <div className="checkbox_section">
                       <BlockStack gap="400">
                         <Checkbox
                           onFocus={() => handleFocus("field1")}
-                          label="Show on desktop"
+                          label={`${t('ScrollTop.labelDesktop')}`}
                           onChange={(e) =>
                             handleInputChange(e, "show_on_desktop")
                           }
@@ -421,7 +420,7 @@ export default function ScrollToTop() {
 
                         <Checkbox
                           onFocus={() => handleFocus("field2")}
-                          label="Show on mobile"
+                          label={`${t('ScrollTop.labelMobile')}`}
                           onChange={(e) =>
                             handleInputChange(e, "show_on_mobile")
                           }
@@ -431,7 +430,7 @@ export default function ScrollToTop() {
                         <div className="color_section">
                           <TextField
                             onFocus={() => handleFocus("field3")}
-                            label="Button Color"
+                            label={`${t('ScrollTop.btnColor')}`}
                             type="text"
                             value={formData.button_color}
                             onChange={(e) =>
@@ -471,7 +470,7 @@ export default function ScrollToTop() {
             <Layout.Section>
               <Card roundedAbove="sm">
                 <Text variant="headingMd" as="h6">
-                  Theme
+                {`${t('ScrollTop.theme')}`}
                 </Text>
                 <Box paddingBlockStart="200">
                   <div className="theme_image_icons">
@@ -491,7 +490,7 @@ export default function ScrollToTop() {
             <div className="grid_2nd_card_conatiner">
               <div className="grid_2nd_inner_card_conatiner">
                 <div className="all_preview_header">
-                  example.com/product-page
+                  {`${t('ScrollTop.examplecom')}`}
                 </div>
                 <div className="all_preview_image">
                   <img
@@ -502,7 +501,7 @@ export default function ScrollToTop() {
                   />
                 </div>
                 <div className="all_preview_body">
-                  <h1>Example product</h1>
+                  <h1>{`${t('ScrollTop.example')}`}</h1>
                 </div>
                 <div className="price_section_grid_2nd">
                   <h1>
@@ -512,19 +511,12 @@ export default function ScrollToTop() {
                 <div className="product_preview_quantity">
                   <input className="product_input" type="number" />
                 </div>
-                <div className="add_cart_button">Add to cart</div>
+                <div className="add_cart_button">{`${t('defaultSettings.atc')}`}</div>
                 <div className="product_description">
-                  Example product description
+                  {`${t('ScrollTop.description')}`}
                   <br></br>
                   <br></br>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of sheets containing Lorem Ipsum passages.
+                  {`${t('ScrollTop.lorem')}`}
                 </div>
               </div>
               <div className="app_preview_scroll_icon">{SelectedIcon()}</div>
@@ -541,7 +533,7 @@ export default function ScrollToTop() {
           }}
         >
           <ContextualSaveBar
-            message="Unsaved changes"
+                message={t('defaultSettings.content')}
             saveAction={{
               onAction: handleSave,
               loading: buttonloading,

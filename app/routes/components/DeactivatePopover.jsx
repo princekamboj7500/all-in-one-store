@@ -1,10 +1,10 @@
 
 import {Button, Popover, ActionList, Card} from '@shopify/polaris';
 import {useState, useCallback} from 'react';
-
+import { useTranslation } from "react-i18next";
 const DeactivatePopover = ({type,  handleToggleStatus, buttonLoading }) => {
   const [popoverActive, setPopoverActive] = useState(false);
-
+  let { t } = useTranslation();
   const togglePopoverActive = useCallback(
     () => setPopoverActive((popoverActive) => !popoverActive),
     [],
@@ -17,7 +17,7 @@ const DeactivatePopover = ({type,  handleToggleStatus, buttonLoading }) => {
 
   const activator = (
     <Button onClick={togglePopoverActive} disclosure>
-      Active
+      {`${t('defaultSettings.active')}`}
     </Button>
   );
 
@@ -30,7 +30,7 @@ const DeactivatePopover = ({type,  handleToggleStatus, buttonLoading }) => {
     >
       <Card>
         <Button onClick={handleDeactivateClick} tone="critical" loading={buttonLoading}>
-        {`Deactivate ${type}`}
+          {`${t('defaultSettings.deactivateBtn')}`} {`${type}`}
         </Button>
       </Card>
     </Popover>

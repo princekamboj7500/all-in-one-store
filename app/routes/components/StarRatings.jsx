@@ -1,6 +1,8 @@
 import { BlockStack, Button, ButtonGroup, Card, RadioButton, ContextualSaveBar, ChoiceList, Text, Page, InlineGrid, Listbox, Select, Tooltip, Checkbox, TextField, Tabs, Box, Layout, Toast, Grid, Frame, InlineStack, Link, Popover, ActionList, Icon } from '@shopify/polaris';
 import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
 function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange }) {
+    let { t } = useTranslation();
     const star_alignment_options = [
         { id: 'Left', label: 'Left' },
         { id: 'Center', label: 'Center' },
@@ -97,9 +99,9 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Star rating on homepage and collection pages</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("Ratings.Star")}</Text>
                         <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '4px', width: 'fit-content' }}>
-      <p>To display star rating on the home and collection pages, place the following code in your file wherever you want to display the star rating:</p>
+      <p>{t("Ratings.display")}</p>
       <pre style={{ background: '#f4f4f4', padding: '10px', borderRadius: '4px', whiteSpace: 'pre-wrap' }}>
         {codeSnippet}
       </pre>
@@ -119,7 +121,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                         /> */}
                         <TextField
                             type='number'
-                            label={`Star size`}
+                            label={t("Ratings.size")}
                             value={formData.star_size_homepage}
                             onChange={(e) => {
                                 handleFocus("star_size_homepage")
@@ -129,7 +131,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                         />
                         <div className="btn-grp-radio">
                             <ChoiceList
-                                title="Star alignment"
+                                title={t("Ratings.alignment")}
                                 choices={star_alignment_options.map(option => ({
                                     label: (
                                         <span className={formData.star_alignment_homepage == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -146,18 +148,18 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                             />
                         </div>
                         <TextField
-                            label={`Star rating format`}
+                            label={t("Ratings.rating")}
                             value={formData.star_rating_format_homepage}
                             onChange={(e) => {
                                 handleFocus("star_rating_format_homepage")
                                 handleChange(e, "star_rating_format_homepage")
                             }}
-                            helpText="You can customize the look & feel of your review snippet on collection pages or the homepage. Make sure you use the correct tags: {{ stars }}, {{ averageRating }}, {{ totalReviews }, {{ reviewsTranslation }}."
+                            helpText={t("Ratings.customize")}
                         />
                         <InlineGrid columns={{  sm:"2" }} gap={300}>
                             <TextField
                                 type='number'
-                                label={`Margin top`}
+                                label={t("Ratings.top")}
                                 value={formData.margin_top_homepage}
                                 onChange={(e) => {
                                     handleFocus("margin_top_homepage")
@@ -167,7 +169,7 @@ function ReviewsWidget({ formData, handleFocus, handleChange, handleColorChange 
                             />
                             <TextField
                                 type='number'
-                                label={`Margin bottom`}
+                                label={t("Ratings.bottom")}
                                 value={formData.margin_bottom_homepage}
                                 onChange={(e) => {
                                     handleFocus("margin_bottom_homepage")

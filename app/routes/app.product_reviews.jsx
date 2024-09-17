@@ -56,6 +56,7 @@ import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css";
 
+import { useTranslation } from "react-i18next";
 import ReviewsWidget from "./components/ReviewsWidget";
 import StarRatings from "./components/StarRatings";
 import HappyCustomers from "./components/HappyCustomersPage";
@@ -345,7 +346,7 @@ export const loader = async ({ request }) => {
 
 export function ReviewList({ reviews }) {
   const navigate = useNavigate();
-
+  let { t } = useTranslation();
   const [data, setData] = useState(reviews);
 
   let products = [];
@@ -365,7 +366,7 @@ export function ReviewList({ reviews }) {
         heading="No product reviews yet"
         image="https://cdn.shopify.com/s/files/1/0854/6615/3247/files/reviews.svg?v=1721279077"
       >
-        <p>Please add reviews</p>
+        <p>{`${t('productreviews.title')}`}</p>
       </EmptyState>
     ) : undefined;
 
@@ -404,23 +405,24 @@ export function ReviewList({ reviews }) {
               </Text>
               <div style={{ marginTop: "5px", display: "flex", gap: "12px" }}>
                 <Badge>
-                  Reviews <b>{reviews}</b>
+                  {`${t('productreviews.Reviews')}`} <b>{reviews}</b>
                 </Badge>
                 <Badge>
-                  Rating <b>{totalRating}</b>
+                {`${t('productreviews.Rating')}`}<b>{totalRating}</b>
                 </Badge>
               </div>
             </ResourceItem>
           );
         }}
         resourceName={resourceName}
-        alternateTool={<Button variant="primary">Import reviews</Button>}
+        alternateTool={<Button variant="primary">{`${t('productreviews.Importreviews')}`}</Button>}
       />
     </Card>
   );
 }
 
 export const AnalyticsDataTab = ({ data, reviews }) => {
+  let { t } = useTranslation();
   const [activeLine, setActiveLine] = useState(null);
   const [loading, setLoading] = useState(false);
   const [Impressionscount, setImpressionCount] = useState(0);
@@ -840,7 +842,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     </Scrollable>
                   ) : (
                     <Select
-                      label="Date range"
+                      label={`${t('productreviews.Daterange')}`}
                       //labelHidden
                       onChange={(value) => {
                         const result = ranges.find(
@@ -862,7 +864,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     <div style={{ flexGrow: 1 }}>
                       <TextField
                         role="combobox"
-                        label={"Start date"}
+                        label={`${t('productreviews.Startdate')}`}
                         // labelHidden
                         //prefix={<Icon source={CalendarIcon} />}
                         value={inputValues.since}
@@ -875,7 +877,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     <div style={{ flexGrow: 1 }}>
                       <TextField
                         role="combobox"
-                        label={"End date"}
+                        label={`${t('productreviews.Enddate')}`}
                         //labelHidden
                         //prefix={<Icon source={CalendarIcon} />}
                         value={inputValues.until}
@@ -892,9 +894,9 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
           <Popover.Pane fixed>
             <Popover.Section>
               <InlineStack align="end">
-                <Button onClick={cancel}>Cancel</Button>
+                <Button onClick={cancel}>{`${t('productreviews.Cancel')}`}</Button>
                 <Button primary onClick={apply}>
-                  Apply
+                {`${t('productreviews.Apply')}`}
                 </Button>
               </InlineStack>
             </Popover.Section>
@@ -903,7 +905,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
       </div>
 
       <div style={{ marginTop: "7px" }}>
-        <Text>{`compared to ${date.startDate} - ${date.endDate}`}</Text>
+        <Text>{`${t('productreviews.compared')}`}{` ${date.startDate} - ${date.endDate}`}</Text>
       </div>
     </InlineStack>
   );
@@ -1088,7 +1090,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Impressions
+                      {`${t('ScrollTop.Impressions')}`}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Impressionscount}
@@ -1126,7 +1128,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Image clicks
+                      {`${t('productreviews.Imageclicks')}`}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Imagecount}
@@ -1161,7 +1163,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Star rating clicks
+                      {`${t('productreviews.ratings')}`}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Starcount}
@@ -1197,7 +1199,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Collected reviews
+                     {`${t('productreviews.collected')}`}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Reviewscount}
@@ -1263,7 +1265,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="impressions"
-                  name="Impressions"
+                  name={`${t('ScrollTop.Impressions')}`}
                   stroke="#7E5AFA"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -1275,7 +1277,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="imageClicks"
-                  name="Image Clicks"
+                  name={`${t('productreviews.Imageclicks')}`}
                   stroke="#14BA88"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -1287,7 +1289,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="starRatingClicks"
-                  name="Star Rating Clicks"
+                  name={`${t('productreviews.ratings')}`}
                   stroke="#9ACDE1"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -1299,7 +1301,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="reviewRequestEmails"
-                  name="Review Request Emails"
+                  name={`${t('productreviews.request')}`}
                   stroke="#F4B207"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -1311,7 +1313,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="collectedReviews"
-                  name="Collected Reviews"
+                  name={`${t('productreviews.collected')}`}
                   stroke="#2C6ECB"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -1330,6 +1332,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
 };
 
 function ProductReviews() {
+  let { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const getTabFromUrl = () => {
@@ -1371,14 +1374,14 @@ function ProductReviews() {
   };
 
   const widgetoptions = [
-    { value: "ReviewsWidget", label: "Reviews Widget" },
-    { value: "StarRatings", label: "Star Ratings" },
-    { value: "ReviewsCarousel", label: "Reviews Carousel" },
-    { value: "HappyCustomers", label: "Happy Customers Page" },
-    { value: "FeaturedReviews", label: "Featured Reviews" },
-    { value: "AllReviewsBadge", label: "All Reviews Badge" },
-    { value: "Publishing", label: "Publishing" },
-    { value: "Translations", label: "Translations" },
+    { value: "ReviewsWidget", label: t('productreviews.ReviewsWidget') },
+    { value: "StarRatings", label: t('productreviews.StarRatings') },
+    { value: "ReviewsCarousel", label:  t('productreviews.ReviewsCarousel') },
+    { value: "HappyCustomers", label: t('productreviews.happy') },
+    { value: "FeaturedReviews", label: t('productreviews.featured') },
+    { value: "AllReviewsBadge", label: t('productreviews.allhere') },
+    { value: "Publishing", label: t('productreviews.Publishing') },
+    { value: "Translations", label: t('InstantSearch.Translations') },
   ];
 
   const handleToggleStatus = async () => {
@@ -1615,15 +1618,15 @@ function ProductReviews() {
       <div style={{ padding: "10px" }} className="product-review">
         <BlockStack gap="200">
           <Text variant="headingMd" fontWeight="bold">
-            Popular Actions
+            {`${t('productreviews.Popular')}`}
           </Text>
           <Card>
             <BlockStack gap={300} inlineAlign="start">
               <InlineGrid columns="45px 1fr" gap="200" alignItems="start">
                 <Thumbnail source={ViewIcon} size="small" />
                 <BlockStack gap="100">
-                  <Text fontWeight="bold">See reviews</Text>
-                  <Text variant="p">See all products with reviews.</Text>
+                  <Text fontWeight="bold">{`${t('productreviews.Seereviews')}`}</Text>
+                  <Text variant="p">{`${t('productreviews.allreviews')}`}</Text>
                 </BlockStack>
               </InlineGrid>
               <Button
@@ -1631,7 +1634,7 @@ function ProductReviews() {
                   setSelected(1);
                 }}
               >
-                See Reviews
+                {`${t('productreviews.Seereviews')}`}
               </Button>
             </BlockStack>
           </Card>
@@ -1640,10 +1643,9 @@ function ProductReviews() {
               <InlineGrid columns="45px 1fr" gap="200" alignItems="start">
                 <Thumbnail source={ImportIcon} size="small" />
                 <BlockStack gap="100">
-                  <Text fontWeight="bold">Import reviews</Text>
+                  <Text fontWeight="bold">{`${t('productreviews.Importreviews')}`}</Text>
                   <Text variant="p">
-                    Add reviews to your store by importing from other platforms,
-                    CSV or Aliexpress.
+                  {`${t('productreviews.description')}`}
                   </Text>
                 </BlockStack>
               </InlineGrid>
@@ -1652,7 +1654,7 @@ function ProductReviews() {
                   setSelected(2);
                 }}
               >
-                Import Reviews
+                {`${t('productreviews.Importreviews')}`}
               </Button>
             </BlockStack>
           </Card>
@@ -1661,10 +1663,9 @@ function ProductReviews() {
               <InlineGrid columns="45px 1fr" gap="200" alignItems="start">
                 <Thumbnail source={ImportIcon} size="small" />
                 <BlockStack gap="100">
-                  <Text fontWeight="bold">Customize appearance & settings</Text>
+                  <Text fontWeight="bold">{`${t('productreviews.customize')}`}</Text>
                   <Text variant="p">
-                    Customize how the product reviews widget looks on your store
-                    and edit other settings.
+                  {`${t('productreviews.sub')}`}
                   </Text>
                 </BlockStack>
               </InlineGrid>
@@ -1673,7 +1674,7 @@ function ProductReviews() {
                   setSelected(3);
                 }}
               >
-                Go to settings
+                {`${t('productreviews.gosettings')}`}
               </Button>
             </BlockStack>
           </Card>
@@ -1725,10 +1726,10 @@ function ProductReviews() {
             <div>
               {file.name}{" "}
               <Text variant="bodySm" as="p">
-                {file.size} bytes
+                {file.size} {`${t('productreviews.bytes')}`}
               </Text>
             </div>
-            <Button onClick={() => handleRemove(index)}>Remove</Button>
+            <Button onClick={() => handleRemove(index)}>{`${t('productreviews.Remove')}`}</Button>
           </div>
         ))}
       </div>
@@ -1793,7 +1794,7 @@ function ProductReviews() {
                   </Text>
                   <List type="number">
                     <List.Item>
-                      Download this empty template
+                    {`${t('productreviews.Download')}`}
                       <a
                         href="https://cdn.shopify.com/s/files/1/0654/5388/3651/files/aios-reviews-template.csv?v=1724129630"
                         target="_blank"
@@ -1801,9 +1802,9 @@ function ProductReviews() {
                         aios-review-template.csv
                       </a>
                     </List.Item>
-                    <List.Item>Fill in the fields as explained in</List.Item>
+                    <List.Item>{`${t('productreviews.fill')}`}</List.Item>
                     <List.Item>
-                      Upload it by clicking Add File section below.
+                    {`${t('productreviews.uploaded')}`}
                     </List.Item>
                   </List>
                 </Box>
@@ -1822,7 +1823,7 @@ function ProductReviews() {
                   <Checkbox
                     checked={checkImport}
                     onChange={handleCheckChange}
-                    label="I confirm that the imported reviews are for my products or I have permission to use them."
+                    label= {`${t('productreviews.confirm')}`}
                   ></Checkbox>
                 </BlockStack>
               </Box>
@@ -1875,9 +1876,7 @@ function ProductReviews() {
               }}
             >
               <p>
-                Only import reviews about products sold by you and collected
-                from your customers. Importing external reviews may violate
-                regulations and mislead customers.
+              {`${t('productreviews.importtext')}`}
               </p>
             </Banner>
           )}
@@ -1915,11 +1914,10 @@ function ProductReviews() {
                     style={{ borderRadius: "8px" }}
                   />
                   <Text variant="p">
-                    Import reviews from a CSV file in the All-in-one Store
-                    format:
+                  {`${t('productreviews.secimport')}`}
                   </Text>
                 </InlineGrid>
-                <Button onClick={handleImportModal}>Import</Button>
+                <Button onClick={handleImportModal}>{`${t('productreviews.Import')}`}</Button>
               </InlineGrid>
             </BlockStack>
           </Card>
@@ -1973,7 +1971,7 @@ function ProductReviews() {
   const tabs = [
     {
       id: "dashboard",
-      content: "Dashboard",
+      content: t('productreviews.Dashboard'),
       accessibilityLabel: "Dashboard",
       panelID: "Dashboard",
       component: <Dashboard />,
@@ -1981,28 +1979,28 @@ function ProductReviews() {
     },
     {
       id: "Reviews",
-      content: "Reviews",
+      content: t('productreviews.Reviews'),
       panelID: "Reviews",
       component: <ReviewList reviews={productReviews} />,
       dummy: "",
     },
     {
       id: "Import",
-      content: "Import",
+      content: t('productreviews.Import'),
       panelID: "Import",
       component: <Importtab />,
       dummy: "",
     },
     {
       id: "settings",
-      content: "Settings",
+      content: t('defaultSettings.settings'),
       panelID: "settings",
       component: <>{SettingsDataTab}</>,
       dummy: "",
     },
     {
       id: "Analytics",
-      content: "Analytics",
+      content: t('productreviews.Analytics'),
       panelID: "Analytics",
       component: (
         <AnalyticsDataTab data={analyticsData} reviews={collectionData} />
@@ -2024,8 +2022,8 @@ function ProductReviews() {
     <div className="Produyct-reviews">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title="Product Reviews"
-        subtitle="Easily collect, import and display reviews with photos and boost trust and conversion rates with social proof."
+        title= {`${t('Homepage.product')}`}
+        subtitle={`${t('productreviews.descriptions')}`}
         primaryAction={
           status ? (
             <DeactivatePopover
@@ -2034,8 +2032,8 @@ function ProductReviews() {
               buttonLoading={buttonloading}
             />
           ) : (
-            {
-              content: "Activate App",
+            { 
+              content: t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,
@@ -2048,7 +2046,7 @@ function ProductReviews() {
             {selected == "0" && (
               <BlockStack gap="200">
                 <Text alignment="end" tone="subdued">
-                  Results for the last 30 days.{" "}
+                {`${t('productreviews.resultss')}`}{" "}
                 </Text>
                 <InlineGrid
                   columns={{
@@ -2066,7 +2064,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Reviews collected
+                      {`${t('productreviews.reviewscollected')}`}
                       </Text>
                       <Text as="p" variant="headingLg">
                         {totalReviews}
@@ -2085,7 +2083,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Reviews published
+                      {`${t('productreviews.Reviewspublished')}`}
                       </Text>
                       <Text as="p" variant="headingLg">
                         {publishReviews}
@@ -2104,7 +2102,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Average star rating
+                      {`${t('productreviews.Averagerating')}`}
                       </Text>
                       <InlineStack align="start" gap="200" blockAlign="center">
                         <span>
@@ -2140,7 +2138,7 @@ function ProductReviews() {
               }}
             >
               <ContextualSaveBar
-                message="Unsaved changes"
+                message={t('defaultSettings.content')}
                 saveAction={{
                   onAction: handleSave,
                   loading: buttonloading,

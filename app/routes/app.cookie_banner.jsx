@@ -44,6 +44,7 @@ import {
   AlertCircleIcon,
   ArrowRightIcon,
 } from "@shopify/polaris-icons";
+import { useTranslation } from "react-i18next";
 import DateRangePicker from "./components/DateRangePicker";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
@@ -127,6 +128,7 @@ export const loader = async ({ request }) => {
 
 function CookieBanner(props) {
   const navigate = useNavigate();
+  let { t } = useTranslation();
   const { data, storeName } = useLoaderData();
   const [formData, setFormData] = useState(data);
   const [status, setStatus] = useState(data.app_status);
@@ -315,7 +317,7 @@ function CookieBanner(props) {
               >
                 <div style={{ float: "left" }}>
                   <Text variant="headingSm" as="h6">
-                    General and design settings
+                  {`${t('CookieBanner.general.title')}`}
                   </Text>
                 </div>
                 <div style={{ float: "right" }}>
@@ -325,7 +327,7 @@ function CookieBanner(props) {
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {`${t('CookieBanner.displaySettings')}`} 
                         </Text>
                       </div>
                     )}
@@ -334,8 +336,7 @@ function CookieBanner(props) {
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                Personalize the appearance and overall settings, such as visual
-                elements and general preferences.
+              {`${t('CookieBanner.general.subTitle')}`} 
               </Text>
             </BlockStack>
           </div>
@@ -347,7 +348,7 @@ function CookieBanner(props) {
           >
             <BlockStack gap="300">
               <Select
-                label="Theme"
+                label={`${t('CookieBanner.general.label')}`} 
                 options={theme_options}
                 onChange={(e) => {
                   handleFocus("cookie_banner_theme");
@@ -357,7 +358,7 @@ function CookieBanner(props) {
               />
               <div className="color_section">
                 <TextField
-                  label="Cookie banner background color"
+                  label={`${t('CookieBanner.general.bannerBgColor')}`} 
                   type="text"
                   onChange={(e) => {
                     handleFocus("cookie_banner_bg");
@@ -393,7 +394,7 @@ function CookieBanner(props) {
               </div>
               <div className="color_section">
                 <TextField
-                  label="Cookie banner body text color"
+                  label={`${t('CookieBanner.general.bannerTextColor')}`} 
                   type="text"
                   onChange={(e) => {
                     handleFocus("cookie_banner_color");
@@ -429,7 +430,7 @@ function CookieBanner(props) {
               </div>
               <div className="color_section">
                 <TextField
-                  label={`"Accept" button background color`}
+                  label={`${t('CookieBanner.general.acceptBtn')}`} 
                   type="text"
                   onChange={(e) => {
                     handleChange(e, "acceptbtn_bg ");
@@ -461,7 +462,7 @@ function CookieBanner(props) {
               </div>
               <div className="color_section">
                 <TextField
-                  label={`"Accept" button text color`}
+                  label={`${t('CookieBanner.general.accpetTextColor')}`} 
                   type="text"
                   onChange={(e) => {
                     handleFocus("acceptbtn_color");
@@ -497,18 +498,18 @@ function CookieBanner(props) {
               </div>
 
               <TextField
-                label={`"Learn more"`}
+                label={`${t('CookieBanner.general.learnMore')}`}
                 value={formData.learnmore_text}
                 onChange={(e) => {
                   handleFocus("learnmore_text");
                   handleChange(e, "learnmore_text");
                 }}
                 autoComplete="off"
-                placeholder="Learn More"
+                placeholder={`${t('CookieBanner.general.learnMore')}`}
               />
 
               <TextField
-                label={`URL of your Privacy Policy`}
+                label={`${t('CookieBanner.general.url')}`}
                 value={formData.learnmore_pivacylink}
                 onChange={(e) => {
                   handleFocus("learnmore_pivacylink");
@@ -517,22 +518,22 @@ function CookieBanner(props) {
                 autoComplete="off"
                 helpText={
                   <Text as="p" variant="bodySm">
-                    Every site needs to have a privacy policy, you can use{" "}
+                    {`${t('CookieBanner.general.Every')}`}{" "}
                     <a
                       target="_blank"
                       href="https://www.shopify.com/tools/policy-generator?_gl=1*1l5buzj*_ga*MzI4MTA0NjUxLjE3MTk1NjA0MDU.*_ga_JPZEV67G7G*MTcyMjkyMTE2MC4xMjguMS4xNzIyOTIxMTcxLjQ5LjAuMA.."
                     >
-                      Shopify's Free Privacy Policy Generator
+                      {`${t('CookieBanner.general.link')}`}
                     </a>{" "}
-                    to quickly get one. Until you add a link to that page, the
-                    "Learn more" message will not be shown.
+                    {`${t('CookieBanner.general.quicklyget')}`}{" "}
+                    
                   </Text>
                 }
               />
 
               <div className="color_section">
                 <TextField
-                  label={`"Privacy Policy" link color`}
+                  label={`${t('CookieBanner.general.linkColor')}`}
                   type="text"
                   onChange={(e) => {
                     handleFocus("learnmore_color");
@@ -587,11 +588,11 @@ function CookieBanner(props) {
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
                       {" "}
-                      Cookie Consent Banner
+                      {`${t('CookieBanner.Cookie.title')}`}
                       {formData.cookie_consent_status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">{`${t('CookieBanner.Cookie.statusOptions')}`}</Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>{`${t('CookieBanner.Cookie.inactive')}`}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -603,7 +604,7 @@ function CookieBanner(props) {
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {`${t('CookieBanner.displaySettings')}`}
                         </Text>
                       </div>
                     )}
@@ -612,10 +613,7 @@ function CookieBanner(props) {
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                To comply with GDPR and other data protection laws, if you have
-                customized your customer privacy settings in Shopify, a cookie
-                consent banner is necessary to obtain visitor consent for
-                tracking purposes.
+              {`${t('CookieBanner.Cookie.subTitle')}`}
                 {/* <Link href="#">
                                         <Text variant="headingSm" as="h5">Preview</Text>
                                     </Link> */}
@@ -639,40 +637,38 @@ function CookieBanner(props) {
                       </div>
                       <div>
                         <Text variant="headingSm" as="h6">
-                          Enable "Use custom cookie banner" in Shopify
+                        {`${t('CookieBanner.enableds')}`}
                         </Text>
                         <Text variant="bodySm" as="p">
-                          External settings required
+                        {`${t('CookieBanner.ecternal')}`}
                         </Text>
                       </div>
                     </InlineStack>
 
                     <Text variant="bodyMd" as="p">
-                      {`Enable the setting in Shopify to show the All-In-One Store Consent Banner. Find the setting under the More actions menu > Use custom cookie banner. Confirm the regions you want to show the cookie banner.`}
+                      {`${t('CookieBanner.enabeltext')}`}
                     </Text>
 
                     <Text variant="bodyMd" as="p">
-                      The Cookie Consent banner is displayed only to customers
-                      from the selected regions, according to Shopify's API
-                      server response.
+                    {`${t('CookieBanner.cookiecostent')}`}
                     </Text>
 
                     <ButtonGroup>
                       <Button onClick={handleNavigate}>
                         <Text as="h6" variant="headingXs">
                           {" "}
-                          Go to Cookie Banner setting
+                          {`${t('CookieBanner.bannertext')}`}
                         </Text>
                       </Button>
 
-                      <Button variant="plain">Read more</Button>
+                      <Button variant="plain">{`${t('CookieBanner.readmore')}`}</Button>
                     </ButtonGroup>
                   </BlockStack>
                 </Card>
               </div>
 
               <Select
-                label="Status"
+                label={`${t('CookieBanner.Cookie.status')}`}
                 options={Status_options}
                 onChange={(e) => {
                   handleFocus("cookie_consent_status");
@@ -682,7 +678,7 @@ function CookieBanner(props) {
               />
 
               <TextField
-                label="Text on cookie banner"
+                label={`${t('CookieBanner.Cookie.title')}`}
                 autoComplete="off"
                 placeholder="We use cookies to improve your experience and track website usage."
                 onChange={(e) => {
@@ -693,7 +689,7 @@ function CookieBanner(props) {
               />
 
               <TextField
-                label={`"Accept" button text`}
+                label={`${t('CookieBanner.Cookie.acceptBtn')}`}
                 autoComplete="off"
                 placeholder="Accept."
                 onChange={(e) => {
@@ -704,7 +700,7 @@ function CookieBanner(props) {
               />
 
               <TextField
-                label={`"Reject" button text`}
+                label={`${t('CookieBanner.Cookie.rejectBtn')}`}
                 autoComplete="off"
                 onChange={(e) => {
                   handleFocus("cookie_consent_reject_text");
@@ -714,7 +710,7 @@ function CookieBanner(props) {
               />
 
               <Select
-                label={`"Reject" button style`}
+                label={`${t('CookieBanner.Cookie.btnStyle')}`} 
                 options={Reject_Button_options}
                 onChange={(e) => {
                   handleFocus("reject_btn_style");
@@ -725,7 +721,7 @@ function CookieBanner(props) {
               {formData.reject_btn_style === "Outline" && (
                 <div className="color_section">
                   <TextField
-                    label={`"Reject" border color`}
+                    label={`${t('CookieBanner.Cookie.borderColor')}`} 
                     type="text"
                     onChange={(e) => {
                       handleFocus("reject_btn_border");
@@ -763,7 +759,7 @@ function CookieBanner(props) {
               {formData.reject_btn_style === "Fill" && (
                 <div className="color_section">
                   <TextField
-                    label={`"Reject" button background color`}
+                    label={`${t('CookieBanner.Cookie.rejectbackcolor')}`} 
                     type="text"
                     onChange={(e) => {
                       handleFocus("reject_btn_bg");
@@ -801,7 +797,7 @@ function CookieBanner(props) {
 
               <div className="color_section">
                 <TextField
-                  label={`"Reject" text color`}
+                  label={`${t('CookieBanner.Cookie.textColor')}`} 
                   type="text"
                   onChange={(e) => {
                     handleFocus("reject_text_color");
@@ -838,12 +834,10 @@ function CookieBanner(props) {
 
               <div>
                 <Text variant="headingSm" as="h6">
-                  Reset Consent
+                {`${t('CookieBanner.Cookie.ResetConsent')}`} 
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  Give your visitors control over their cookie consent settings
-                  by adding a link that triggers the cookie banner. For
-                  instructions on how to do this, <Link>follow this guide</Link>
+                {`${t('CookieBanner.Cookie.visitor')}`}  <Link>{`${t('CookieBanner.Cookie.guid')}`}</Link>
                   .
                 </Text>
               </div>
@@ -867,11 +861,11 @@ function CookieBanner(props) {
                 <div style={{ float: "left" }}>
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
-                      Informative Cookie Banner
+                    {`${t('CookieBanner.Informative.Bannertitle')}`}
                       {formData.informative_banner_status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">{`${t('CookieBanner.Cookie.statusOptions')}`} </Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>{`${t('CookieBanner.Cookie.inactive')}`}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -883,7 +877,7 @@ function CookieBanner(props) {
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                          {`${t('CookieBanner.displaySettings')}`}
                         </Text>
                       </div>
                     )}
@@ -892,13 +886,10 @@ function CookieBanner(props) {
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                If your visitors are not required to give permission before
-                their data can be used, you can display an informative banner.
-                It will notify the visitors that by using your service, they
-                accept your Privacy Policy.
+              {`${t('CookieBanner.description')}`}
                 <Link href="#">
                   <Text variant="headingSm" as="h5">
-                    Preview
+                  {`${t('CookieBanner.Preview')}`}
                   </Text>
                 </Link>
               </Text>
@@ -913,7 +904,7 @@ function CookieBanner(props) {
           >
             <BlockStack gap="400">
               <Select
-                label="Status"
+                label={`${t('CookieBanner.Cookie.status')}`}
                 options={informative_Status_options}
                 onChange={(e) => {
                   handleFocus("informative_banner_status");
@@ -922,25 +913,25 @@ function CookieBanner(props) {
                 value={formData.informative_banner_status}
               />
               <TextField
-                label="Text on cookie banner"
+                label={`${t('CookieBanner.Cookie.text')}`}
                 onChange={(e) => {
                   handleFocus("informative_banner_text");
                   handleChange(e, "informative_banner_text");
                 }}
                 value={formData.informative_banner_text}
                 autoComplete="off"
-                placeholder="We use cookies to improve your experience and track website usage."
+                placeholder={`${t('CookieBanner.Informative.improve')}`}
               />
 
               <TextField
-                label={`"I Accept"`}
+                label={`${t('CookieBanner.Informative.accept')}`}
                 onChange={(e) => {
                   handleFocus("informative_accept_text");
                   handleChange(e, "informative_accept_text");
                 }}
                 value={formData.informative_accept_text}
                 autoComplete="off"
-                placeholder="I understand."
+                placeholder={`${t('CookieBanner.Informative.understand')}`}
               />
             </BlockStack>
           </Collapsible>
@@ -975,7 +966,7 @@ function CookieBanner(props) {
                 <div className="grid_2nd_card_conatiner">
                   <div className="grid_2nd_inner_card_conatiner">
                     <div className="all_preview_header">
-                      example.com/product-page
+                      {`${t('ScrollTop.examplecom')}`}
                     </div>
                     <div className="all_preview_image">
                       <img
@@ -986,7 +977,7 @@ function CookieBanner(props) {
                       />
                     </div>
                     <div className="all_preview_body">
-                      <h1>Example product</h1>
+                      <h1>{`${t('ScrollTop.example')}`}</h1>
                     </div>
                     <div className="price_section_grid_2nd">
                       <h1>
@@ -1002,18 +993,10 @@ function CookieBanner(props) {
                     </div>
                     <div className="add_cart_button">Add to cart</div>
                     <div className="product_description">
-                      Example product description
+                    {`${t('ScrollTop.description')}`}
                       <br></br>
                       <br></br>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s, when an unknown
-                      printer took a galley of type and scrambled it to make a
-                      type specimen book. It has survived not only five
-                      centuries, but also the leap into electronic typesetting,
-                      remaining essentially unchanged. It was popularised in the
-                      1960s with the release of sheets containing Lorem Ipsum
-                      passages.
+                      {`${t('ScrollTop.lorem')}`}                      
                     </div>
 
                     {openStates.cookiesettings ? (
@@ -1136,13 +1119,13 @@ function CookieBanner(props) {
           <div className="graph_card_1">
             <BlockStack gap={300}>
               <Text fontWeight="bold" variant="headingMd" as="h6">
-                Impressions
+              {`${t('ScrollTop.Impressions')}`}
               </Text>
               <Text fontWeight="bold" variant="headingLg" as="h5">
                 8
               </Text>
               <Text as="p" fontWeight="medium">
-                No change
+              {`${t('ScrollTop.Nochange')}`}
               </Text>
             </BlockStack>
           </div>
@@ -1150,13 +1133,13 @@ function CookieBanner(props) {
           <div className="graph_card_2">
             <BlockStack gap={300}>
               <Text fontWeight="bold" variant="headingMd" as="h6">
-                Accept rate
+              {`${t('ScrollTop.Acceptrate')}`}
               </Text>
               <Text fontWeight="bold" variant="headingLg" as="h5">
                 0 %
               </Text>
               <Text as="p" fontWeight="medium">
-                No change
+              {`${t('ScrollTop.Nochange')}`}
               </Text>
             </BlockStack>
           </div>
@@ -1188,10 +1171,10 @@ function CookieBanner(props) {
                   <Icon source={BookOpenIcon}> </Icon>
 
                   <Text as="h6" variant="headingMd">
-                    Your analytics will be displayed here
+                    {`${t('CookieBanner.Informative.analytics')}`}
                   </Text>
                   <Text as="p" variant="bodyXs">
-                    No data available yet.
+                  {`${t('CookieBanner.Informative.nodata')}`}
                   </Text>
                 </BlockStack>
               </div>
@@ -1211,7 +1194,7 @@ function CookieBanner(props) {
   const tabs = [
     {
       id: "Settings-customers-1",
-      content: "Settings",
+      content:t('defaultSettings.settings'),
       accessibilityLabel: "Settings customers",
       panelID: "Settings-customers-content-1",
       component: <>{SettingsDataTab}</>,
@@ -1224,8 +1207,8 @@ function CookieBanner(props) {
     <div className="Cookies_Banner_page">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title="Cookies Banner"
-        subtitle="Inform your visitors that the site uses cookies to improve the user experience and track the visitors activity."
+        title={t('CookieBanner.appTitle')}
+        subtitle={t('CookieBanner.appDesc')}
         primaryAction={
           status ? (
             <DeactivatePopover
@@ -1235,7 +1218,7 @@ function CookieBanner(props) {
             />
           ) : (
             {
-              content: "Activate App",
+            content:t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,

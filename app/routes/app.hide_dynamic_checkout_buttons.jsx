@@ -6,7 +6,7 @@ import {
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
-
+import { useTranslation } from "react-i18next";
 export const loader = async ({ request }) => {
     const { session,admin } = await authenticate.admin(request);
       const response = await admin.graphql(`query {
@@ -56,6 +56,7 @@ export const loader = async ({ request }) => {
 };
 
 function Hide_Dynamic_Checkout_Buttons(props) {
+    let { t } = useTranslation();
     const navigate= useNavigate();
     const { data } = useLoaderData();
     const [formData, setFormData] = useState(data);
@@ -128,91 +129,40 @@ function Hide_Dynamic_Checkout_Buttons(props) {
                     <Card roundedAbove="sm">
                         <BlockStack gap="200">
                             <Text variant="headingSm" as="h6">
-                                Resources
+                            {`${t('HideButton.title')}`}
                             </Text>
                             <Text as="p" fontWeight="regular">
-                                There are at least 5 reasons to hide the Dynamic Checkout buttons:
+                            {`${t('HideButton.desc')}`}
                             </Text>
                             <div style={{ padding: "5px" }} className='checkbox_section'>
                                 <List type="number">
                                     <List.Item>
-                                        The button takes the customers to the payment gateway (PayPal, Apple Pay, Google Pay, Amazon Pay) to authorize an amount that does not include shipping. Eventually the customer will return to Shopify for shipping options but this creates an unnecessary friction.
+                                    {`${t('HideButton.first')}`} 
                                     </List.Item>
                                     <List.Item>
-                                        The same for coupon codes: if your customers have a coupon code, they will not be able to enter it in the payment gateway, only when they return to continue the normal checkout flow. This might hurt the conversion rate as well.
+                                    {`${t('HideButton.second')}`} 
                                     </List.Item>
                                     <List.Item>
-                                        Discount apps (such as the Product Bundle and Volume Discount apps in All-In-One Store  and other discount apps) will not work on a checkout flow that started from Dynamic Checkout buttons.
+                                    {`${t('HideButton.third')}`}   
                                     </List.Item>
                                     <List.Item>
-                                        If PayPal / Apple Pay / Google Pay / Amazon Pay is not your only payment method, do not let your customers think so. This, as well, might hurt your conversion rate.
+                                    {`${t('HideButton.fourth')}`}  
                                     </List.Item>
                                     <List.Item>
-                                        Last but not least, the buttons might not fit the design of your theme.
+                                    {`${t('HideButton.fifth')}`} 
                                     </List.Item>
                                 </List>
                             </div>
                             <div>
                                 <Text as="p" fontWeight="regular">
-                                    Hiding the third party payment buttons creates a smooth checkout workflow. Rest assured:<span><b>
-                                        customers will still be able to pay using the same payment methods on the checkout page.</b>
+                                {`${t('HideButton.notice')}`} 
+                                    <span> <b>
+                                     {`${t('HideButton.boldText')}`} </b>
                                     </span>
                                 </Text>
                             </div>
                         </BlockStack>
                     </Card>
-
-                    <div className='lower_section'>
-                        <Grid>
-
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                                <Card roundedAbove="sm">
-                                    <BlockStack gap="200">
-                                        <Text as="h2" variant="headingSm">
-                                            Check our Help Center
-                                        </Text>
-                                        <BlockStack gap="200">
-                                            <Text as="p" fontWeight="reguler">
-                                                If you need help with setting up the Hide Dynamic Checkout Buttons app, please check our exhaustive Help Center for details.
-                                            </Text>
-
-                                        </BlockStack>
-                                        <InlineStack align="end">
-                                            <ButtonGroup>
-                                                <Button icon={ExternalIcon} onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                    <Text variant="headingSm" as="h6">Get help</Text>
-                                                </Button>
-
-                                            </ButtonGroup>
-                                        </InlineStack>
-                                    </BlockStack>
-                                </Card>
-                            </Grid.Cell>
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                                <Card roundedAbove="sm">
-                                    <BlockStack gap="200">
-                                        <Text as="h2" variant="headingSm">
-                                            We're here for you, 24/7
-                                        </Text>
-                                        <BlockStack gap="200">
-                                            <Text as="p" fontWeight="reguler">
-                                                We know how complex All-In-One Store  is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
-                                            </Text>
-
-                                        </BlockStack>
-                                        <InlineStack align="end">
-                                            <ButtonGroup>
-                                                <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                    <Text variant="headingSm" as="h6">Contact us</Text>
-                                                </Button>
-
-                                            </ButtonGroup>
-                                        </InlineStack>
-                                    </BlockStack>
-                                </Card>
-                            </Grid.Cell>
-                        </Grid>
-                    </div>
 
                 </BlockStack>
             </div>
@@ -242,12 +192,12 @@ function Hide_Dynamic_Checkout_Buttons(props) {
             <>
                 {isActivated ? (
                     <Button onClick={togglePopoverActive} disclosure>
-                        Active
+                    {`${t('defaultSettings.active')}`} 
                     </Button>
                 ) : (
 
                     <Button className="activate_button" tone="success" onClick={handleActivateClickAgain}>
-                        Activate
+                        {`${t('defaultSettings.Activate')}`}
                     </Button>
                 )}
             </>
@@ -264,7 +214,7 @@ function Hide_Dynamic_Checkout_Buttons(props) {
                             onClose={togglePopoverActive}
                         >
                             <Card>
-                                <Button onClick={handleActivateClick} tone="critical">Deactivate Sticky Add to Cart</Button>
+                                <Button onClick={handleActivateClick} tone="critical">{`${t('defaultSettings.DeactivateSAC')}`}</Button>
                             </Card>
                         </Popover>
                     </> : <>
@@ -277,7 +227,7 @@ function Hide_Dynamic_Checkout_Buttons(props) {
                         >
                             <Popover.Pane fixed>
                                 <Popover.Section>
-                                    <InlineStack><Text alignment='center' as="p" fontWeight="regular" variant="headingMd">What went wrong? </Text>
+                                    <InlineStack><Text alignment='center' as="p" fontWeight="regular" variant="headingMd">{`${t('defaultSettings.wentwrong')}`} </Text>
                                         <div><Icon source={XIcon}></Icon></div></InlineStack>
                                 </Popover.Section>
                             </Popover.Pane>
@@ -313,26 +263,23 @@ function Hide_Dynamic_Checkout_Buttons(props) {
         <div className='Hide_Dynamic_Checkout_Buttons'>
             <Page
                 backAction={{ content: "Back", onAction: handleClick }}
-                title="Hide Dynamic Checkout Buttons"
-                subtitle="Create a smooth checkout flow by hiding the dynamic checkout buttons (PayPal, Apple Pay) from your cart and product pages."
+                title={`${t('HideButton.appTitle')}`}
+                subtitle={`${t('HideButton.appdsec')}`}
 
                 primaryAction={
                     status ? (
                       <DeactivatePopover handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                       {
-                        content: "Activate App",
+                       content:t('defaultSettings.activateBtn'),
                         tone: "success",
                         onAction: handleToggleStatus,
                         loading: buttonloading,
                       }
                     )
                   }
-                secondaryActions={[
-                    {
-                        content: 'Tutorial',
-                    },
-                ]}
+                
+               
 
             >
                 <div className='intant_search'>

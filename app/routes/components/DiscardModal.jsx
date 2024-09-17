@@ -1,28 +1,28 @@
 import React from 'react'
 import { Button, Modal, Frame } from '@shopify/polaris';
-
+import { useTranslation } from "react-i18next";
 const DiscardModal = ({ toggleModal, handleDiscard, activemodal }) => {
+  let { t } = useTranslation();
   return (
       <div className='discard-modal'>
         <Modal
           open={activemodal}
           onClose={toggleModal}
-          title="Discard all unsaved changes"
+          title= {t('discardModal.title')}
           primaryAction={{
             destructive: true,
-            content: 'Discard changes',
+            content: t('discardModal.content'),
             onAction: handleDiscard,
           }}
           secondaryActions={[
             {
-              content: 'Continue editing',
+              content: t('discardModal.btn'),
               onAction: toggleModal,
             },
           ]}
         >
           <Modal.Section>
-            If you discard changes, you’ll delete any edits you made since you
-            last saved.
+           {t('discardModal.text')}
           </Modal.Section>
         </Modal>
       </div>

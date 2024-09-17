@@ -7,14 +7,14 @@ import pointed from "./../assets/product_review/pointed.svg"
 import hearts from "./../assets/product_review/hearts.svg"
 import gridimg from "./../assets/product_review/grid.png"
 import listimg from "./../assets/product_review/list.png"
-
+import { useTranslation } from "react-i18next";
 
 function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorChange }) {
-
+    let { t } = useTranslation();
     const star_shape_options = [
-        { id: 'Rounded', label: 'Rounded corners', imgSrc: rounded },
-        { id: 'Pointed', label: 'Pointed corners', imgSrc: pointed },
-        { id: 'Hearts', label: 'Hearts', imgSrc: hearts },
+        { id: 'Rounded', label: t('Widget.Roundedcorners'), imgSrc: rounded },
+        { id: 'Pointed', label: t('Widget.Pointedcorners'), imgSrc: pointed },
+        { id: 'Hearts', label: t('Widget.Hearts'), imgSrc: hearts },
     ];
    
     const review_layout_options = [
@@ -62,10 +62,10 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>General</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.General')}</Text>
                         <div className='img-choicelist star-shape'>
                             <ChoiceList
-                                title="Star Shape"
+                                title={t('Widget.Star')}
                                 choices={star_shape_options.map(option => ({
                                     label: (
                                         <span className={formData.star_shape == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -84,8 +84,8 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         </div>
                         <div className='color_section'>
                             <TextField
-                                label={<InlineStack style={{ "margin": "0px" }} gap={300}>Star color
-                                    <Tooltip content={`This controls the colors of the stars in every widget except the Reviews Carousel.`}>
+                                label={<InlineStack style={{ "margin": "0px" }} gap={300}>{t('Widget.Star2')}
+                                    <Tooltip content={t('Widget.Star3')}>
                                         <Icon source={AlertCircleIcon} tone='base'></Icon>
                                     </Tooltip></InlineStack>}
                                 type="text"
@@ -115,10 +115,10 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Product page layout</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Product')}</Text>
                         <div className='img-choicelist'>
                             <ChoiceList
-                                title="Reviews layout"
+                                title={t('Widget.layout')}
                                 choices={review_layout_options.map(option => ({
                                     label: (
                                         <span className={formData.reviews_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -133,49 +133,41 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     handleFocus("reviews_layout");
                                     handleChange(selected, "reviews_layout")
                                 }}
-                                helpText="You can change the design settings for this layout in the Layout design settings section below."
+                                helpText={t('Widget.change')}
                             />
                         </div>
                         <Checkbox
-                            label="Show rating filter bars"
+                            label={t('Widget.rating')}
                             checked={formData.show_rating_filterbar}
                             onChange={(e) => {
                                 handleFocus("show_rating_filterbar")
                                 handleChange(e, "show_rating_filterbar")
                             }}
-                            helpText="Display a breakdown of all reviews using progress bars at the top of the reviews list, allowing easy filtering."
+                            helpText={t('Widget.Display')}
                         />
                         <Checkbox
-                            label="Show review box for products with zero reviews"
+                            label={t('Widget.Show')}
                             checked={formData.show_reviewbox_whenzero}
                             onChange={(e) => {
                                 handleFocus("show_reviewbox_whenzero")
                                 handleChange(e, "show_reviewbox_whenzero")
                             }}
                         />
-                        {/* <Checkbox
-                            label="Hide the Product Reviews Main Widget on the product page"
-                            checked={formData.hide_review_mainwidget}
-                            onChange={(e) => {
-                                handleFocus("hide_review_mainwidget")
-                                handleChange(e, "hide_review_mainwidget")
-                            }}
-                            helpText="Check this option if you want to use other Product Reviews widgets (like Carousel) while hiding the Main Widget from the product page. However, this won't hide the widget if placed via Shopify or Vitals Editor."
-                        /> */}
+                      
                     </BlockStack>
                 </Card>
             </Layout.Section>
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Number of reviews on product page</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Number')}</Text>
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>Desktop</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Desktop')}</Text>
                                 <InlineGrid columns={{  sm:"2" }} gap={200}>
                                     <TextField
                                         type='number'
-                                        label={`Number of reviews before showing more`}
+                                        label={t('Widget.before')}
                                         value={formData.desktop_min_reviews}
                                         onChange={(e) => {
                                             handleFocus("desktop_min_reviews")
@@ -184,7 +176,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     />
                                     <TextField
                                         type='number'
-                                        label={`Maximum number of reviews`}
+                                        label={t('Widget.Maximum')}
                                         value={formData.desktop_max_reviews}
                                         onChange={(e) => {
                                             handleFocus("desktop_max_reviews")
@@ -200,11 +192,11 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         </Box>
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>Mobile</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Mobile')}</Text>
                                 <InlineGrid  columns={{  sm:"2" }} gap={200}>
                                     <TextField
                                         type='number'
-                                        label={`Number of reviews before showing more`}
+                                        label={t('Widget.of')}
                                         value={formData.mobile_min_reviews}
                                         onChange={(e) => {
                                             handleFocus("mobile_min_reviews")
@@ -213,7 +205,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     />
                                     <TextField
                                         type='number'
-                                        label={`Maximum number of reviews`}
+                                        label={t('Widget.reviews')}
                                         value={formData.mobile_max_reviews}
                                         onChange={(e) => {
                                             handleFocus("mobile_max_reviews")
@@ -230,10 +222,10 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Reviews information</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.information')}</Text>
                        
                         <Checkbox
-                            label="Show review dates"
+                            label={t('Widget.Show2')}
                             checked={formData.show_reviews_date}
                             onChange={(e) => {
                                 handleFocus("show_reviews_date")
@@ -242,7 +234,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         />
                         
                         <Select
-                            label="Date format"
+                            label={t('Widget.Date')}
                             options={date_format_options}
                             onChange={(e) => {
                                 handleFocus("date_format")
@@ -251,7 +243,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                             value={formData.date_format}
                         />
                         <Select
-                            label="Reviewer name display method"
+                            label={t('Widget.method')}
                             options={reviewer_name_options}
                             onChange={(e) => {
                                 handleFocus("reviewer_name_display")
@@ -262,11 +254,11 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         <hr style={{
                             "height": "1px", "margin": "6px", "border": "none", "background": "#d9d9d9"
                         }} />
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Verified purchase icon</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Verified')}</Text>
                         <Checkbox
-                            label={<InlineStack gap="200">Show "Verified purchase” icon
+                            label={<InlineStack gap="200">{t('Widget.icon')}
                                 <Tooltip
-                                    content={`If enabled, it will show a Verified icon after the reviewer's name for those reviews that are deemed to be made by verified buyers. When customers leave feedback on your products and we are able to match their data to your orders, we tag the reviews as verified automatically. You can also mark any review as verified.`}>
+                                    content={t('Widget.enabled')}>
                                     <Icon source={AlertCircleIcon} tone='base'></Icon></Tooltip></InlineStack>}
                             checked={formData.verified_icon}
                             onChange={(e) => {
@@ -276,7 +268,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         />
                         <div className='color_section'>
                             <TextField
-                                label="Verified icon color"
+                                label={t('Widget.color')}
                                 type="text"
                                 onChange={(e) =>{
                                     handleFocus("verified_icon_color")
@@ -303,14 +295,14 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Layout design settings</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.settings')}</Text>
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>Grid</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Grid')}</Text>
                                 <InlineGrid  columns={{  sm:"2" }} gap={200}>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Reviewer name"
+                                            label={t('Widget.Reviewer')}
                                             type="text"
                                             value={formData.reviewer_name_color}
                                             onChange={(e) => {
@@ -333,7 +325,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Review text"
+                                            label={t('Widget.text')}
                                             type="text"
                                             value={formData.reviewer_text_color}
                                             onChange={(e) => {
@@ -356,7 +348,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Review card background"
+                                            label={t('Widget.background')}
                                             type="text"
                                             value={formData.review_card_bg}
                                             onChange={(e) => {
@@ -379,7 +371,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Review card shadow"
+                                            label={t('Widget.Pro')}
                                             type="text"
                                             value={formData.review_card_shadow}
                                             onChange={(e) => {
@@ -402,7 +394,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Review date"
+                                            label={t('Widget.Prodate')}
                                             type="text"
                                             value={formData.review_date}
                                             onChange={(e) => {
@@ -428,11 +420,11 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         </Box>
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>List</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.List')}</Text>
                                 <InlineGrid columns={{  sm:"2" }} gap={200}>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Avatar background"
+                                            label={t('Widget.Avatar')}
                                             type="text"
                                             value={formData.avatar_bg}
                                             onChange={(e) => {
@@ -455,7 +447,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Avatar icon"
+                                            label={t('Widget.Avatar2')}
                                             type="text"
                                             value={formData.avatar_icon_color}
                                             onChange={(e) => {
@@ -481,11 +473,11 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         </Box>
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>List</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.List2')}</Text>
                                 <InlineGrid  columns={{  sm:"2" }} gap={200}>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Store reply title"
+                                            label={t('Widget.reply')}
                                             type="text"
                                             value={formData.storyreply_title_color}
                                             onChange={(e) => {
@@ -508,7 +500,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Store reply text"
+                                            label={t('Widget.Store')}
                                             type="text"
                                             value={formData.storyreply_text_color}
                                             onChange={(e) => {
@@ -531,7 +523,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                                     </div>
                                     <div className='color_section'>
                                         <TextField
-                                            label="Store reply card background"
+                                            label={t('Widget.Store2')}
                                             type="text"
                                             value={formData.storyreply_card_bg}
                                             onChange={(e) => {
@@ -561,9 +553,9 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Write a review form</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.form')}</Text>
                         <Checkbox
-                            label="Allow customers to upload a photo"
+                            label={t('Widget.Allow')}
                             checked={formData.form_allow_img}
                             onChange={(e) => {
                                 handleFocus("form_allow_img")
@@ -573,7 +565,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                         <InlineGrid  columns={{  sm:"2" }} gap={200}>
                             <div className='color_section'>
                                 <TextField
-                                    label="Form text"
+                                    label={t('Widget.Form')}
                                     type="text"
                                     value={formData.form_text_color}
                                     onChange={(e) => {
@@ -596,7 +588,7 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                             </div>
                             <div className='color_section'>
                                 <TextField
-                                    label="Form background"
+                                    label={t('Widget.Form2')}
                                     type="text"
                                     value={formData.form_bg_color}
                                     onChange={(e) => {
@@ -619,11 +611,8 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                             </div>
                             <div className='color_section'>
                                 <TextField
-                                    label={<InlineStack gap={200}>Button text
-                                        <Tooltip content={`Controls the color of 2 buttons:
-                                                            - Write review button
-                                                            - Submit review button
-                                                            `}>
+                                    label={<InlineStack gap={200}>{t('Widget.Button')}
+                                        <Tooltip content={t('Widget.Button2')}>
                                             <Icon source={AlertCircleIcon} tone='base'></Icon></Tooltip></InlineStack>}
                                     type="text"
                                     value={formData.form_btn_text}
@@ -647,11 +636,8 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
                             </div>
                             <div className='color_section'>
                                 <TextField
-                                    label={<InlineStack gap={200} >Button background
-                                        <Tooltip content={`Controls the color of 2 buttons:
-                                                            - Write review button
-                                                            - Submit review button
-                                                            `}>
+                                    label={<InlineStack gap={200} >{t('Widget.bg')}
+                                        <Tooltip content={t('Widget.Controls')}>
                                             <Icon source={AlertCircleIcon} tone='base'></Icon></Tooltip></InlineStack>}
                                     type="text"
                                     value={formData.form_btn_bg}
@@ -680,14 +666,14 @@ function ReviewsWidget({ shop, formData, handleFocus, handleChange, handleColorC
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Position</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.Position')}</Text>
                         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
                             <BlockStack gap={200}>
-                                <Text variant="headingSm" as="h6" fontWeight='semibold'>Place or move this app using Shopify Editor</Text>
-                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show the app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the All-In-One Store  app you need.</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('Widget.app')}</Text>
+                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >{t('Widget.Click')}</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
-                                        <Button onClick={handleCarouselClick} accessibilityLabel="Go to editor"> Go to editor</Button>
+                                        <Button onClick={handleCarouselClick} accessibilityLabel="Go to editor">{t('Widget.gut')} </Button>
                                        
                                     </ButtonGroup>
                                 </InlineStack>

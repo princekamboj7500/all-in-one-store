@@ -20,7 +20,7 @@ import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import { authenticate } from "../shopify.server";
 import { ExternalIcon, XIcon } from "@shopify/polaris-icons";
-
+import { useTranslation } from "react-i18next";
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   const response = await admin.graphql(`query {
@@ -75,6 +75,7 @@ export const loader = async ({ request }) => {
 function Auto_External_Links(props) {
   const navigate = useNavigate();
   const { data } = useLoaderData();
+  let { t } = useTranslation();
   const [formData, setFormData] = useState(data);
   const [status, setStatus] = useState(data.app_status);
   const [active, setActive] = useState(false);
@@ -149,67 +150,7 @@ function Auto_External_Links(props) {
     return (
       <div className="Cart_notice_page_SettingsDataTab_container">
         <BlockStack gap="400">
-          <div className="lower_section">
-            <Grid>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      Check our Help Center
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        If you need help with setting up the Auto External Links
-                        app, please check our exhaustive Help Center for
-                        details.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          icon={ExternalIcon}
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingXs" as="h6" fontWeight="medium">
-                            Get help
-                          </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                <Card roundedAbove="sm">
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingSm">
-                      We're here for you, 24/7
-                    </Text>
-                    <BlockStack gap="200">
-                      <Text as="p" fontWeight="reguler">
-                        We know how complex All-In-One Store  is - that's why{" "}
-                        <Link href="#">we are available 24/7</Link> to support
-                        you in setting it up.
-                      </Text>
-                    </BlockStack>
-                    <InlineStack align="end">
-                      <ButtonGroup>
-                        <Button
-                          onClick={() => {}}
-                          accessibilityLabel="Fulfill items"
-                        >
-                          <Text variant="headingXs" as="h6" fontWeight="medium">
-                            Contact us
-                          </Text>
-                        </Button>
-                      </ButtonGroup>
-                    </InlineStack>
-                  </BlockStack>
-                </Card>
-              </Grid.Cell>
-            </Grid>
-          </div>
+       
         </BlockStack>
       </div>
     );

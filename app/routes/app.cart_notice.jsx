@@ -3,7 +3,7 @@ import React, { useCallback, useState,useEffect } from 'react';
 import {
     ChevronDownIcon, XIcon, MinusIcon, SearchIcon, ExternalIcon, CalendarIcon, AlertCircleIcon, ArrowRightIcon
 } from '@shopify/polaris-icons';
-
+import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
@@ -64,6 +64,7 @@ export const loader = async ({ request }) => {
 };
 
 function CartNotice(props) {
+    let { t } = useTranslation();
     const navigate = useNavigate();
     const { data, storeName } = useLoaderData();
     const [formData, setFormData] = useState(data);
@@ -195,7 +196,7 @@ function CartNotice(props) {
                    
                     <InlineGrid columns={['oneThird', 'twoThirds']}>
                         <Text variant="headingMd" as="h6">
-                            Settings
+                        {`${t('defaultSettings.settings')}`}
                         </Text>
                         <Layout>
                             <Layout.Section>
@@ -206,7 +207,7 @@ function CartNotice(props) {
                                             <BlockStack gap="300">
                                                 <div className='color_section'>
                                                     <TextField
-                                                        label="Background Color"
+                                                        label={`${t('StickyCart.look.bgColor')}`}
                                                         type="text"
                                                         value={formData.notice_bg_color}
                                                         onChange={(e) => {
@@ -235,7 +236,7 @@ function CartNotice(props) {
                                                 </div>
                                                 <div className='color_section'>
                                                     <TextField
-                                                        label="Text Color"
+                                                        label={`${t('StickyCart.look.textColor')}`}
                                                         type="text"
                                                         value={formData.notice_text_color}
                                                         onChange={(e) => {
@@ -263,7 +264,7 @@ function CartNotice(props) {
                                                     />
                                                 </div>
                                                 <TextField
-                                                    label="Cart notice title"
+                                                    label={`${t('CartNotice.cartTitle')}`}
                                                     value={formData.cart_notice_title}
                                                     autoComplete="off"
                                                     onChange={(e) => {
@@ -275,7 +276,7 @@ function CartNotice(props) {
                                                 />
 
                                                 <TextField
-                                                    label="Secondary text"
+                                                    label={`${t('CartNotice.secondaryText')}`}
                                                     value={formData.cart_notice_secondary}
                                                     autoComplete="off"
                                                     onChange={(e) => {
@@ -284,11 +285,11 @@ function CartNotice(props) {
                                                     }
                                                     }
                                                     helpText="You can use a countdown timer if you include the {{ counter }} variable in the text."
-                                                    placeholder="Complete the order to make sure it’s yours!"
+                                                    placeholder={`${t('CartNotice.complet')}`}
                                                 />
 
                                                 <Checkbox
-                                                    label="Hide the fire icon"
+                                                    label={`${t('CartNotice.hide')}`}
                                                     checked={formData.hide_fire_icon}
                                                     onChange={(e) => {
                                                         handleFocus("hide_fire_icon")
@@ -305,57 +306,7 @@ function CartNotice(props) {
                         </Layout>
                     </InlineGrid>
 
-                    <div className='lower_section'>
-                        <Grid>
-                        
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6}}>
-                                <Card roundedAbove="sm">
-                                    <BlockStack gap="200">
-                                        <Text as="h2" variant="headingSm">
-                                            Check our Help Center
-                                        </Text>
-                                        <BlockStack gap="200">
-                                            <Text as="p" fontWeight="reguler">
-                                                If you need help with setting up the Cart Notice app, please check our exhaustive Help Center for details.
-                                            </Text>
-
-                                        </BlockStack>
-                                        <InlineStack align="end">
-                                            <ButtonGroup>
-                                                <Button icon={ExternalIcon} onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                    <Text variant="headingSm" as="h6">Get help</Text>
-                                                </Button>
-
-                                            </ButtonGroup>
-                                        </InlineStack>
-                                    </BlockStack>
-                                </Card>
-                            </Grid.Cell>
-                            <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
-                                <Card roundedAbove="sm">
-                                    <BlockStack gap="200">
-                                        <Text as="h2" variant="headingSm">
-                                            We're here for you, 24/7
-                                        </Text>
-                                        <BlockStack gap="200">
-                                            <Text as="p" fontWeight="reguler">
-                                                We know how complex All-In-One Store is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
-                                            </Text>
-
-                                        </BlockStack>
-                                        <InlineStack align="end">
-                                            <ButtonGroup>
-                                                <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                    <Text variant="headingSm" as="h6">Contact us</Text>
-                                                </Button>
-
-                                            </ButtonGroup>
-                                        </InlineStack>
-                                    </BlockStack>
-                                </Card>
-                            </Grid.Cell>
-                        </Grid>
-                    </div>
+                   
 
                 </BlockStack>
             </div>
@@ -373,14 +324,14 @@ function CartNotice(props) {
         <div className='Cart_notice_page_page'>
             <Page
                 backAction={{ content: "Back", onAction: handleClick }}
-                title="Cart Notice"
-                subtitle="Create urgency in the cart page with a custom message shown on top of the cart line items."
+                title={`${t('CartNotice.appTitle')}`}
+                subtitle={`${t('CartNotice.appdsec')}`}
                 primaryAction={
                     status ? (
                         <DeactivatePopover  type={appName}handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                         {
-                            content: "Activate App",
+                            content:t('defaultSettings.activateBtn'),
                             tone: "success",
                             onAction: handleToggleStatus,
                             loading: buttonloading,
@@ -391,11 +342,11 @@ function CartNotice(props) {
                 <div className='intant_search'>
                 { !isDismissed  && (
           <Banner
-            title="Please add the cart widget in cart page to view"
+            title={t('CartNotice.title')}
             tone="warning"
             onDismiss={handleDismiss}
           >
-            <p>Add Cart Notice  widget in your theme. <a href={url} target="_blank">Here</a>
+            <p>{`${t('CartNotice.desc')}`} <a href={url} target="_blank">{`${t('CartNotice.link')}`}</a>
             </p>
           </Banner>
         )}

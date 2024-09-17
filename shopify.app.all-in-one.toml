@@ -3,23 +3,22 @@
 client_id = "37128c1641a4e826bc6c7fc319b09b57"
 name = "All In One"
 handle = "all-in-one-34"
-application_url = "https://survivor-filme-scholarships-facilities.trycloudflare.com"
+application_url = "https://ct-cheats-mothers-serving.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "3dproductt.myshopify.com"
-include_config_on_deploy = true
+dev_store_url = "droptracking.myshopify.com"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products, write_products"
+scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://survivor-filme-scholarships-facilities.trycloudflare.com/auth/callback",
-  "https://survivor-filme-scholarships-facilities.trycloudflare.com/auth/shopify/callback",
-  "https://survivor-filme-scholarships-facilities.trycloudflare.com/api/auth/callback"
+  "https://ct-cheats-mothers-serving.trycloudflare.com/auth/callback",
+  "https://ct-cheats-mothers-serving.trycloudflare.com/auth/shopify/callback",
+  "https://ct-cheats-mothers-serving.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -38,7 +38,7 @@ import arrow4 from "./../assets/product_review/arrow4.png";
 import arrow5 from "./../assets/product_review/arrow5.png";
 import arrow6 from "./../assets/product_review/arrow6.png";
 import arrow7 from "./../assets/product_review/arrow7.png";
-
+import { useTranslation } from "react-i18next";
 function ReviewsCarousel({
   shop,
   formData,
@@ -46,6 +46,7 @@ function ReviewsCarousel({
   handleChange,
   handleColorChange,
 }) {
+  let { t } = useTranslation();
   const layout_options = [
     { id: "imagecards", label: "Image Cards", imgSrc: imagecards_img },
     { id: "textcards", label: "Text Cards", imgSrc: textcards_img },
@@ -82,7 +83,7 @@ function ReviewsCarousel({
         <Card roundedAbove="sm">
           <BlockStack gap="300">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Publish and position
+            {t('carousel.position')}
             </Text>
 
             <Box
@@ -92,7 +93,7 @@ function ReviewsCarousel({
             >
               <BlockStack gap={200}>
                 <Text variant="headingSm" as="h6" fontWeight="regular">
-                  Display manually
+                {t('carousel.Display')}
                 </Text>
                 <Text
                   variant="headingSm"
@@ -100,17 +101,16 @@ function ReviewsCarousel({
                   fontWeight="regular"
                   tone="subdued"
                 >
-                  Place the Reviews Carousel manually on your homepage or other
-                  pages using the Shopify editor .
+                 {t('carousel.pages')} 
                 </Text>
                 <InlineStack align="start">
                   <ButtonGroup>
                     <Button
                       onClick={handleCarouselClick}
-                      accessibilityLabel="Go to editor"
+                      accessibilityLabel={t('carousel.go')} 
                     >
                       {" "}
-                      Go to Shopify Editor
+                      {t('carousel.Go')}
                     </Button>
                   </ButtonGroup>
                 </InlineStack>
@@ -123,10 +123,10 @@ function ReviewsCarousel({
         <Card roundedAbove="sm">
           <BlockStack gap="400">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Carousel title{" "}
+            {t('carousel.car')}{" "}
             </Text>
             <TextField
-              label={`Title`}
+              label={t('carousel.Title2')}
               value={formData.carousel_title}
               onChange={(e) => {
                 handleFocus("carousel_title");
@@ -135,7 +135,7 @@ function ReviewsCarousel({
             />
             <div className="btn-grp-radio">
               <ChoiceList
-                title="Title alignment"
+                title={t('carousel.Tit')}
                 choices={alignment_options.map((option) => ({
                   label: (
                     <span
@@ -159,7 +159,7 @@ function ReviewsCarousel({
             </div>
             <RangeSlider
               output
-              label={"Title font size"}
+              label={t('carousel.Title')}
               min={18}
               max={44}
               prefix="18px"
@@ -177,11 +177,11 @@ function ReviewsCarousel({
         <Card roundedAbove="sm">
           <BlockStack gap="400">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Layout and design
+            {t('carousel.design')}
             </Text>
             <div className="img-choicelist">
               <ChoiceList
-                title="Layout"
+                title={t('carousel.lay')}
                 choices={layout_options.map((option) => ({
                   label: (
                     <span
@@ -204,18 +204,16 @@ function ReviewsCarousel({
                 }}
               />
               <Text>
-                The "Image Cards" layout can only display reviews that contain
-                images. Choose "Text Cards" or "Testimonial" layout for
-                text-only reviews.
+              {t('carousel.Cards')}
               </Text>
             </div>
             <RangeSlider
               output
               label={
                 <InlineStack style={{ margin: "0px" }}>
-                  Carousel maximum width
+                  {t('carousel.max')}
                   <Tooltip
-                    content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
+                    content={t('carousel.width')}
                   >
                     <Icon source={AlertCircleIcon} tone="base"></Icon>
                   </Tooltip>
@@ -234,7 +232,7 @@ function ReviewsCarousel({
             {formData.carousel_layout !== "testimonial" && (
               <RangeSlider
                 output
-                label={"Number of columns on desktop"}
+                label={t('carousel.columns')}
                 min={1}
                 max={6}
                 prefix="1"
@@ -248,7 +246,7 @@ function ReviewsCarousel({
             )}
             <RangeSlider
               output
-              label={"Maximum number of text rows"}
+              label={t('carousel.Maximum')}
               min={1}
               max={6}
               prefix="1"
@@ -262,7 +260,7 @@ function ReviewsCarousel({
 
             <div className="btn-grp-radio">
               <ChoiceList
-                title="Reviews alignment"
+                title={t('carousel.alignment')}
                 choices={alignment_options.map((option) => ({
                   label: (
                     <span
@@ -287,7 +285,7 @@ function ReviewsCarousel({
             {formData.carousel_layout === "imagecards" && (
               <div className="btn-grp-radio">
                 <ChoiceList
-                  title="Image aspect ratio"
+                  title={t('carousel.ratio')}
                   choices={ratio_options.map((option) => ({
                     label: (
                       <span
@@ -317,7 +315,7 @@ function ReviewsCarousel({
         <Card roundedAbove="sm">
           <BlockStack gap="400">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Carousel margins
+            {t('carousel.margins')}
             </Text>
             <Box
               background="bg-surface-secondary"
@@ -327,7 +325,7 @@ function ReviewsCarousel({
               <InlineGrid columns={{ sm: "2" }} gap={300}>
                 <TextField
                   type="number"
-                  label={`Margin top`}
+                  label={t('carousel.mt')}
                   suffix="px"
                   value={formData.carousel_margin_top}
                   onChange={(e) => {
@@ -338,7 +336,7 @@ function ReviewsCarousel({
                 <TextField
                   type="number"
                   suffix="px"
-                  label={`Margin bottom`}
+                  label={t('carousel.mb')}
                   value={formData.carousel_margin_bottom}
                   onChange={(e) => {
                     handleFocus("carousel_margin_bottom");
@@ -357,7 +355,7 @@ function ReviewsCarousel({
                   type="number"
                   label={
                     <Text>
-                      Margin top <b>(Mobile)</b>
+                      {t('carousel.top')}
                     </Text>
                   }
                   suffix="px"
@@ -372,7 +370,7 @@ function ReviewsCarousel({
                   suffix="px"
                   label={
                     <Text>
-                      Margin bottom <b>(Mobile)</b>
+                      {t('carousel.Margin')}
                     </Text>
                   }
                   value={formData.carousel_margin_bottom_mobile}
@@ -390,12 +388,12 @@ function ReviewsCarousel({
         <Card roundedAbove="sm">
           <BlockStack gap="400">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Card settings
+            {t('carousel.Card')}
             </Text>
             <InlineGrid columns={{ sm: "2" }} gap={200}>
               <div className="color_section">
                 <TextField
-                  label="Text color"
+                  label={t('carousel.Text')}
                   type="text"
                   onChange={(e) => {
                     handleFocus("carouselcard_text_color");
@@ -417,7 +415,7 @@ function ReviewsCarousel({
               </div>
               <div className="color_section">
                 <TextField
-                  label="Background color"
+                  label={t('carousel.Background')}
                   type="text"
                   onChange={(e) => {
                     handleFocus("carouselcard_bg_color");
@@ -439,7 +437,7 @@ function ReviewsCarousel({
               </div>
               <div className="color_section">
                 <TextField
-                  label="Stars color"
+                  label={t('carousel.Stars')}
                   type="text"
                   onChange={(e) => {
                     handleFocus("carouselcard_stars_color");
@@ -469,10 +467,10 @@ function ReviewsCarousel({
               }}
             />
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Border
+            {t('carousel.Border2')}
             </Text>
             <Checkbox
-              label={"Show shadow"}
+              label={t('carousel.shadow')}
               checked={formData.carouselcard_show_shadow}
               onChange={(e) => {
                 handleFocus("carouselcard_show_shadow");
@@ -480,7 +478,7 @@ function ReviewsCarousel({
               }}
             />
             <Checkbox
-              label={"Show border"}
+              label={t('carousel.Show')}
               checked={formData.carouselcard_show_border}
               onChange={(e) => {
                 handleFocus("carouselcard_show_border");
@@ -490,7 +488,7 @@ function ReviewsCarousel({
             {formData.carouselcard_show_border && (
               <div className="color_section">
                 <TextField
-                  label="Border color"
+                  label={t('carousel.Border')}
                   type="text"
                   onChange={(e) => {
                     handleFocus("carouselcard_border_color");
@@ -513,7 +511,7 @@ function ReviewsCarousel({
             )}
             <RangeSlider
               output
-              label={"Rounded corners"}
+              label={t('carousel.corners')}
               min={0}
               max={50}
               prefix="0px"
@@ -531,7 +529,7 @@ function ReviewsCarousel({
         <Card>
           <BlockStack gap="400">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Carousel arrows
+            {t('carousel.arrows')}
             </Text>
             <div className="img-choicelist arrows-choicelist">
               <ChoiceList
