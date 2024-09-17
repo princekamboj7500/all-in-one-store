@@ -1,8 +1,9 @@
 import { BlockStack, Button, ButtonGroup, Card, RadioButton, ContextualSaveBar, ChoiceList, Text, Page, InlineGrid, Listbox, Select, Tooltip, Checkbox, TextField, Tabs, Box, Layout, Toast, Grid, Frame, InlineStack, Link, Popover, ActionList, Icon } from '@shopify/polaris';
 import gridimg from "./../assets/product_review/grid.png"
 import listimg from "./../assets/product_review/list.png"
-
+import { useTranslation } from "react-i18next";
 function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColorChange }) {
+    let { t } = useTranslation();
     const review_layout_options = [
         { id: 'Grid_view', label: 'Grid View', imgSrc: gridimg },
         { id: 'List_view', label: 'List View', imgSrc: listimg }
@@ -19,10 +20,10 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
         <Layout.Section>
             <Card roundedAbove="sm">
                 <BlockStack gap="400">
-                    <Text variant="headingSm" as="h6" fontWeight='semibold'>Layout</Text>
+                    <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Layout")}</Text>
                     <div className='img-choicelist'>
                         <ChoiceList
-                            title="Reviews layout"
+                            title={t("featured.Reviews")}
                             choices={review_layout_options.map(option => ({
                                 label: (
                                     <span className={formData.featured_reviews_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -37,17 +38,17 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
                                 handleFocus("featured_reviews_layout");
                                 handleChange(selected, "featured_reviews_layout")
                             }}
-                            helpText="You can change the design settings for this layout in the Layout design settings section below."
+                            helpText={t("featured.helptext")}
                         />
                     </div>
                     <Checkbox
-                        label="Show rating filter bars"
+                        label={t("featured.bars")}
                         checked={formData.featured_show_filterbar}
                         onChange={(e) => {
                             handleFocus("featured_show_filterbar")
                             handleChange(e, "featured_show_filterbar")
                         }}
-                        helpText="Display a breakdown of all reviews using progress bars at the top of the reviews list, allowing easy filtering."
+                        helpText={t("featured.helptext2")}
                     />
                 </BlockStack>
             </Card>
@@ -55,14 +56,14 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
         <Layout.Section>
             <Card roundedAbove="sm">
                 <BlockStack gap="400">
-                    <Text variant="headingSm" as="h6" fontWeight='semibold'>Number of reviews on product page</Text>
+                    <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Number")}</Text>
                     <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                         <BlockStack gap="200">
-                            <Text variant="headingSm" as="h6" fontWeight='semibold'>Desktop</Text>
+                            <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Desktop")}</Text>
                             <InlineGrid columns={{  sm:"2" }} gap={200}>
                                 <TextField
                                     type='number'
-                                    label={`Number of reviews before showing more`}
+                                    label={t("featured.Reviews3")}
                                     value={formData.featured_desktop_min_reviews}
                                     onChange={(e) => {
                                         handleFocus("featured_desktop_min_reviews")
@@ -72,7 +73,7 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
                                 />
                                 <TextField
                                     type='number'
-                                    label={`Maximum number of reviews`}
+                                    label={t("featured.Reviews4")}
                                     value={formData.featured_desktop_max_reviews}
                                     onChange={(e) => {
                                         handleFocus("featured_desktop_max_reviews")
@@ -85,11 +86,11 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
                     </Box>
                     <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                         <BlockStack gap="200">
-                            <Text variant="headingSm" as="h6" fontWeight='semibold'>Mobile</Text>
+                            <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Mobile")}</Text>
                             <InlineGrid columns={{  sm:"2" }} gap={200}>
                                 <TextField
                                     type='number'
-                                    label={`Number of reviews before showing more`}
+                                    label={t("featured.Reviews5")}
                                     value={formData.featured_mobile_min_reviews}
                                     onChange={(e) => {
                                         handleFocus("featured_mobile_min_reviews")
@@ -99,7 +100,7 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
                                 />
                                 <TextField
                                     type='number'
-                                    label={`Maximum number of reviews`}
+                                    label={t("featured.Reviews6")}
                                     value={formData.featured_mobile_max_reviews}
                                     onChange={(e) => {
                                         handleFocus("featured_mobile_max_reviews")
@@ -116,15 +117,15 @@ function FeaturedReviews({ shop, formData, handleFocus, handleChange, handleColo
         <Layout.Section>
             <Card roundedAbove="sm">
                 <BlockStack gap="400">
-                    <Text variant="headingSm" as="h6" fontWeight='semibold'>Position</Text>
+                    <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Position")}</Text>
                     <Box background="bg-surface-secondary" padding="300" borderRadius="200">
                         <BlockStack gap={200}>
-                            <Text variant="headingSm" as="h6" fontWeight='semibold'>Place or move this app using Shopify Editor</Text>
-                            <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Choose where to show th app using the Theme Editor. Click 'Add Section' or 'Add Block', then find the All-In-One Store  app you need.</Text>
+                            <Text variant="headingSm" as="h6" fontWeight='semibold'>{t("featured.Place")}</Text>
+                            <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >{t("featured.choose")}</Text>
                             <InlineStack align="start">
                                 <ButtonGroup>
-                                    <Button onClick={handleNavigate} accessibilityLabel="Go to editor"> Go to editor</Button>
-                                    <Button variant="plain">Learn more</Button>
+                                    <Button onClick={handleNavigate} accessibilityLabel="Go to editor">{t("featured.Go")}</Button>
+                                    <Button variant="plain">{t("featured.learn")}</Button>
                                 </ButtonGroup>
                             </InlineStack>
                         </BlockStack>

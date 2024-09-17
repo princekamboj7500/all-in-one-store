@@ -23,7 +23,7 @@ import {
   InlineGrid,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
-
+import { useTranslation } from "react-i18next";
 import {
   StarIcon,
   MenuHorizontalIcon,
@@ -118,7 +118,7 @@ export default function Index() {
   const submit = useSubmit();
   const [isBannerVisible, setIsBannerVisible] = useState(status);
   const [isDismissed, setIsDismissed] = useState(false);
-
+	let { t } = useTranslation();
   const activateApp = () => {
 
     window.open(
@@ -144,30 +144,10 @@ export default function Index() {
   return (
     <Page>
       <BlockStack gap="500">
-        <Text variant="headingLg" as="h5">
-          {`Hello, ${storeName}!`}
+        <Text variant="headingLg" as="h5">     
+          {`${t('Homepage.greeting')}, ${storeName}!`}
         </Text>
-        <Card>
-          <InlineStack align="space-between" blockAlign="center">
-            <BlockStack gap="200">
-              <Text variant="headingSm" as="h6">
-                How is your experience with All-In-One Store?
-              </Text>
-              <Text as="p" tone="subdued">
-                Rate us by clicking on the stars on the right.
-              </Text>
-            </BlockStack>
-            <InlineStack align="space-between" blockAlign="center">
-              <Icon source={StarIcon} tone="base" />
-              <Icon source={StarIcon} tone="base" />
-              <Icon source={StarIcon} tone="base" />
-              <Icon source={StarIcon} tone="base" />
-              <Icon source={StarIcon} tone="base" />
-
-              <Button variant="tertiary" icon={MenuHorizontalIcon} />
-            </InlineStack>
-          </InlineStack>
-        </Card>
+        
 
         {(isBannerVisible === false || isBannerVisible === null) && !isDismissed  && (
           <Banner
@@ -180,12 +160,12 @@ export default function Index() {
            tone="warning"
             onDismiss={handleDismiss}
           >
-            <p>Activate All-in-one Store  widget in your theme</p>
+            <p>{`${t('Homepage.Activatetext')}`}</p>
           </Banner>
         )}
         <Box>
           <Text variant="bodySm" as="p">
-            Last 7 Days
+            {`${t('Homepage.dayss')}`}
           </Text>
         </Box>
 
@@ -195,7 +175,7 @@ export default function Index() {
           <Card background="bg-surface-secondary">
             <BlockStack gap="200">
               <Text as="h3" variant="headingSm" fontWeight="medium">
-                Active apps
+                {`${t('Homepage.active')}`}
               </Text>
               <Text variant="headingLg" as="h5">
              {activeApp}
@@ -214,13 +194,14 @@ export default function Index() {
                   monochrome
                   url="/app/upsell_builder"
                 >
-                  Upsell Builder
+                  {`${t('Homepage.upsell')}`}
                 </Link>
                 <Button
                   onClick={handleCreate}
                   accessibilityLabel="Create new offer"
                 >
-                  Create new offer
+                  {`${t('Homepage.offer')}`}
+                  
                 </Button>
               </InlineGrid>
               <div className="vitals_app_body">
@@ -228,13 +209,13 @@ export default function Index() {
                   <InlineStack align="space-between" blockAlign="center">
                     <BlockStack gap="20">
                       <Text as="p" fontWeight="medium" tone="subdued">
-                        Revenue
+                        {`${t('Homepage.Revenue')}`}
                       </Text>
                       <Text variant="heading2xl" as="h3">
                         $0
                       </Text>
                       <Text variant="bodySm" as="p">
-                        Last 7 Days
+                      {`${t('Homepage.dayss')}`}
                       </Text>
                     </BlockStack>
                     <Icon source={ChartLineIcon} tone="base" />
@@ -248,7 +229,7 @@ export default function Index() {
                         monochrome
                         url="https://help.shopify.com/manual"
                       >
-                        Viewed Offers
+                        {`${t('Homepage.Viewed')}`}
                       </Link>
                       <Link
                         removeUnderline
@@ -266,7 +247,7 @@ export default function Index() {
                         monochrome
                         url="https://help.shopify.com/manual"
                       >
-                        Accepted Offers
+                        {`${t('Homepage.Accepted')}`}
                       </Link>
                       <Link
                         removeUnderline
@@ -283,7 +264,7 @@ export default function Index() {
                         monochrome
                         url="https://help.shopify.com/manual"
                       >
-                        Click-Throgh Rate(CTR)
+                        {`${t('Homepage.RateCTR')}`}
                       </Link>
                       <Link
                         className="app_upsell_text"
@@ -301,11 +282,13 @@ export default function Index() {
           </Card>
         </div>
         <div className="apps_list">
+     
           <Card>
-            <BlockStack gap="200">
-              <Text variant="headingMd" as="h6">
-                My Apps
+          <Text variant="headingMd" as="h6">
+              {t('Homepage.apptitle')}
               </Text>
+            <BlockStack gap="200">
+         
               <div className="apps_name">
                 <InlineStack blockAlign="center" rows="5">
                   <div className="all_in_apps_Card">
@@ -316,7 +299,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Favicon Cart Count
+                            {`${t('FaviconCart.appTitle')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -330,7 +313,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Scroll to Top Button
+                            {`${t('ScrollTop.appTitle')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -344,7 +327,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Sticky Add to Cart
+                            {`${t('StickyCart.appTitle')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -367,7 +350,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Auto external links
+                            {`${t('Autolinks.appTitle')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -385,7 +368,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Instant Search
+                           {`${t('Homepage.search')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -407,7 +390,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Inactive Tab Message
+                            {`${t('Homepage.inactive')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -422,7 +405,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Cart Notice
+                            {`${t('Homepage.cart')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -444,7 +427,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Hide Dynamic Checkout Button
+                          {`${t('Homepage.hide')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -462,7 +445,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Cookie Banner
+                            {`${t('Homepage.cookie')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -480,7 +463,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Product Reviews
+                           {`${t('Homepage.product')}`}
                           </Text>
                         </div>
                       </InlineStack>
@@ -499,7 +482,7 @@ export default function Index() {
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
-                            Upsell Builder
+                          {`${t('Homepage.upsell')}`}
                           </Text>
                         </div>
                       </InlineStack>

@@ -7,8 +7,10 @@ import vertical from "./../assets/product_review/vertical.png"
 import custom from "./../assets/product_review/custom.png"
 import dark from "./../assets/product_review/dark.png"
 import light from "./../assets/product_review/light.png"
-
+import { useTranslation } from "react-i18next";
 function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColorChange }) {
+
+     let { t } = useTranslation();
     const layout_options = [
         { id: 'horizontal', label: 'Horizontal', imgSrc: horizontal },
         { id: 'vertical', label: 'Vertical', imgSrc: vertical }

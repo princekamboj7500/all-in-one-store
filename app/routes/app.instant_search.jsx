@@ -6,6 +6,7 @@ import {
 } from '@shopify/polaris-icons';
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css"
 import DiscardModal from './components/DiscardModal';
@@ -68,6 +69,7 @@ export const loader = async ({ request }) => {
 };
 
 function Instantsearchapp(props) {
+    let { t } = useTranslation();
     const navigate = useNavigate();
     const { data } = useLoaderData();
     const [formData, setFormData] = useState(data);
@@ -78,6 +80,8 @@ function Instantsearchapp(props) {
     const [buttonloading, setButtonLoading] = useState(false);
     const [activeField, setActiveField] = useState(null);
 
+
+ 
     const handleToggleStatus = async () => {
         setButtonLoading(true);
         const updatedFormData = {
@@ -200,7 +204,7 @@ function Instantsearchapp(props) {
             <BlockStack gap="400">
                 <InlineGrid columns={['oneThird', 'twoThirds']}>
                     <Text variant="headingMd" as="h6">
-                        Settings
+                        {`${t('defaultSettings.settings')}`}
                     </Text>
                     <Layout>
                         <Layout.Section>
@@ -211,7 +215,7 @@ function Instantsearchapp(props) {
                                         <div className='checkbox_section'>
                                             <BlockStack gap="400">
                                                 <Checkbox
-                                                    label="Show popular searches"
+                                                    label={t('InstantSearch.popular')}
                                                     checked={formData.show_popular_search}
                                                     onFocus={() => handleFocus("show_popular_search")}
                                                     onChange={(e) =>
@@ -221,7 +225,7 @@ function Instantsearchapp(props) {
 
                                                 <div className='color_section'>
                                                     <TextField
-                                                        label="Product Background Color"
+                                                        label={`${t('InstantSearch.bgcolor')}`}
                                                         type="text"
                                                         onFocus={() => handleFocus("product_bg_color")}
                                                         value={formData.product_bg_color}
@@ -279,7 +283,7 @@ function Instantsearchapp(props) {
                                     <Box>
                                         <BlockStack gap="100">
                                             <Text variant="headingMd" as="h6">
-                                                Translations
+                                            {`${t('InstantSearch.Translations')}`}
                                             </Text>
                                            
                                         </BlockStack>
@@ -289,18 +293,18 @@ function Instantsearchapp(props) {
                                         <div className='checkbox_section'>
                                             <BlockStack gap="300">
                                                 <TextField
-                                                    label="See more results"
+                                                    label={`${t('InstantSearch.more')}`}
                                                     onFocus={() => handleFocus("see_more_results")}
                                                     value={formData.see_more_results}
                                                     onChange={(e) =>
                                                         handleChange(e, "see_more_results")
                                                     }
-                                                    placeholder="See more results"
+                                                    placeholder={`${t('InstantSearch.more')}`}
                                                     autoComplete="off"
                                                 />
                                                 <TextField
-                                                    label="Popular searches"
-                                                    placeholder="Popular searches"
+                                                    label={`${t('InstantSearch.Popularsearch')}`} 
+                                                    placeholder={`${t('InstantSearch.Popularsearch')}`} 
                                                     onFocus={() => handleFocus("popular_searches")}
                                                     value={formData.popular_searches}
                                                     onChange={(e) =>
@@ -309,8 +313,8 @@ function Instantsearchapp(props) {
                                                     autoComplete="off"
                                                 />
                                                 <TextField
-                                                    label="Here are your results"
-                                                    placeholder="Here are your results"
+                                                    label={`${t('InstantSearch.results')}`} 
+                                                    placeholder={`${t('InstantSearch.results')}`} 
                                                     onFocus={() => handleFocus("here_results")}
                                                     value={formData.here_results}
                                                     onChange={(e) =>
@@ -319,8 +323,8 @@ function Instantsearchapp(props) {
                                                     autoComplete="off"
                                                 />
                                                 <TextField
-                                                    label="No results found."
-                                                    placeholder="No results found."
+                                                    label={`${t('InstantSearch.nonotice')}`} 
+                                                    placeholder={`${t('InstantSearch.nonotice')}`} 
                                                     onFocus={() => handleFocus("no_results")}
                                                     value={formData.no_results}
                                                     onChange={(e) =>
@@ -329,8 +333,8 @@ function Instantsearchapp(props) {
                                                     autoComplete="off"
                                                 />
                                                 <TextField
-                                                    label="What are you looking for?"
-                                                    placeholder="What are you looking for?"
+                                                    label={`${t('InstantSearch.translations.looking')}`} 
+                                                    placeholder={`${t('InstantSearch.translations.looking')}`} 
                                                     onFocus={() => handleFocus("looking_for")}
                                                     value={formData.looking_for}
                                                     onChange={(e) =>
@@ -339,8 +343,8 @@ function Instantsearchapp(props) {
                                                     autoComplete="off"
                                                 />
                                                 <TextField
-                                                    label="Collections"
-                                                    placeholder="Collections"
+                                                    label={`${t('InstantSearch.translations.collections')}`} 
+                                                    placeholder={`${t('InstantSearch.translations.collections')}`} 
                                                     onFocus={() => handleFocus("collections_translation")}
                                                     value={formData.collections_translation}
                                                     onChange={(e) =>
@@ -358,79 +362,7 @@ function Instantsearchapp(props) {
                     </Layout>
                 </InlineGrid>
 
-                <div className='lower_section'>
-                    <Grid>
-                        <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                            <Card roundedAbove="sm">
-                                <BlockStack gap="200">
-                                    <Text as="h2" variant="headingSm">
-                                        Localization
-                                    </Text>
-                                    <BlockStack gap="200">
-                                        <Text as="p" fontWeight="reguler">
-                                            Translate all the strings from the Instant Search app to all the languages enabled on your store.
-                                        </Text>
-
-                                    </BlockStack>
-                                    <InlineStack align="end">
-                                        <ButtonGroup>
-                                            <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                <Text variant="headingSm" as="h6">Translate</Text>
-                                            </Button>
-
-                                        </ButtonGroup>
-                                    </InlineStack>
-                                </BlockStack>
-                            </Card>
-                        </Grid.Cell>
-                        <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                            <Card roundedAbove="sm">
-                                <BlockStack gap="200">
-                                    <Text as="h2" variant="headingSm">
-                                        Check our Help Center
-                                    </Text>
-                                    <BlockStack gap="200">
-                                        <Text as="p" fontWeight="reguler">
-                                            If you need help with setting up the Instant Search app, please check our exhaustive Help Center for details.
-                                        </Text>
-
-                                    </BlockStack>
-                                    <InlineStack align="end">
-                                        <ButtonGroup>
-                                            <Button icon={ExternalIcon} onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                <Text variant="headingSm" as="h6">Get help</Text>
-                                            </Button>
-
-                                        </ButtonGroup>
-                                    </InlineStack>
-                                </BlockStack>
-                            </Card>
-                        </Grid.Cell>
-                        <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                            <Card roundedAbove="sm">
-                                <BlockStack gap="200">
-                                    <Text as="h2" variant="headingSm">
-                                        We're here for you, 24/7
-                                    </Text>
-                                    <BlockStack gap="200">
-                                        <Text as="p" fontWeight="reguler">
-                                            We know how complex  All-In-One Store is - that's why <Link href='#'>we are available 24/7</Link> to support you in setting it up.
-                                        </Text>
-
-                                    </BlockStack>
-                                    <InlineStack align="end">
-                                        <ButtonGroup>
-                                            <Button onClick={() => { }} accessibilityLabel="Fulfill items">
-                                                <Text variant="headingSm" as="h6">Contact us</Text>
-                                            </Button>
-
-                                        </ButtonGroup>
-                                    </InlineStack>
-                                </BlockStack>
-                            </Card>
-                        </Grid.Cell>
-                    </Grid>
-                </div>
+              
 
             </BlockStack>
         </div>
@@ -455,7 +387,7 @@ function Instantsearchapp(props) {
     const tabs = [
         {
             id: 'Settings-customers-1',
-            content: 'Settings',
+            content: t('defaultSettings.settings'),
             accessibilityLabel: 'Settings customers',
             panelID: 'Settings-customers-content-1',
             component: <>{SettingsDataTab}</>,
@@ -488,12 +420,12 @@ function Instantsearchapp(props) {
             <>
                 {isActivated ? (
                     <Button onClick={togglePopoverActive} disclosure>
-                        Active
+                        {`${t('defaultSettings.active')}`}
                     </Button>
                 ) : (
 
                     <Button className="activate_button" tone="success" onClick={handleActivateClickAgain}>
-                        Activate
+                        {`${t('defaultSettings.Activate')}`}
                     </Button>
                 )}
             </>
@@ -510,7 +442,7 @@ function Instantsearchapp(props) {
                             onClose={togglePopoverActive}
                         >
                             <Card>
-                                <Button onClick={handleActivateClick} tone="critical">Deactivate Sticky Add to Cart</Button>
+                                <Button onClick={handleActivateClick} tone="critical">{`${t('defaultSettings.DeactivateSAC')}`}</Button>
                             </Card>
                         </Popover>
                     </> : <>
@@ -523,7 +455,7 @@ function Instantsearchapp(props) {
                         >
                             <Popover.Pane fixed>
                                 <Popover.Section>
-                                    <InlineStack><Text alignment='center' as="p" fontWeight="regular" variant="headingMd">What went wrong? </Text>
+                                    <InlineStack><Text alignment='center' as="p" fontWeight="regular" variant="headingMd">{`${t('defaultSettings.wentwrong')}`} </Text>
                                         <div><Icon source={XIcon}></Icon></div></InlineStack>
                                 </Popover.Section>
                             </Popover.Pane>
@@ -555,14 +487,14 @@ function Instantsearchapp(props) {
         <div className='Hide_Dynamic_Checkout_Buttons'>
             <Page
                 backAction={{ content: "Back", onAction: handleClick }}
-                title="Instant Search"
-                subtitle="Help visitors instantly find the products they're looking for by using predictive search and displaying frequent searches."
+                title={`${t('Homepage.search')}`}
+                subtitle={`${t('InstantSearch.appdsec')}`}
                 primaryAction={
                     status ? (
                         <DeactivatePopover type={appName} handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                         {
-                            content: "Activate App",
+                             content:t('defaultSettings.activateBtn'),
                             tone: "success",
                             onAction: handleToggleStatus,
                             loading: buttonloading,

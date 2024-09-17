@@ -43,6 +43,7 @@ import React, {
   useEffect,
 } from "react";
 import "./assets/style.css";
+import { useTranslation } from "react-i18next";
 import { useLoaderData } from "@remix-run/react";
 import { authenticate } from "../shopify.server";
 import DeactivatePopover from "./components/DeactivatePopover";
@@ -102,7 +103,7 @@ export const loader = async ({ request }) => {
 import { useNavigate } from "@remix-run/react";
 function Favicon_cart_count(props) {
   const navigate = useNavigate();
-
+  let { t } = useTranslation();
   const [error, setError] = useState("");
   const { data, storeName } = useLoaderData();
   const [status, setStatus] = useState(data.app_status);
@@ -248,12 +249,13 @@ function Favicon_cart_count(props) {
   };
    const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?context=theme`;
     const appName = "Favicon Cart Count"
+ 
   return (
     <div className="Favicon_cart_count_page">
       <Page
         backAction={{ content: "Back", onAction:  handleClick  }}
-        title="Favicon Cart Count"
-        subtitle="Make sure your store's browser tab stands out by displaying the number of items in cart on the favicon."
+        title={`${t('FaviconCart.appTitle')}`}
+        subtitle={`${t('FaviconCart.appdsec')}`}
         primaryAction={
           status ? (
             <DeactivatePopover
@@ -263,7 +265,7 @@ function Favicon_cart_count(props) {
             />
           ) : (
             {
-              content: "Activate App",
+              content:t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,
@@ -276,15 +278,15 @@ function Favicon_cart_count(props) {
         {!isDismissed &&(
         <Banner   onDismiss={handleDismiss}>
           <p>
-          Please make sure you have added a favicon image to view this app.
-          <a href={url} target="_blank">Click Here</a>
+          {`${t('FaviconCart.appText')}`}
+          <a href={url} target="_blank">{`${t('FaviconCart.appbtn')}`}</a>
           </p>
         </Banner>)}
           <div className="SettingsDataTab_container">
             <BlockStack gap="400">
               <InlineGrid columns={["oneThird", "twoThirds"]}>
                 <Text variant="headingMd" as="h6">
-                  Settings
+                  {`${t('defaultSettings.settings')}`}
                 </Text>
                 <Layout>
                   <Layout.Section>
@@ -295,7 +297,7 @@ function Favicon_cart_count(props) {
                             
                             <div className="color_section">
                               <TextField
-                                label="Badge color"
+                                label={`${t('FaviconCart.badgeColor')}`}
                                 type="text"
                                 onFocus={() => handleFocus("field4")}
                                 value={formData.badge_color}
@@ -335,7 +337,7 @@ function Favicon_cart_count(props) {
 
                             <div className="color_section">
                               <TextField
-                                label="Text color"
+                                label={`${t('FaviconCart.textColor')}`}
                                 onFocus={() => handleFocus("field1")}
                                 type="text"
                                 value={formData.text_color}
@@ -374,15 +376,7 @@ function Favicon_cart_count(props) {
                               />
                             </div>
 
-                            {/* <Select
-                          label="Animation repetition interval"
-                          options={Button_Size_options}
-                          onChange={(value) =>
-                            handleSelectChange(value, "animation_repeat")
-                          }
-                          value={formData.animation_repeat}
-                          onFocus={() => handleFocus("field6")}
-                        /> */}
+                         
                           </BlockStack>
                         </div>
                       </BlockStack>
@@ -391,67 +385,7 @@ function Favicon_cart_count(props) {
                 </Layout>
               </InlineGrid>
 
-              {/* <div className="lower_section">
-                <Grid>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                    <Card roundedAbove="sm">
-                      <BlockStack gap="200">
-                        <Text as="h2" variant="headingSm">
-                          Check our Help Center
-                        </Text>
-                        <BlockStack gap="200">
-                          <Text as="p" fontWeight="reguler">
-                            If you need help with setting up the Favicon Cart
-                            Count app, please check our exhaustive Help Center
-                            for details.
-                          </Text>
-                        </BlockStack>
-                        <InlineStack align="end">
-                          <ButtonGroup>
-                            <Button
-                              icon={ExternalIcon}
-                              onClick={() => {}}
-                              accessibilityLabel="Fulfill items"
-                            >
-                              <Text variant="headingSm" as="h6">
-                                Get help
-                              </Text>
-                            </Button>
-                          </ButtonGroup>
-                        </InlineStack>
-                      </BlockStack>
-                    </Card>
-                  </Grid.Cell>
-                  <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
-                    <Card roundedAbove="sm">
-                      <BlockStack gap="200">
-                        <Text as="h2" variant="headingSm">
-                          We're here for you, 24/7
-                        </Text>
-                        <BlockStack gap="200">
-                          <Text as="p" fontWeight="reguler">
-                            We know how complex Vitals is - that's why{" "}
-                            <Link href="#">we are available 24/7</Link> to
-                            support you in setting it up.
-                          </Text>
-                        </BlockStack>
-                        <InlineStack align="end">
-                          <ButtonGroup>
-                            <Button
-                              onClick={() => {}}
-                              accessibilityLabel="Fulfill items"
-                            >
-                              <Text variant="headingSm" as="h6">
-                                Contact us
-                              </Text>
-                            </Button>
-                          </ButtonGroup>
-                        </InlineStack>
-                      </BlockStack>
-                    </Card>
-                  </Grid.Cell>
-                </Grid>
-              </div> */}
+              
             </BlockStack>
           </div>
         </div>
@@ -464,7 +398,7 @@ function Favicon_cart_count(props) {
             }}
           >
             <ContextualSaveBar
-              message="Unsaved changes"
+           message={t('defaultSettings.content')}
               saveAction={{
                 onAction: handleSave,
                 loading: buttonloading,

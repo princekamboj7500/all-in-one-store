@@ -52,6 +52,7 @@ import {
   ArrowDownIcon,
   DeleteIcon,
 } from "@shopify/polaris-icons";
+import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 import { useNavigate, useLoaderData, useLocation } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
@@ -244,38 +245,14 @@ export function GeneralSettings({
   handleColorChange,
   handleFocus,
 }) {
+  let { t } = useTranslation();
   return (
     <div className="SettingsDataTab_container">
       <BlockStack gap="400">
+       
         <InlineGrid columns={["oneThird", "twoThirds"]}>
           <Text variant="headingMd" as="h6">
-            Combine discount
-          </Text>
-          <Layout>
-            <Layout.Section>
-              <Card roundedAbove="sm">
-                <BlockStack gap="300">
-                  <div className="checkbox_section">
-                    <BlockStack gap="400">
-                      <Checkbox
-                        checked={data.discount}
-                        onChange={(e) => {
-                          handleFocus("discount");
-                          handleChange(e, "discount");
-                        }}
-                        label="Allow customers to combine the  All-In-One Store discounts with other discount codes"
-                        helpText="Only combinable discounts can be used together. Some combinations, such as multiple discounts on the same product"
-                      />
-                    </BlockStack>
-                  </div>
-                </BlockStack>
-              </Card>
-            </Layout.Section>
-          </Layout>
-        </InlineGrid>
-        <InlineGrid columns={["oneThird", "twoThirds"]}>
-          <Text variant="headingMd" as="h6">
-            Look and Feel
+          {t('upsellbuilder.LookFeel')}
           </Text>
           <Layout>
             <Layout.Section>
@@ -285,7 +262,7 @@ export function GeneralSettings({
                     <BlockStack gap="400">
                       <div className="color_section">
                         <TextField
-                          label="Variant selector background color"
+                          label={t('upsellbuilder.Variantcolor')}
                           type="text"
                           onChange={(e) => {
                             handleFocus("variantbgcolor");
@@ -321,7 +298,7 @@ export function GeneralSettings({
                       </div>
                       <div className="color_section">
                         <TextField
-                          label="Variant selector active background color"
+                          label={t('upsellbuilder.Variantbackground')}
                           type="text"
                           onChange={(e) => {
                             handleFocus("variantactivebgcolor");
@@ -357,7 +334,7 @@ export function GeneralSettings({
                       </div>
                       <div className="color_section">
                         <TextField
-                          label="Variant selector text color"
+                          label={t('upsellbuilder.Varianttextcolor')}
                           type="text"
                           onChange={(e) => {
                             handleFocus("varianttextcolor");
@@ -397,12 +374,12 @@ export function GeneralSettings({
                           handleFocus("show_compare_price");
                           handleChange(e, "show_compare_price");
                         }}
-                        label="Show the Compare-at price next to the Current price"
+                        label={t('upsellbuilder.showcompare')}
                         helpText="Only combinable discounts can be used together. Some combinations, such as multiple discounts on the same product"
                       />
                       <Divider />
                       <Text variant="bodyLg" as="p">
-                        Volume Discounts
+                      {t('upsellbuilder.VolumeDiscounts')}
                       </Text>
                       <BlockStack gap="200">
                         <Box
@@ -416,7 +393,7 @@ export function GeneralSettings({
                               as="h6"
                               fontWeight="regular"
                             >
-                              On desktop
+                              {t('upsellbuilder.Ondesktop')}
                             </Text>
                             <InlineGrid
                               columns={{
@@ -440,7 +417,7 @@ export function GeneralSettings({
                                   handleChange(e, "desktop_margin_bottom");
                                 }}
                                 value={data.desktop_margin_bottom}
-                                label={`Margin bottom`}
+                                label={t('upsellbuilder.Marginbottom')}
                               />
                             </InlineGrid>
                           </BlockStack>
@@ -456,7 +433,7 @@ export function GeneralSettings({
                               as="h6"
                               fontWeight="regular"
                             >
-                              On Mobile
+                              {t('upsellbuilder.OnMobile')}
                             </Text>
                             <InlineGrid
                               columns={{
@@ -471,7 +448,7 @@ export function GeneralSettings({
                                   handleChange(e, "mobile_margin_top");
                                 }}
                                 value={data.mobile_margin_top}
-                                label={`Margin top`}
+                                label={t('upsellbuilder.Margintop')}
                               />
                               <TextField
                                 type="number"
@@ -480,7 +457,7 @@ export function GeneralSettings({
                                   handleChange(e, "mobile_margin_bottom");
                                 }}
                                 value={data.mobile_margin_bottom}
-                                label={`Margin bottom`}
+                                label={t('upsellbuilder.Marginbottom')}
                               />
                             </InlineGrid>
                           </BlockStack>
@@ -495,12 +472,12 @@ export function GeneralSettings({
               <Card roundedAbove="sm">
                 <BlockStack gap="300">
                   <Text variant="headingMd" as="h5">
-                    Translations
+                  {t('upsellbuilder.Translations')}
                   </Text>
                   <div className="checkbox_section">
                     <BlockStack gap="400">
                       <TextField
-                        label="You Save "
+                        label={t('upsellbuilder.YouSave')}
                         onChange={(e) => {
                           handleFocus("translation_you_save");
                           handleChange(e, "translation_you_save");
@@ -509,7 +486,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Out of stock "
+                        label={t('upsellbuilder.Outstock')}
                         onChange={(e) => {
                           handleFocus("translation_stock");
                           handleChange(e, "translation_stock");
@@ -518,7 +495,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="This Item "
+                        label={t('upsellbuilder.ThisItem')}
                         onChange={(e) => {
                           handleFocus("translation_item");
                           handleChange(e, "translation_item");
@@ -527,7 +504,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Total price "
+                        label={t('upsellbuilder.Totalprice')}
                         onChange={(e) => {
                           handleFocus("translation_total_price");
                           handleChange(e, "translation_total_price");
@@ -536,7 +513,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Add to cart "
+                        label={t('upsellbuilder.atc')}
                         onChange={(e) => {
                           handleFocus("translation_cart");
                           handleChange(e, "translation_cart");
@@ -545,7 +522,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="For "
+                        label={t('upsellbuilder.for')}
                         onChange={(e) => {
                           handleFocus("translation_for");
                           handleChange(e, "translation_for");
@@ -554,7 +531,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="With "
+                        label={t('upsellbuilder.With')}
                         onChange={(e) => {
                           handleFocus("translation_with");
                           handleChange(e, "translation_with");
@@ -563,7 +540,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Off "
+                        label={t('upsellbuilder.Off')}
                         onChange={(e) => {
                           handleFocus("translation_off");
                           handleChange(e, "translation_off");
@@ -572,7 +549,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Each"
+                        label={t('upsellbuilder.Each')}
                         onChange={(e) => {
                           handleFocus("translation_each");
                           handleChange(e, "translation_each");
@@ -581,7 +558,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Buy "
+                        label={t('translation.BUY')}
                         onChange={(e) => {
                           handleFocus("translation_buy");
                           handleChange(e, "translation_buy");
@@ -590,7 +567,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Subtotal "
+                        label={t('upsellbuilder.Subtotal')}
                         onChange={(e) => {
                           handleFocus("translation_subtotal");
                           handleChange(e, "translation_subtotal");
@@ -599,7 +576,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Discount "
+                        label={t('translation.Discount')}
                         onChange={(e) => {
                           handleFocus("translation_discount");
                           handleChange(e, "translation_discount");
@@ -609,7 +586,7 @@ export function GeneralSettings({
                       />
 
                       <TextField
-                        label="Old price "
+                        label={t('upsellbuilder.Oldprice')}
                         onChange={(e) => {
                           handleFocus("translation_price");
                           handleChange(e, "translation_price");
@@ -618,7 +595,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Quantity "
+                        label={t('upsellbuilder.Quantity')}
                         onChange={(e) => {
                           handleFocus("translation_quantity");
                           handleChange(e, "translation_quantity");
@@ -627,7 +604,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="And"
+                        label={t('upsellbuilder.And')}
                         onChange={(e) => {
                           handleFocus("translation_and");
                           handleChange(e, "translation_and");
@@ -636,7 +613,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Free of charge"
+                        label={t('upsellbuilder.Freecharge')}
                         onChange={(e) => {
                           handleFocus("translation_charge");
                           handleChange(e, "translation_charge");
@@ -645,7 +622,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Free "
+                        label={t('upsellbuilder.Free')}
                         onChange={(e) => {
                           handleFocus("translation_free");
                           handleChange(e, "translation_free");
@@ -654,7 +631,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Claim gift "
+                        label={t('upsellbuilder.Claimgift')}
                         onChange={(e) => {
                           handleFocus("translation_claim");
                           handleChange(e, "translation_claim");
@@ -663,7 +640,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Gift "
+                        label={t('upsellbuilder.Gift')}
                         onChange={(e) => {
                           handleFocus("translation_gift");
                           handleChange(e, "translation_gift");
@@ -672,7 +649,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Your product has been added to cartt "
+                        label={t('upsellbuilder.yourproduct')}
                         onChange={(e) => {
                           handleFocus("translation_msg");
                           handleChange(e, "translation_msg");
@@ -681,7 +658,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Save "
+                        label={t('upsellbuilder.Save')}
                         onChange={(e) => {
                           handleFocus("translation_save");
                           handleChange(e, "translation_save");
@@ -690,7 +667,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Per item "
+                        label={t('upsellbuilder.Peritem')}
                         onChange={(e) => {
                           handleFocus("translation_per_item");
                           handleChange(e, "translation_per_item");
@@ -699,7 +676,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="Swap item "
+                        label={t('upsellbuilder.Swapitem')}
                         onChange={(e) => {
                           handleFocus("translation_swap");
                           handleChange(e, "translation_swap");
@@ -708,7 +685,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="See more "
+                        label={t('upsellbuilder.Seemore')}
                         onChange={(e) => {
                           handleFocus("translation_see");
                           handleChange(e, "translation_see");
@@ -717,7 +694,7 @@ export function GeneralSettings({
                         autoComplete="off"
                       />
                       <TextField
-                        label="See less "
+                        label={t('upsellbuilder.Seeless')}
                         onChange={(e) => {
                           handleFocus("translation_less");
                           handleChange(e, "translation_less");
@@ -742,6 +719,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
     singular: "bundle",
     plural: "bundles",
   };
+  let { t } = useTranslation();
   const [upsellList, setUpsellList] = useState(data);
   const [queryValue, setQueryValue] = useState("");
   const [queryLoading, setQueryLoading] = useState(false);
@@ -869,7 +847,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
       setUpsellList(data);
       setQueryLoading(false)
       setError(true);
-      setMsgData("There is some error while update");
+      setMsgData(t('translation.erorr'));
     }
   };
 
@@ -904,9 +882,9 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
           title="Offer Types"
           titleHidden
           choices={[
-            { label: "Product bundle", value: "Product bundle" },
-            { label: "Volume Discount", value: "Volume Discount" },
-            { label: "Buy X Get Y", value: "BOGO" },
+            { label: t('upsellbuilder.Productbundle'), value: t('upsellbuilder.Productbundle') },
+            { label: t('upsellbuilder.VolumeDiscounts'), value: t('upsellbuilder.VolumeDiscounts') },
+            { label: t('upsellbuilder.BuyXGetY'), value: "BOGO" },
           ]}
           selected={availability || []}
           onChange={handleAvailabilityChange}
@@ -953,13 +931,13 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
         if (customerBuySelectType === "any") {
           return (
             <div className="upsell_buy_bundles">
-              <div className="">AnyProduct</div>
+              <div className="">{t('translation.Anyproduct')}</div>
             </div>
           );
         } else if (customerBuySelectType === "specific") {
           return (
             <div className="upsell_buy_bundles">
-              <div className="">{buy_products.length} Products Selected</div>
+              <div className="">{buy_products.length} {t('upsellbuilder.ProductsSelected')}</div>
             </div>
           );
         }
@@ -974,7 +952,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
         } else if (customerGetSelectType === "specific") {
           return (
             <div className="upsell_buy_bundles">
-              <div className="">{get_products.length} Products Selected</div>
+              <div className="">{get_products.length} {t('upsellbuilder.ProductsSelected')}</div>
             </div>
           );
         }
@@ -1059,26 +1037,9 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
              loading={queryLoading}
             />
             <Button variant="primary" onClick={handleCreate}>
-              Create Offer
+            {t('upsellbuilder.CreateOffer')}
             </Button>
             <div className="upsell_search_bar">
-              {/* <InlineStack
-                wrap={false}
-                blockAlign="center"
-                gap="200"
-                align="space-between"
-              >
-                <div className="search_filter" style={{ width: "88%" }}>
-                  <TextField
-                    type="text"
-                    prefix={<Icon source={SearchIcon} tone="base" />}
-                    autoComplete="off"
-                  />
-                </div>
-                <Button variant="primary" onClick={handleCreate}>
-                  Create Offer
-                </Button>
-              </InlineStack> */}
               <IndexTable
                 resourceName={resourceName}
                 itemCount={upsellList.length}
@@ -1086,16 +1047,15 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
                   allResourcesSelected ? "All" : selectedResources.length
                 }
                 emptyState={emptyStateMarkup}
-                // loading={queryLoading}
                 onSelectionChange={handleSelectionChange}
                 headings={[
                   { title: "" },
-                  { title: "Name" },
+                  { title: t('upsellbuilder.Name') },
                   { title: "Impressions" },
-                  { title: "Clicks" },
-                  { title: "Click Rate" },
-                  { title: "Orders" },
-                  { title: "Revenue" },
+                  { title: t('upsellbuilder.Clicks') },
+                  { title: t('upsellbuilder.ClickRate') },
+                  { title: t('upsellbuilder.Orders') },
+                  { title: t('upsellbuilder.Revenue') },
                 ]}
                 bulkActions={bulkActions}
               >
@@ -1103,28 +1063,12 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
               </IndexTable>
             </div>
           </>
-        {/* ) : (
-          <div className="aios-upsell-grid">
-            <Box borderColor="border" borderRadius="100" borderWidth="025">
-              <Box padding="400">
-                <Text variant="headingSm" as="h6" alignment="center">
-                  Buy X, Get Y
-                </Text>
-              </Box>
-              <Link url="/app/create/bogo" onClick={handleLinkClick}>
-                <Box padding="400">
-                  <img src={bogo} className="upsell_bundle_images" />
-                </Box>
-              </Link>
-            </Box>
-          </div>
-        )} */}
       </Card>
       <Layout.Section>
         <Card roundedAbove="sm">
           <BlockStack gap="300">
             <Text variant="headingSm" as="h6" fontWeight="semibold">
-              Publish and position
+              {t('upsellbuilder.Publishposition')}
             </Text>
 
             <Box
@@ -1134,7 +1078,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
             >
               <BlockStack gap={200}>
                 <Text variant="headingSm" as="h6" fontWeight="regular">
-                  Display manually
+                   {t('upsellbuilder.Displaymanually')}
                 </Text>
                 <Text
                   variant="headingSm"
@@ -1142,8 +1086,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
                   fontWeight="regular"
                   tone="subdued"
                 >
-                  Place the Reviews Carousel manually on your homepage or
-                  other pages using the Shopify editor .
+                 {t('upsellbuilder.PlaceReviews')}
                 </Text>
                 <InlineStack align="start">
                   <ButtonGroup>
@@ -1151,7 +1094,7 @@ export   const Offers = ({data, handleCreate, handleUpsellBuilderClick, shopName
                       onClick={handleUpsellBuilderClick}
                       accessibilityLabel="Go to editor"
                     >
-                      Go to Shopify Editor
+                       {t('upsellbuilder.GoEditor')}
                     </Button>
                   </ButtonGroup>
                 </InlineStack>
@@ -1198,6 +1141,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
   const [analyticsChartData, setanalyticsChartData] = useState([]);
   const { mdDown, lgUp } = useBreakpoints();
   const shouldShowMultiMonth = lgUp;
+  let { t } = useTranslation();
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const yesterday = new Date(
     new Date(new Date().setDate(today.getDate() - 1)).setHours(0, 0, 0, 0),
@@ -1224,7 +1168,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
 
   const ranges = [
     {
-      title: "Custom",
+      title:t('upsellbuilder.Custom'),
       alias: "custom",
       period: {
         since: today,
@@ -1232,7 +1176,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
       },
     },
     {
-      title: "Today",
+      title: t('upsellbuilder.Today'),
       alias: "today",
       period: {
         since: today,
@@ -1240,7 +1184,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
       },
     },
     {
-      title: "Yesterday",
+      title: t('upsellbuilder.Yesterday'),
       alias: "yesterday",
       period: {
         since: yesterday,
@@ -1248,7 +1192,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
       },
     },
     {
-      title: "Last 7 days",
+      title: t('upsellbuilder.Lastdays'),
       alias: "last7days",
       period: {
         since: new Date(
@@ -1608,7 +1552,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     </Scrollable>
                   ) : (
                     <Select
-                      label="Date range"
+                      label={t('upsellbuilder.Daterange')}
                       //labelHidden
                       onChange={(value) => {
                         const result = ranges.find(
@@ -1630,7 +1574,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     <div style={{ flexGrow: 1 }}>
                       <TextField
                         role="combobox"
-                        label={"Start date"}
+                        label={t('upsellbuilder.Startdate')}
                         // labelHidden
                         //prefix={<Icon source={CalendarIcon} />}
                         value={inputValues.since}
@@ -1643,7 +1587,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     <div style={{ flexGrow: 1 }}>
                       <TextField
                         role="combobox"
-                        label={"End date"}
+                        label={t('upsellbuilder.Enddate')} 
                         //labelHidden
                         //prefix={<Icon source={CalendarIcon} />}
                         value={inputValues.until}
@@ -1660,9 +1604,9 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
           <Popover.Pane fixed>
             <Popover.Section>
               <InlineStack align="end">
-                <Button onClick={cancel}>Cancel</Button>
+                <Button onClick={cancel}>{t('upsellbuilder.Cancel')}</Button>
                 <Button primary onClick={apply}>
-                  Apply
+                {t('upsellbuilder.Apply')}
                 </Button>
               </InlineStack>
             </Popover.Section>
@@ -1671,7 +1615,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
       </div>
 
       <div style={{ marginTop: "7px" }}>
-        <Text>{`compared to ${date.startDate} - ${date.endDate}`}</Text>
+        <Text>{t('upsellbuilder.comparedto')}{` ${date.startDate} - ${date.endDate}`}</Text>
       </div>
     </InlineStack>
   );
@@ -1862,19 +1806,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Impressionscount}
                     </Text>
-                    {/* <InlineStack align="start" blockAlign="center" gap="100">
-                    <span>
-                      <Icon source={ArrowDownIcon} tone="text-inverse" />
-                    </span>
-                    <Text
-                      fontWeight="medium"
-                      as="p"
-                      variant="bodySm"
-                      tone="text-inverse"
-                    >
-                      -82.65%
-                    </Text>
-                  </InlineStack> */}
+                   
                   </BlockStack>
                 </Box>
               </div>
@@ -1895,21 +1827,11 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Image clicks
+                      {t('upsellbuilder.Imageclicks')}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Imagecount}
                     </Text>
-                    {/* <InlineStack align="start" blockAlign="center" gap="100">
-                    <Text
-                      fontWeight="medium"
-                      as="p"
-                      variant="bodySm"
-                      tone="text-inverse"
-                    >
-                      No change
-                    </Text>
-                  </InlineStack> */}
                   </BlockStack>
                 </Box>
               </div>
@@ -1930,21 +1852,11 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Star rating clicks
+                      {t('upsellbuilder.Starclicks')}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Starcount}
                     </Text>
-                    {/* <InlineStack align="start" blockAlign="center" gap="100">
-                    <Text
-                      fontWeight="medium"
-                      as="p"
-                      variant="bodySm"
-                      tone="text-inverse"
-                    >
-                      -82.65%
-                    </Text>
-                  </InlineStack> */}
                   </BlockStack>
                 </Box>
               </div>
@@ -1966,24 +1878,12 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                      Collected reviews
+                      {t('upsellbuilder.Collectedreviews')}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Reviewscount}
                     </Text>
-                    {/* <InlineStack align="start" blockAlign="center" gap="100">
-                    <span>
-                      <Icon source={ArrowDownIcon} tone="text-inverse" />
-                    </span>
-                    <Text
-                      fontWeight="medium"
-                      as="p"
-                      variant="bodySm"
-                      tone="text-inverse"
-                    >
-                      -100%
-                    </Text>
-                  </InlineStack> */}
+                  
                   </BlockStack>
                 </Box>
               </div>
@@ -2044,7 +1944,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="imageClicks"
-                  name="Image Clicks"
+                  name={t('upsellbuilder.Imageclicks')}
                   stroke="#14BA88"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -2056,7 +1956,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="starRatingClicks"
-                  name="Star Rating Clicks"
+                  name={t('upsellbuilder.Starclicks')}
                   stroke="#9ACDE1"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -2068,7 +1968,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="reviewRequestEmails"
-                  name="Review Request Emails"
+                  name={t('upsellbuilder.ReviewEmails')}
                   stroke="#F4B207"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -2080,7 +1980,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                 <Line
                   type="monotone"
                   dataKey="collectedReviews"
-                  name="Collected Reviews"
+                  name={t('upsellbuilder.Collectedreviews')}
                   stroke="#2C6ECB"
                   activeDot={{ r: 8 }}
                   opacity={
@@ -2133,7 +2033,7 @@ function UpsellBuilder() {
     [],
   );
   const [buttonLoader, setButtonLoader] = useState(false);
-
+  let { t } = useTranslation();
   const handleToggleStatus = async () => {
     setButtonLoading(true);
     const updatedFormData = {
@@ -2281,23 +2181,21 @@ function UpsellBuilder() {
         <BlockStack gap="400">
           {importBanner && (
             <Banner
-              title="Ensure Regulatory Compliance in Review Imports"
+              title={t('upsellbuilder.EnsureRegulatory')}
               tone="info"
               onDismiss={() => {
                 setImportBanner(false);
               }}
             >
               <p>
-                Only import reviews about products sold by you and collected
-                from your customers. Importing external reviews may violate
-                regulations and mislead customers.
+              {t('upsellbuilder.Onlyimportreviews')}
               </p>
             </Banner>
           )}
           <Card padding="400">
             <BlockStack gap="400">
               <Text variant="p" fontWeight="bold">
-                Import reviews from a CSV export from another app:
+              {t('upsellbuilder.Importreviews')}
               </Text>
               <ButtonGroup>
                 <Button>Growave</Button>
@@ -2328,10 +2226,10 @@ function UpsellBuilder() {
                     style={{ borderRadius: "8px" }}
                   />
                   <Text variant="p">
-                    Import reviews from a CSV file in the All-In-One Store  format:
+                  {t('upsellbuilder.Importreviewss')}
                   </Text>
                 </InlineGrid>
-                <Button>Import</Button>
+                <Button>{t('upsellbuilder.Import')}</Button>
               </InlineGrid>
             </BlockStack>
           </Card>
@@ -2348,10 +2246,10 @@ function UpsellBuilder() {
                 <InlineGrid columns="45px 1fr" alignItems="center" gap="200">
                   <Thumbnail source={ImportIcon} size="small" />
                   <Text variant="p">
-                    Import reviews from AliExpress for a product:
+                  {t('upsellbuilder.ImportAliExpress')}
                   </Text>
                 </InlineGrid>
-                <Button>Import from AliExpress</Button>
+                <Button>{t('upsellbuilder.ImportfromAliExpress')}</Button>
               </InlineGrid>
             </BlockStack>
           </Card>
@@ -2368,10 +2266,10 @@ function UpsellBuilder() {
                 <InlineGrid columns="45px 1fr" alignItems="center" gap="200">
                   <Thumbnail source={ExportIcon} size="small" />
                   <Text variant="p">
-                    Export all reviews from All-In-One Store  to a CSV file.
+                  {t('upsellbuilder.Exportall')}
                   </Text>
                 </InlineGrid>
-                <Button>Export</Button>
+                <Button>{t('upsellbuilder.Import')}</Button>
               </InlineGrid>
             </BlockStack>
           </Card>
@@ -2403,23 +2301,7 @@ function UpsellBuilder() {
       ),
       dummy: "",
     },
-    // {
-    //   id: "Excluded Products",
-    //   content: "Excluded Products",
-    //   panelID: "Excluded Products",
-    //   component: <Importtab />,
-    //   dummy: "",
-    // },
-
-    // {
-    //   id: "Analytics",
-    //   content: "Analytics",
-    //   panelID: "Analytics",
-    //   component: (
-    //     <AnalyticsDataTab data={analyticsData} reviews={collectionData} />
-    //   ),
-    //   dummy: "",
-    // },
+   
   ];
   const handleClick = () => {
     shopify.loading(true);
@@ -2431,8 +2313,8 @@ function UpsellBuilder() {
     <div className="Produyct-reviews">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title="Upsell Builder"
-        subtitle="Easily collect, import and display reviews with photos and boost trust and conversion rates with social proof."
+        title={t('upsellbuilder.UpsellBuilder')}
+        subtitle={t('upsellbuilder.Easilycollect')}
         primaryAction={
           status ? (
             <DeactivatePopover
@@ -2442,7 +2324,7 @@ function UpsellBuilder() {
             />
           ) : (
             {
-              content: "Activate App",
+              content: t('upsellbuilder.ActivateApp'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,
@@ -2455,7 +2337,7 @@ function UpsellBuilder() {
             {selected == "0" && (
               <BlockStack gap="200">
                 <Text alignment="end" tone="subdued">
-                  Results for the last 30 days.{" "}
+                {t('upsellbuilder.Resultsfor')}{" "}
                 </Text>
                 <InlineGrid
                   columns={{
@@ -2492,7 +2374,7 @@ function UpsellBuilder() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Clicks
+                      {t('translation.Clicks')}
                       </Text>
                       <Text as="p" variant="headingLg">
                         0
@@ -2511,7 +2393,7 @@ function UpsellBuilder() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Orders
+                         {t('translation.Orders')}
                       </Text>
                       <InlineStack align="start" gap="200" blockAlign="center">
                         <span>
@@ -2535,7 +2417,7 @@ function UpsellBuilder() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                        Sales
+                      {t('upsellbuilder.Sales')}
                       </Text>
                       <Text as="p" variant="headingLg">
                         3

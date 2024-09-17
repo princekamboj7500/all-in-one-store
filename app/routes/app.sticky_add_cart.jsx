@@ -55,6 +55,7 @@ import { authenticate } from "../shopify.server";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import DiscardModal from "./components/DiscardModal";
+import { useTranslation } from "react-i18next";
 import "./assets/style.css";
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
@@ -137,7 +138,7 @@ export default function StickyAddToCart() {
   const [status, setStatus] = useState(data.app_status);
   const [activeField, setActiveField] = useState(null);
   const [formData, setFormData] = useState({ ...defaultSettings, ...data });
-
+  let { t } = useTranslation();
   const navigate = useNavigate();
   const [buttonloading, setButtonLoading] = useState(false);
   const [error, setError] = useState("");
@@ -875,8 +876,8 @@ export default function StickyAddToCart() {
   const SettingsTab = (
     <BlockStack gap="400">
       <InlineGrid columns={["oneThird", "twoThirds"]}>
-        <Text variant="headingMd" as="h6">
-          Settings for Desktop
+        <Text variant="headingMd" as="h6">  
+         {t('StickyCart.newtext')}
         </Text>
         <Layout>
           <Layout.Section>
@@ -887,7 +888,7 @@ export default function StickyAddToCart() {
                     <BlockStack gap="400">
                       <Checkbox
                         key="show_on_desktop"
-                        label="Show the Sticky Add to Cart bar on Desktop Devices."
+                        label={t('StickyCart.desktop.showDesktop')}
                         onFocus={() => handleFocus("field1")}
                         onChange={(e) => handleChange(e, "show_on_desktop")}
                         checked={formData.show_on_desktop}
@@ -896,7 +897,7 @@ export default function StickyAddToCart() {
                       <Select
                         key="desktop_position"
                         name="desktop_position"
-                        label="Desktop Location"
+                        label={`${t('StickyCart.desktop.desktopLabel')}`}
                         options={Location_options}
                         onFocus={() => handleFocus("field2")}
                         onChange={(e) => handleChange(e, "desktop_position")}
@@ -916,7 +917,7 @@ export default function StickyAddToCart() {
 
                       <Checkbox
                         key="show_quantity"
-                        label="Show Quantity Selector on Desktop"
+                        label={`${t('StickyCart.desktop.displayQuantity')}`}
                         onFocus={() => handleFocus("field4")}
                         checked={formData.show_quantity}
                         onChange={(e) => handleChange(e, "show_quantity")}
@@ -924,7 +925,7 @@ export default function StickyAddToCart() {
 
                       <Checkbox
                         key="show_variant"
-                        label="Show the Variant Selector on Desktop"
+                        label={`${t('StickyCart.desktop.displayVariant')}`}
                         onFocus={() => handleFocus("field5")}
                         onChange={(e) => handleChange(e, "show_variant")}
                         checked={formData.show_variant}
@@ -932,7 +933,7 @@ export default function StickyAddToCart() {
 
                       <Select
                         key="sticky_height"
-                        label="Sticky Bar Height"
+                        label={`${t('StickyCart.desktop.barHeightLabel')}`}
                         options={Height_options}
                         onFocus={() => handleFocus("field6")}
                         onChange={(e) => handleChange(e, "sticky_height")}
@@ -941,7 +942,7 @@ export default function StickyAddToCart() {
 
                       <Checkbox
                         key="show_product_title"
-                        label="Show Product Title on Desktop"
+                        label={`${t('StickyCart.desktop.displayTitle')}`}
                         onFocus={() => handleFocus("field7")}
                         onChange={(e) => handleChange(e, "show_product_title")}
                         checked={formData.show_product_title}
@@ -949,7 +950,7 @@ export default function StickyAddToCart() {
 
                       <Select
                         key="button_size"
-                        label="Button Size"
+                        label={`${t('StickyCart.desktop.buttonSize')}`}
                         options={Button_Size_options}
                         onFocus={() => handleFocus("field8")}
                         onChange={(e) => handleChange(e, "button_size")}
@@ -966,7 +967,7 @@ export default function StickyAddToCart() {
 
       <InlineGrid columns={["oneThird", "twoThirds"]}>
         <Text variant="headingMd" as="h6">
-          Settings for Mobile
+        {`${t('StickyCart.mobile.forMobile')}`}
         </Text>
         <Layout>
           <Layout.Section>
@@ -976,14 +977,14 @@ export default function StickyAddToCart() {
                   <div className="checkbox_section">
                     <BlockStack gap="400">
                       <Checkbox
-                        label="Show the Sticky Add to Cart bar on Mobile Devices."
+                        label={`${t('StickyCart.mobile.showMobile')}`}
                         onFocus={() => handleFocus("field_1")}
                         checked={formData.show_on_mobile}
                         onChange={(e) => handleChange(e, "show_on_mobile")}
                       />
 
                       <Select
-                        label="Mobile Location"
+                        label={`${t('StickyCart.mobile.mobileLabel')}`}
                         options={Mobile_Location_options}
                         onFocus={() => handleFocus("field_2")}
                         onChange={(e) => handleChange(e, "mobile_position")}
@@ -1001,7 +1002,7 @@ export default function StickyAddToCart() {
                                         /> */}
 
                       <Checkbox
-                        label="Show Quantity Selector on Mobile"
+                        label={`${t('StickyCart.mobile.displayQuantity')}`}
                         onFocus={() => handleFocus("field_4")}
                         checked={formData.show_quantity_mobile}
                         onChange={(e) =>
@@ -1010,7 +1011,7 @@ export default function StickyAddToCart() {
                       />
 
                       <Checkbox
-                        label="Show the Variant Selector on Mobile"
+                        label={`${t('StickyCart.mobile.displayVariant')}`}
                         onFocus={() => handleFocus("field_5")}
                         checked={formData.show_variant_mobile}
                         onChange={(e) => handleChange(e, "show_variant_mobile")}
@@ -1056,7 +1057,7 @@ export default function StickyAddToCart() {
 
       <InlineGrid columns={["oneThird", "twoThirds"]}>
         <Text variant="headingMd" as="h6">
-          Look and feel
+        {`${t('StickyCart.look.title')}`}
         </Text>
         <Layout>
           <Layout.Section>
@@ -1067,7 +1068,7 @@ export default function StickyAddToCart() {
                     <BlockStack gap="400">
                       <div className="color_section">
                         <TextField
-                          label="Background color"
+                          label={`${t('StickyCart.look.bgColor')}`}
                           type="text"
                           onFocus={() => handleFocus("field-1")}
                           value={formData.background_color}
@@ -1103,7 +1104,7 @@ export default function StickyAddToCart() {
                       <div className="color_section">
                         <TextField
                           onFocus={() => handleFocus("field-2")}
-                          label="Text color"
+                          label={`${t('StickyCart.look.textColor')}`}
                           type="text"
                           value={formData.text_color}
                           onChange={(e) => handleChange(e, "text_color")}
@@ -1137,7 +1138,7 @@ export default function StickyAddToCart() {
                       <div className="color_section">
                         <TextField
                           onFocus={() => handleFocus("field-inner1")}
-                          label="Button Color"
+                          label={`${t('StickyCart.look.btnColor')}`} 
                           type="text"
                           value={formData.button_color}
                           onChange={(e) => handleChange(e, "button_color")}
@@ -1171,7 +1172,7 @@ export default function StickyAddToCart() {
                       <div className="color_section">
                         <TextField
                           onFocus={() => handleFocus("field-inner2")}
-                          label="Button Text Color"
+                          label={`${t('StickyCart.look.btnTextColor')}`}
                           type="text"
                           value={formData.button_text_color}
                           onChange={(e) => handleChange(e, "button_text_color")}
@@ -1206,9 +1207,9 @@ export default function StickyAddToCart() {
                       <TextField
                         label={
                           <InlineStack>
-                            Border Radius{" "}
+                            {`${t('StickyCart.look.borderRadius')}`}{" "}
                             <Tooltip
-                              content={`This controls the border radius for the "Add to cart" button and the selectors.`}
+                              content={`${t('StickyCart.look.borderTooltip')}`}
                             >
                               <Icon source={AlertCircleIcon} tone="base"></Icon>
                             </Tooltip>
@@ -1227,9 +1228,9 @@ export default function StickyAddToCart() {
                         <TextField
                           label={
                             <InlineStack>
-                              Selectors Border-color{" "}
+                              {`${t('StickyCart.look.borderColor')}`}{" "}
                               <Tooltip
-                                content={`This controls the color of variants and quantity selectors.`}
+                                content={`${t('StickyCart.look.borderColorToltip')}`}
                               >
                                 <Icon
                                   source={AlertCircleIcon}
@@ -1367,7 +1368,7 @@ export default function StickyAddToCart() {
   const tabs = [
     {
       id: "Settings-customers-1",
-      content: "Settings",
+      content: t('defaultSettings.settings'),
       accessibilityLabel: "Settings customers",
       panelID: "Settings-customers-content-1",
       component: <div className="SettingsDataTab_container">{SettingsTab}</div>,
@@ -1386,21 +1387,19 @@ export default function StickyAddToCart() {
     <div className="Sticky_Add_to_Cart_page">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title="Sticky Add to Cart"
-        subtitle={
-          "Improve conversion rate by displaying a sticky add to cart bar when the visitors are scrolling down."
-        }
+        title={`${t('StickyCart.appTitle')}`}
+        subtitle={`${t('StickyCart.appdsec')}`}
         // compactTitle
         primaryAction={
           status ? (
             <DeactivatePopover
-              type={appName}
+              type={`${t('defaultSettings.StickyAddCartss')}`}
               handleToggleStatus={handleToggleStatus}
               buttonLoading={buttonloading}
             />
           ) : (
             {
-              content: "Activate App",
+              content:t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,
@@ -1436,7 +1435,7 @@ export default function StickyAddToCart() {
             }}
           >
             <ContextualSaveBar
-              message="Unsaved changes"
+              message={t('defaultSettings.content')}
               saveAction={{
                 onAction: handleSave,
                 loading: buttonloading,

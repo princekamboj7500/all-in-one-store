@@ -1,0 +1,24 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "94fdb7678a68f40d76fbcf1d9ca01fe2"
+name = "Bodysport checkout"
+handle = "bodysport-checkout"
+application_url = "https://shopify.dev/apps/default-app-home"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = false
+dev_store_url = "bodysport-test-ui.myshopify.com"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_customer_events,read_products,write_checkout_branding_settings,write_delivery_customizations,write_discounts,write_pixels,write_products,write_script_tags"
+
+[auth]
+redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
+
+[webhooks]
+api_version = "2024-07"
+
+[pos]
+embedded = false

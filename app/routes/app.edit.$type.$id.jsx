@@ -45,6 +45,7 @@ import {
   EditIcon,
   ImageIcon,
 } from "@shopify/polaris-icons";
+import { useTranslation } from "react-i18next";
 import DiscardModal from "./components/DiscardModal";
 import { product, bogoproduct, bogoproduct2 } from "./assets";
 export const loader = async ({ request, params }) => {
@@ -234,7 +235,9 @@ export function Discount({
 
   handleContinueClick,
 }) {
+  let { t } = useTranslation();
   return (
+
     <>
       <div className="aios_layout_spacer">
         <Layout>
@@ -244,7 +247,7 @@ export function Discount({
                 <Card roundedAbove="sm">
                   <BlockStack gap="300">
                     <Text variant="headingSm" as="h6">
-                      Discount value
+                   {t('translation.title')}
                     </Text>
                     <Box paddingBlockStart="200">
                       <BlockStack gap="400">
@@ -256,13 +259,13 @@ export function Discount({
                                 handleFirstButtonClick("discount");
                               }}
                             >
-                              Percent
+                               {t('translation.Percent')}
                             </Button>
                             <Button
                               pressed={!isFirstButtonActive}
                               onClick={handleSecondButtonClick}
                             >
-                              Fixed Amount
+                               {t('translation.FixedAmount')}
                             </Button>
                           </ButtonGroup>
                           <TextField
@@ -289,12 +292,12 @@ export function Discount({
       </div>
       <PageActions
         primaryAction={{
-          content: "Continue to Appearance",
+          content: t('translation.Continue'),
           onClick: handleContinueClick,
         }}
         secondaryActions={
           <Button onClick={toggleModal} variant="primary" tone="critical">
-            Delete
+            {t('translation.Delete')}
           </Button>
         }
       />
@@ -314,6 +317,7 @@ export function ReviewsLayout({
   handleChange,
   formData,
 }) {
+  let { t } = useTranslation();
   const getCustomerBuysText = () => {
     const { chosen_type, qty } = formData?.rules?.customer_buy || {};
     const eligibleProductsCount = buyProduct.length;
@@ -346,7 +350,7 @@ export function ReviewsLayout({
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Products
+                         {t('translation.Products')}
                       </Text>
                       <div>
                         <Button
@@ -357,16 +361,16 @@ export function ReviewsLayout({
                       </div>
                     </InlineStack>
                     <Text variant="bodySm" as="p">
-                      Customer buys: {getCustomerBuysText()}
+                    {t('translation.Customer')} {getCustomerBuysText()}
                     </Text>
-                    Customer gets: {getCustomerGetsText()}
+                    {t('translation.Customergets')} {getCustomerGetsText()}
                   </Card>
                 </Layout.Section>
                 <Layout.Section>
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Discount details
+                      {t('translation.Discountdetails')}
                       </Text>
                       <div>
                         <Button
@@ -377,14 +381,14 @@ export function ReviewsLayout({
                       </div>
                     </InlineStack>
                     {formData?.rules?.discount?.discount_amount}
-                    {formData?.rules?.discount?.discount_symbol} Discount
+                    {formData?.rules?.discount?.discount_symbol} {t('translation.Discount')}
                   </Card>
                 </Layout.Section>
                 <Layout.Section>
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Placements & Appearance
+                         {t('translation.Placements')}
                       </Text>
                       <div>
                         <Button
@@ -405,14 +409,14 @@ export function ReviewsLayout({
                           <BlockStack gap="500">
                             <InlineStack wrap={false} align="space-between">
                               <Text variant="bodyMd" as="p">
-                                BOGO on Product Page
+                              {t('translation.BOGO')}
                               </Text>
                               <div>
                                 {formData?.rules?.product_page.status ==
                                 "Active" ? (
-                                  <Badge tone="success">Active</Badge>
+                                  <Badge tone="success">{t('translation.Active')}</Badge>
                                 ) : (
-                                  <Badge tone="info">Inactive</Badge>
+                                  <Badge tone="info">{t('translation.Inactive')}</Badge>
                                 )}
                               </div>
                             </InlineStack>
@@ -431,14 +435,14 @@ export function ReviewsLayout({
                           <BlockStack gap="500">
                             <InlineStack wrap={false} align="space-between">
                               <Text variant="bodyMd" as="p">
-                                Cart Suggestion on Cart page Success
+                              {t('translation.subs')}
                               </Text>
                               <div>
                                 {formData?.rules?.cart_page.status ==
                                 "Active" ? (
-                                  <Badge tone="success">Active</Badge>
+                                  <Badge tone="success">{t('translation.Active')}</Badge>
                                 ) : (
-                                  <Badge>Inactive</Badge>
+                                  <Badge>{t('translation.Inactive')}</Badge>
                                 )}
                               </div>
                             </InlineStack>
@@ -446,56 +450,7 @@ export function ReviewsLayout({
                         </div>
                       </a>
                     </Box>
-                    {/* <Box
-                      background="bg-surface"
-                      borderColor="border"
-                      borderWidth="025"
-                      borderRadius="100"
-                    >
-                      <a>
-                        <div className="aios_placements_reviews">
-                          <BlockStack gap="500">
-                            <InlineStack wrap={false} align="space-between">
-                              <Text variant="bodyMd" as="p">
-                                Post Purchase on Thank you page
-                              </Text>
-                              <div>
-                              {formData?.rules?.popup_cart.status=="Active"?( 
-                                  <Badge tone="success">Active</Badge>):(
-                         <Badge>Inactive</Badge>
-                                  )}
-                              </div>
-                            </InlineStack>
-                          </BlockStack>
-                        </div>
-                      </a>
-                    </Box> */}
-                    {/* <Box
-                      background="bg-surface"
-                      borderColor="border"
-                      borderWidth="025"
-                      borderRadius="100"
-                    >
-                      <a>
-                        <div className="aios_placements_reviews">
-                          <BlockStack gap="500">
-                            <InlineStack wrap={false} align="space-between">
-                              <Text variant="bodyMd" as="p">
-                                Pop-up on Add to Cart button
-                              </Text>
-                              <div>
-                                {formData?.rules?.popup_cart.status ==
-                                "Active" ? (
-                                  <Badge tone="success">Active</Badge>
-                                ) : (
-                                  <Badge>Inactive</Badge>
-                                )}
-                              </div>
-                            </InlineStack>
-                          </BlockStack>
-                        </div>
-                      </a>
-                    </Box> */}
+                   
                   </Card>
                 </Layout.Section>
               </Layout>
@@ -507,7 +462,7 @@ export function ReviewsLayout({
             <Layout.Section>
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Offer status
+                {t('translation.Offerstatus')}
                 </Text>
                 <Select
                   options={options}
@@ -522,7 +477,7 @@ export function ReviewsLayout({
             <Layout.Section variant="oneThird">
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Internal name
+                {t('translation.Internalname')}
                 </Text>
                 <TextField
                   onChange={(e) => {
@@ -537,7 +492,7 @@ export function ReviewsLayout({
             <Layout.Section variant="oneThird">
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Cart Label
+                {t('translation.CartLabel')}
                 </Text>
                 <TextField
                   onChange={(e) => {
@@ -545,7 +500,7 @@ export function ReviewsLayout({
                     handleChange(e, "cart_label");
                   }}
                   value={formData.cart_label}
-                  helpText="Customize the text that shows up near the discount on the Cart page."
+                  helpText={t('translation.descritpion')}
                   autoComplete="off"
                 />
               </Card>
@@ -556,7 +511,7 @@ export function ReviewsLayout({
       <PageActions
        secondaryActions={
         <Button onClick={toggleModal} variant="primary" tone="critical">
-          Delete
+           {t('translation.Delete')}
         </Button>
       }
       />
@@ -580,6 +535,7 @@ export function BogoProducts({
   formData,
   handleCollectionDelete,
 }) {
+  let { t } = useTranslation();
   const handleInputChangeCustomerProduct = () => {
     selectProduct("customer_buy");
   };
@@ -602,10 +558,10 @@ export function BogoProducts({
               <Card>
                 <BlockStack gap="200">
                   <Text variant="headingMd" as="h6" fontWeight="semibold">
-                    Customer buys
+                  {t('translation.Customer')}
                   </Text>
                   <RadioButton
-                    label="Any product"
+                    label={t('translation.Anyproduct')}
                     id="any-products-slotA"
                     name="products-slotA"
                     checked={formData.rules.customer_buy.chosen_type === "any"}
@@ -616,7 +572,7 @@ export function BogoProducts({
                   />
 
                   <RadioButton
-                    label="Specific product or collection"
+                    label={t('translation.specific')}
                     id="product-collection-slotA"
                     name="products-slotA"
                     checked={
@@ -633,7 +589,7 @@ export function BogoProducts({
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search Products"
+                            placeholder= {t('translation.searchproduct')}
                             type="text"
                             onChange={handleInputChangeCustomerProduct}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -641,13 +597,13 @@ export function BogoProducts({
                           />
                         </div>
                         <Button onClick={() => selectProduct("customer_buy")}>
-                          Browse
+                        {t('translation.Browse')}
                         </Button>
                       </InlineStack>
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search  Collections"
+                            placeholder= {t('translation.SearchCollections')}
                             type="text"
                             onChange={handleInputChangeCustomerCollection}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -657,7 +613,7 @@ export function BogoProducts({
                         <Button
                           onClick={() => selectCollection("customer_buy")}
                         >
-                          Browse
+                          {t('translation.Browse')}
                         </Button>
                       </InlineStack>
                     </>
@@ -666,7 +622,7 @@ export function BogoProducts({
                   )}
 
                   <TextField
-                    label="Quantity"
+                    label={t('translation.Quantity')}
                     type="number"
                     value={formData.rules.customer_buy.qty}
                     autoComplete="off"
@@ -680,7 +636,7 @@ export function BogoProducts({
                       {buyProduct.length === 0 &&
                       buyCollections.length === 0 ? (
                         <InlineError
-                          message="A product or collection selection is required"
+                          message={t('translation.aproductsdes')}
                           fieldID="myFieldID"
                         />
                       ) : (
@@ -688,7 +644,7 @@ export function BogoProducts({
                           {buyProduct.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {buyProduct.length} product
+                              {t('translation.Youselected')} {buyProduct.length} {t('translation.product')}
                                 {buyProduct.length > 1 ? "s" : ""}
                               </Text>
                               {buyProduct.length > 0 &&
@@ -718,7 +674,7 @@ export function BogoProducts({
                                               <Icon
                                                 source={ImageIcon}
                                                 color="base"
-                                                accessibilityLabel="Placeholder image"
+                                                accessibilityLabel={t('translation.Placeholder')}
                                               />
                                             )}
                                             <Text variant="bodySm" as="p">
@@ -735,7 +691,7 @@ export function BogoProducts({
                                                 "customer_buy",
                                               )
                                             }
-                                            accessibilityLabel="Delete product"
+                                            accessibilityLabel={t('translation.Deleteproduct')}
                                           />
                                         </Box>
                                       </InlineStack>
@@ -747,7 +703,7 @@ export function BogoProducts({
                           {buyCollections.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {buyCollections.length}{" "}
+                              {t('translation.Youselected')} {buyCollections.length}{" "}
                                 collection
                                 {buyCollections.length > 1 ? "s" : ""}
                               </Text>
@@ -777,7 +733,7 @@ export function BogoProducts({
                                             <Icon
                                               source={ImageIcon}
                                               color="base"
-                                              accessibilityLabel="Placeholder image"
+                                              accessibilityLabel={t('translation.Placeholder')}
                                             />
                                           )}
                                           <Text variant="bodySm" as="p">
@@ -794,7 +750,7 @@ export function BogoProducts({
                                               "customer_buy",
                                             )
                                           }
-                                          accessibilityLabel="Delete collection"
+                                          accessibilityLabel={t('translation.Deletecollection')}
                                         />
                                       </Box>
                                     </InlineStack>
@@ -814,11 +770,11 @@ export function BogoProducts({
               <Card>
                 <BlockStack gap={300}>
                   <Text variant="headingMd" as="h6" fontWeight="semibold">
-                    Customer gets
+                  {t('translation.Customergets')}
                   </Text>
                   <BlockStack>
                     <RadioButton
-                      label="Any product"
+                      label={t('translation.Anyproduct')}
                       id="any-products-slotB"
                       name="products-slotB"
                       checked={
@@ -830,7 +786,7 @@ export function BogoProducts({
                       }}
                     />
                     <RadioButton
-                      label="Specific product or Collection"
+                      label={t('translation.specific')}
                       id="same-collection-slotB"
                       name="products-slotB"
                       checked={
@@ -847,7 +803,7 @@ export function BogoProducts({
                           <InlineStack wrap={false} gap="200">
                             <div style={{ width: "100%" }}>
                               <TextField
-                                placeholder="Search Products or Collections"
+                                placeholder={t('translation.SearchsCollections')}
                                 type="text"
                                 onChange={handleInputChangeCustomerGet}
                                 prefix={
@@ -865,7 +821,7 @@ export function BogoProducts({
                           <InlineStack wrap={false} gap="200">
                             <div style={{ width: "100%" }}>
                               <TextField
-                                placeholder="Search Products or Collections"
+                                placeholder={t('translation.SearchsCollections')}
                                 type="text"
                                 onChange={handleInputChangeCustomerColl}
                                 prefix={
@@ -877,7 +833,7 @@ export function BogoProducts({
                             <Button
                               onClick={() => selectCollection("customer_get")}
                             >
-                              Browse
+                              {t('translation.Browse')}
                             </Button>
                           </InlineStack>
                         </BlockStack>
@@ -886,7 +842,7 @@ export function BogoProducts({
                       ""
                     )}
                     <TextField
-                      label="Quantity"
+                      label={t('translation.Quantity')}
                       type="number"
                       onChange={(e) => {
                         handleFocus("qty");
@@ -900,7 +856,7 @@ export function BogoProducts({
                         {getProduct.length === 0 &&
                         getCollections.length === 0 ? (
                           <InlineError
-                            message="A product or collection selection is required"
+                            message={t('translation.aproductsdes')}
                             fieldID="myFieldID"
                           />
                         ) : (
@@ -908,7 +864,7 @@ export function BogoProducts({
                             {getProduct.length > 0 && (
                               <BlockStack gap="200">
                                 <Text as="p" fontWeight="bold">
-                                  You have selected {getProduct.length} product
+                                {t('translation.Youselected')} {getProduct.length} {t('translation.product')}
                                   {getProduct.length > 1 ? "s" : ""}
                                 </Text>
                                 {getProduct.length > 0 &&
@@ -938,7 +894,7 @@ export function BogoProducts({
                                                 <Icon
                                                   source={ImageIcon}
                                                   color="base"
-                                                  accessibilityLabel="Placeholder image"
+                                                  accessibilityLabel={t('translation.Placeholder')}
                                                 />
                                               )}
                                               <Text variant="bodySm" as="p">
@@ -955,7 +911,7 @@ export function BogoProducts({
                                                   "customer_get",
                                                 )
                                               }
-                                              accessibilityLabel="Delete product"
+                                              accessibilityLabel={t('translation.Deleteproduct')}
                                             />
                                           </Box>
                                         </InlineStack>
@@ -967,7 +923,7 @@ export function BogoProducts({
                             {getCollections.length > 0 && (
                               <BlockStack gap="200">
                                 <Text as="p" fontWeight="bold">
-                                  You have selected {getCollections.length}{" "}
+                                {t('translation.Youselected')} {getCollections.length}{" "}
                                   collection
                                   {getCollections.length > 1 ? "s" : ""}
                                 </Text>
@@ -997,7 +953,7 @@ export function BogoProducts({
                                               <Icon
                                                 source={ImageIcon}
                                                 color="base"
-                                                accessibilityLabel="Placeholder image"
+                                                accessibilityLabel={t('translation.Placeholder')}
                                               />
                                             )}
                                             <Text variant="bodySm" as="p">
@@ -1014,7 +970,7 @@ export function BogoProducts({
                                                 "customer_get",
                                               )
                                             }
-                                            accessibilityLabel="Delete collection"
+                                            accessibilityLabel={t('translation.Deleteproduct')}
                                           />
                                         </Box>
                                       </InlineStack>
@@ -1045,7 +1001,7 @@ export function BogoProducts({
         }}
         secondaryActions={
           <Button onClick={toggleModal} variant="primary" tone="critical">
-            Delete
+             {t('translation.Delete')}
           </Button>
         }
       />
@@ -1064,10 +1020,11 @@ export function Apperance({
   formData,
   handleColorChange,
 }) {
+  let { t } = useTranslation();
   const Status_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "Active", value: "Active" },
-    { label: "Inactive", value: "Inactive" },
+    { label: t('translation.Selectoption'), value: t('translation.Selectoption') },
+    { label: t('translation.Active'), value: t('translation.Active') },
+    { label: t('translation.Inactive'), value: t('translation.Inactive') },
   ];
   const codeSnippet =
     '<div class="aios_cart_bogo" id="{{ item.product_id  }}" data-key="{{ item.key }}"></div>';
@@ -1084,9 +1041,9 @@ export function Apperance({
       });
   };
   const informative_Status_options = [
-    { label: "Select an option", value: "Select an option" },
-    { label: "Active", value: "Active" },
-    { label: "Inactive", value: "Inactive" },
+    { label: t('translation.Selectoption'), value: t('translation.Selectoption') },
+    { label: t('translation.Active'), value: t('translation.Active') },
+    { label: t('translation.Inactive'), value: t('translation.Inactive') },
   ];
 
   const Productpage = (
@@ -1103,11 +1060,11 @@ export function Apperance({
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
                       {" "}
-                      BOGO on Product Page
+                      {t('translation.BOGO')}
                       {formData.rules.product_page.status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">{t('translation.Active')}</Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>{t('translation.Inactive')}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -1119,7 +1076,7 @@ export function Apperance({
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {t('translation.Showsettings')}
                         </Text>
                       </div>
                     )}
@@ -1128,8 +1085,7 @@ export function Apperance({
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                Showcase the products from the offer, together with the
-                discount. Suited just below the product description.
+               {t('translation.newdescription')}
                 {/* <Link href="#">
                   <Text variant="headingSm" as="h5">
                     Preview
@@ -1147,7 +1103,7 @@ export function Apperance({
           >
             <BlockStack gap="400">
               <Select
-                label="Status"
+                label={t('translation.Status')}
                 options={Status_options}
                 onChange={(e) => {
                   handleFocus("status");
@@ -1156,7 +1112,7 @@ export function Apperance({
                 value={formData.rules.product_page.status}
               />
               <TextField
-                label="Offer title"
+                label={t('translation.Offertitle')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleFocus("offer_title");
@@ -1165,7 +1121,7 @@ export function Apperance({
                 value={formData.rules.product_page.offer_title}
               />
               <TextField
-                label={`Button text`}
+                label={t('translation.Buttontext')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleFocus("button_text");
@@ -1174,7 +1130,7 @@ export function Apperance({
                 value={formData.rules.product_page.button_text}
               />
               <TextField
-                label={`Badge text`}
+                label={t('translation.Badgetext')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleFocus("badge_text");
@@ -1194,11 +1150,10 @@ export function Apperance({
               <BlockStack gap={200}>
                 <div style={{ float: "left" }}>
                   <Text variant="headingMd" as="h6">
-                    Appearance
+                  {t('translation.Appearance')}
                   </Text>
                   <Text variant="bodySm" as="p">
-                    These settings apply to offer badges, price badge and
-                    button.
+                  {t('translation.Appearancetext')}
                   </Text>
                 </div>
 
@@ -1206,7 +1161,7 @@ export function Apperance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Accent color`}
+                        label={t('translation.Accentcolor')}
                         type="text"
                         onChange={(e) => {
                           handleFocus("accent_color");
@@ -1251,7 +1206,7 @@ export function Apperance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Text color`}
+                        label={t('translation.Textcolor')}
                         type="text"
                         onChange={(e) => {
                           handleFocus("text_color");
@@ -1298,9 +1253,9 @@ export function Apperance({
                   output
                   label={
                     <InlineStack style={{ margin: "0px" }}>
-                      Offer badge text size
+                      {t('translation.Offersize')}
                       <Tooltip
-                        content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
+                        content={t('translation.offersizetext')}
                       ></Tooltip>
                     </InlineStack>
                   }
@@ -1326,15 +1281,15 @@ export function Apperance({
               </BlockStack>
               <div>
                 <Text variant="headingSm" as="h6">
-                  Product card
+                 {t('translation.Productcard')}
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  These settings apply to all BOGO offers on Product Page
+                {t('translation.Thesesettings')}
                 </Text>
               </div>
               <BlockStack gap={300}>
                 <Checkbox
-                  label="Show shadow"
+                  label={t('translation.Showshadow')}
                   checked={formData.rules.product_page.show_shadow}
                   onChange={(e) => {
                     handleFocus("show_shadow");
@@ -1342,7 +1297,7 @@ export function Apperance({
                   }}
                 />
                 <Checkbox
-                  label="Show border"
+                  label={t('translation.Showborder')} 
                   checked={formData.rules.product_page.show_border}
                   onChange={(e) => {
                     handleFocus("show_border");
@@ -1354,7 +1309,7 @@ export function Apperance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Border color`}
+                        label={t('translation.Bordercolor')}
                         type="text"
                         onChange={(e) => {
                           handleFocus("border_color");
@@ -1420,11 +1375,11 @@ export function Apperance({
                 <div style={{ float: "left" }}>
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
-                      Cart Suggestion on Cart page
+                    {t('translation.subss')}
                       {formData.rules.cart_page.status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">{t('translation.Active')}</Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>{t('translation.Inactive')}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -1436,7 +1391,7 @@ export function Apperance({
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {t('translation.Showsettings')}
                         </Text>
                       </div>
                     )}
@@ -1445,15 +1400,7 @@ export function Apperance({
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                If your visitors are not required to give permission before
-                their data can be used, you can display an informative banner.
-                It will notify the visitors that by using your service, they
-                accept your Privacy Policy.
-                {/* <Link href="#">
-                  <Text variant="headingSm" as="h5">
-                    Preview
-                  </Text>
-                </Link> */}
+              {t('translation.newdescriptions')}
               </Text>
             </BlockStack>
           </div>
@@ -1474,8 +1421,7 @@ export function Apperance({
                 }}
               >
                 <p>
-                  To display Bogo on cart page place the following code in your
-                  file BOGO on cart page:
+                {t('translation.TodisplayBogo')}
                 </p>
                 <pre
                   style={{
@@ -1495,7 +1441,7 @@ export function Apperance({
                     cursor: "pointer",
                   }}
                 >
-                  {copied ? "Copied!" : "Copy Code"}
+                  {copied ? t('translation.Copied') : t('translation.CopyCode')}
                 </Button>
               </div>
               <Select
@@ -1508,15 +1454,14 @@ export function Apperance({
                 value={formData.rules.cart_page.status}
               />
               <TextField
-                label="Product suggestion format when there is a discount"
+                label={t('translation.metades')}
                 onChange={(e) => {
                   handleFocus("format");
                   handleChange(e, "cart_page", "format");
                 }}
                 value={formData.rules.cart_page.format}
                 autoComplete="off"
-                helpText="Default is: You are eligible to get {{ quantity }} x {{ product }} with
-{{ value }} OFF!'"
+                helpText={t('translation.deafaulttext')}
               />
 
               <Divider />
@@ -1526,549 +1471,6 @@ export function Apperance({
       </Card>
     </div>
   );
-  //     const ThankuPage = (
-  //       <div>
-  //         <Card sectioned>
-  //           <BlockStack gap="500">
-  //             <div className="arrow-sign">
-  //               <BlockStack gap={200}>
-  //                 <div
-  //                   onClick={() => handleToggle("thankubanner")}
-  //                   style={{ display: "inline-block", cursor: "pointer" }}
-  //                 >
-  //                   <div style={{ float: "left" }}>
-  //                     <Text variant="headingSm" as="h6">
-  //                       <InlineStack gap={300}>
-  //                         Post Purchase on Thank you page
-  //                         {formData.informative_banner_status === "Active" ? (
-  //                           <Badge tone="success">Active</Badge>
-  //                         ) : (
-  //                           <Badge>Inactive</Badge>
-  //                         )}
-  //                       </InlineStack>
-  //                     </Text>
-  //                   </div>
-  //                   <div style={{ float: "right" }}>
-  //                     <InlineStack>
-  //                       {openStates.thankubanner ? (
-  //                         <> </>
-  //                       ) : (
-  //                         <div style={{ marginTop: "2px" }}>
-  //                           <Text variant="bodySm" as="p">
-  //                             Show settings
-  //                           </Text>
-  //                         </div>
-  //                       )}
-  //                       <Icon source={ChevronDownIcon} tone="base" />
-  //                     </InlineStack>
-  //                   </div>
-  //                 </div>
-  //               </BlockStack>
-  //             </div>
-
-  //             <Collapsible
-  //               open={openStates.thankubanner}
-  //               id="basic-collapsible"
-  //               transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-  //               expandOnPrint
-  //             >
-  //               <BlockStack gap="400">
-  //                 <Select
-  //                   label="Status"
-  //                   options={informative_Status_options}
-  //                   onChange={(e) => {
-  //                     handleFocus("informative_banner_status");
-  //                     handleChange(e, "informative_banner_status");
-  //                   }}
-  //                   value={formData.informative_banner_status}
-  //                 />
-  //                 <TextField
-  //                   label="Post Purchase offer title"
-  //                   onChange={(e) => {
-  //                     handleFocus("informative_banner_text");
-  //                     handleChange(e, "informative_banner_text");
-  //                   }}
-  //                   value={formData.informative_banner_text}
-  //                   autoComplete="off"
-  //                   helpText="Default is: Last chance to get {{ value }} OFF, if you buy {{ quantity }}"
-  //                 />
-
-  //                 <TextField label={`"Accept" button`} autoComplete="off" />
-  //                 <Divider />
-  //                 <BlockStack gap={200}>
-  //                   <div
-  //                     onClick={() => handleToggle("generalDesignSettings")}
-  //                     style={{ display: "inline-block", cursor: "pointer" }}
-  //                   >
-  //                     <div style={{ float: "left" }}>
-  //                       <Text variant="headingMd" as="h6">
-  //                         Appearance
-  //                       </Text>
-  //                       <Text variant="bodyMd" as="h6">
-  //                         Accent
-  //                       </Text>
-  //                     </div>
-  //                   </div>
-  //                   <Grid>
-  //                     <Grid.Cell
-  //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-  //                     >
-  //                       <div className="color_section">
-  //                         <TextField
-  //                           label="Background"
-  //                           type="text"
-  //                           onChange={(e) => {
-  //                             handleFocus("Accent_color");
-  //                             handleChange(e, "Accent_color");
-  //                           }}
-  //                           value={formData.Accent_color}
-  //                           autoComplete="off"
-  //                           connectedLeft={
-  //                             <input
-  //                               type="color"
-  //                               value={formData.Accent_color}
-  //                               onChange={(e) => {
-  //                                 handleFocus("Accent_color");
-  //                                 handleColorChange(e, "Accent_color");
-  //                               }}
-  //                             />
-  //                           }
-  //                         />
-  //                       </div>
-  //                     </Grid.Cell>
-  //                     <Grid.Cell
-  //                       columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-  //                     >
-  //                       <div className="color_section">
-  //                         <TextField
-  //                           label="Text"
-  //                           type="text"
-  //                           onChange={(e) => {
-  //                             handleFocus("text_color");
-  //                             handleChange(e, "text_color");
-  //                           }}
-  //                           value={formData.text_color}
-  //                           autoComplete="off"
-  //                           connectedLeft={
-  //                             <input
-  //                               type="color"
-  //                               value={formData.text_color}
-  //                               onChange={(e) => {
-  //                                 handleFocus("reject_text_color");
-  //                                 handleColorChange(e, "reject_text_color");
-  //                               }}
-  //                             />
-  //                           }
-  //                         />
-  //                       </div>
-  //                     </Grid.Cell>
-  //                   </Grid>
-  //                   <Text variant="bodyMd" as="h6">
-  //                     Widget Position
-  //                   </Text>
-  //                   <Divider />
-  //                   <Text variant="headingMd" as="h6">
-  //                     Advanced Settings
-  //                   </Text>
-  //                   <TextField
-  //                     label="Maximum acceptable discount
-  // "
-  //                     autoComplete="off"
-  //                     helpText="This setting will protect against situations where the discount would make the upsell unprofitable."
-  //                   />
-  //                   <TextField
-  //                     label="Bonus disclaimer text"
-  //                     multiline={4}
-  //                     autoComplete="off"
-  //                   />
-  //                 </BlockStack>
-  //               </BlockStack>
-  //             </Collapsible>
-  //           </BlockStack>
-  //         </Card>
-  //       </div>
-  //     );
-  // const addCart = (
-  //   <div>
-  //     <Card sectioned>
-  //       <BlockStack gap="500">
-  //         <div className="arrow-sign">
-  //           <BlockStack gap={200}>
-  //             <div
-  //               onClick={() => handleToggle("addCart")}
-  //               style={{ display: "inline-block", cursor: "pointer" }}
-  //             >
-  //               <div style={{ float: "left" }}>
-  //                 <Text variant="headingSm" as="h6">
-  //                   <InlineStack gap={300}>
-  //                     Pop-up on Add to Cart button
-  //                     {formData.rules.popup_cart.status === "Active" ? (
-  //                       <Badge tone="success">Active</Badge>
-  //                     ) : (
-  //                       <Badge>Inactive</Badge>
-  //                     )}
-  //                   </InlineStack>
-  //                 </Text>
-  //               </div>
-  //               <div style={{ float: "right" }}>
-  //                 <InlineStack>
-  //                   {openStates.addCart ? (
-  //                     <> </>
-  //                   ) : (
-  //                     <div style={{ marginTop: "2px" }}>
-  //                       <Text variant="bodySm" as="p">
-  //                         Show settings
-  //                       </Text>
-  //                     </div>
-  //                   )}
-  //                   <Icon source={ChevronDownIcon} tone="base" />
-  //                 </InlineStack>
-  //               </div>
-  //             </div>
-  //             <Text variant="bodySm" as="p">
-  //               Remind customers about this offer, if they missed the Classic
-  //               widget on the product page.
-  //               {/* <Link href="#">
-  //                 <Text variant="headingSm" as="h5">
-  //                   Preview
-  //                 </Text>
-  //               </Link> */}
-  //             </Text>
-  //           </BlockStack>
-  //         </div>
-
-  //         <Collapsible
-  //           open={openStates.addCart}
-  //           id="basic-collapsible"
-  //           transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
-  //           expandOnPrint
-  //         >
-  //           <BlockStack gap="400">
-  //             <Select
-  //               label="Status"
-  //               options={informative_Status_options}
-  //               onChange={(e) => {
-  //                 handleFocus("status");
-  //                 handleChange(e, "popup_cart", "status");
-  //               }}
-  //               value={formData.rules.popup_cart.status}
-  //             />
-  //             <TextField
-  //               label="Pop-up title"
-  //               onChange={(e) => {
-  //                 handleFocus("title");
-  //                 handleChange(e, "popup_cart", "title");
-  //               }}
-  //               value={formData.rules.popup_cart.title}
-  //               autoComplete="off"
-  //             />
-  //             <TextField
-  //               label="Button text"
-  //               onChange={(e) => {
-  //                 handleFocus("text");
-  //                 handleChange(e, "popup_cart", "text");
-  //               }}
-  //               value={formData.rules.popup_cart.text}
-  //               autoComplete="off"
-  //             />
-
-  //             <Divider />
-
-  //             <Text variant="headingSm" as="h6">
-  //               Appearance
-  //             </Text>
-  //             <Text variant="headingSm" as="h6">
-  //               Overlay
-  //             </Text>
-  //             <Grid>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Background"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("overlay_bgColor");
-  //                       handleChange(e, "popup_cart", "overlay_bgColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.overlay_bgColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         type="color"
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.overlay_bgColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.overlay_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.overlay_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         value={formData.rules.popup_cart.overlay_bgColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "overlay_bgColor",
-  //                             "popup_cart",
-  //                             "overlay_bgColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Text"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("overlay_textColor");
-  //                       handleChange(e, "popup_cart", "overlay_textColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.overlay_textColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.overlay_textColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.overlay_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.overlay_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         type="color"
-  //                         value={formData.rules.popup_cart.overlay_textColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "overlay_textColor",
-  //                             "popup_cart",
-  //                             "overlay_textColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //             </Grid>
-  //             <Text variant="headingSm" as="h6">
-  //               Button
-  //             </Text>
-  //             <Grid>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Background"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("button_bgColor");
-  //                       handleChange(e, "popup_cart", "button_bgColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.button_bgColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         type="color"
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.button_bgColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.button_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.button_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         value={formData.rules.popup_cart.button_bgColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "button_bgColor",
-  //                             "popup_cart",
-  //                             "button_bgColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Text"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("button_textColor");
-  //                       handleChange(e, "popup_cart", "button_textColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.button_textColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         type="color"
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.button_textColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.button_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.button_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         value={formData.rules.popup_cart.button_textColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "button_textColor",
-  //                             "popup_cart",
-  //                             "button_textColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //             </Grid>
-  //             <Text variant="headingSm" as="h6">
-  //               Variant selector
-  //             </Text>
-  //             <Grid>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Background"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("variant_bgColor");
-  //                       handleChange(e, "popup_cart", "variant_bgColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.variant_bgColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         type="color"
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.variant_bgColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.variant_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.variant_bgColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         value={formData.rules.popup_cart.variant_bgColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "variant_bgColor",
-  //                             "popup_cart",
-  //                             "variant_bgColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //               <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
-  //                 <div className="color_section">
-  //                   <TextField
-  //                     label="Text"
-  //                     type="text"
-  //                     onChange={(e) => {
-  //                       handleFocus("variant_textColor");
-  //                       handleChange(e, "popup_cart", " variant_textColor");
-  //                     }}
-  //                     value={formData.rules.popup_cart.variant_textColor}
-  //                     autoComplete="off"
-  //                     connectedLeft={
-  //                       <input
-  //                         type="color"
-  //                         style={{
-  //                           boxShadow:
-  //                             formData.rules.popup_cart.variant_textColor ===
-  //                             "#ffffff"
-  //                               ? "inset 0 0 0 1px rgba(0, 0, 0, .19)"
-  //                               : "none",
-  //                           width:
-  //                             formData.rules.popup_cart.variant_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                           height:
-  //                             formData.rules.popup_cart.variant_textColor ===
-  //                             "#ffffff"
-  //                               ? "34px"
-  //                               : "38px",
-  //                         }}
-  //                         value={formData.rules.popup_cart.variant_textColor}
-  //                         onChange={(e) =>
-  //                           handleColorChange(
-  //                             e,
-  //                             "variant_textColor",
-  //                             "popup_cart",
-  //                             "variant_textColor",
-  //                           )
-  //                         }
-  //                       />
-  //                     }
-  //                   />
-  //                 </div>
-  //               </Grid.Cell>
-  //             </Grid>
-  //           </BlockStack>
-  //         </Collapsible>
-  //       </BlockStack>
-  //     </Card>
-  //   </div>
-  // );
-
   const ApperanceDataTab = (
     <div style={{ padding: "10px" }} className="SettingsDataTab_container">
       <BlockStack gap={500}>
@@ -2077,8 +1479,6 @@ export function Apperance({
             <Layout.Section variant="oneThird"></Layout.Section>
             <Layout.Section variant="oneThird">{Productpage}</Layout.Section>
             <Layout.Section variant="oneThird">{CartPage}</Layout.Section>
-            {/* <Layout.Section variant="oneThird">{ThankuPage}</Layout.Section> */}
-            {/* <Layout.Section variant="oneThird">{addCart}</Layout.Section> */}
           </Layout>
         </div>
       </BlockStack>
@@ -2102,7 +1502,7 @@ export function Apperance({
       }}
         secondaryActions={
           <Button onClick={toggleModal} variant="primary" tone="critical">
-            Delete
+            {t('translation.Delete')}
           </Button>
         }
       />
@@ -2111,6 +1511,7 @@ export function Apperance({
 }
 const EditDiscountType = () => {
   const navigate = useNavigate();
+  let { t } = useTranslation();
   const {
     getData,
     upsellType,
@@ -2208,7 +1609,7 @@ const EditDiscountType = () => {
       setActive(true);
       setActiveField(false);
       setButtonLoading(false);
-      setMsgData("Settings Updated");
+      setMsgData(t('translation.SettingsUpdated'));
       setLastSavedData(formData);
       setFormData(data.data);
     } else {
@@ -2216,7 +1617,7 @@ const EditDiscountType = () => {
       setActive(true);
       setActiveField(false);
       setError(true);
-      setMsgData("There is some error while update");
+      setMsgData(t('translation.erorr'));
     }
   };
   const handleFirstButtonClick = (field) => {
@@ -2235,7 +1636,7 @@ const EditDiscountType = () => {
     });
   };
   const handleSecondButtonClick = (field) => {
-    // setFormData({ ...formData, discount_type: "fixed" });
+   
     setFormData({
       ...formData,
       rules: {
@@ -2434,7 +1835,7 @@ const EditDiscountType = () => {
           <div className="all_preview_header">example.com/product-page</div>
           <div className="all_preview_image">
             <div className="preview_header">
-              <h1>Buy One, Get One</h1>
+              <h1>{t('translation.BuyOne')}</h1>
             </div>
             <div className="buy_one_wrapper">
               <div className="buy_one_box">
@@ -2577,7 +1978,7 @@ const EditDiscountType = () => {
       setActive(true);
       setActiveField(false);
       setButtonLoading(false);
-      setMsgData("Deleted Successfully");
+      setMsgData(t('translation.DeletedSuccessfully'));
       setActivemodal(false)
       navigate("/app/upsell_builder");
     } else {
@@ -2586,7 +1987,7 @@ const EditDiscountType = () => {
       setActivemodal(false);
       setActiveField(false);
       setError(true);
-      setMsgData("There is some error while update");
+      setMsgData(t('translation.erorr'));
     }
   };
 
@@ -2596,7 +1997,7 @@ const EditDiscountType = () => {
         <Modal
           open={activemodal}
           onClose={toggleModal}
-          title="Are you sure you want to delete New BOGO?"
+          title={t('translation.areyousure')}
           primaryAction={{
             destructive: true,
             content: "Delete",
@@ -2610,7 +2011,7 @@ const EditDiscountType = () => {
             },
           ]}
         >
-          <Modal.Section>This can't be undone.</Modal.Section>
+          <Modal.Section>{t('translation.Thisundone')}</Modal.Section>
         </Modal>
       </div>
     );
@@ -2658,7 +2059,7 @@ const EditDiscountType = () => {
       setActive(true);
       setActiveField(false);
       setButtonLoading(false);
-      setMsgData("Settings Updated");
+      setMsgData(t('translation.SettingsUpdated'));
       setLastSavedData(formData);
       navigate("/app/upsell_builder");
     } else {
@@ -2666,7 +2067,7 @@ const EditDiscountType = () => {
       setActive(true);
       setActiveField(false);
       setError(true);
-      setMsgData("There is some error while update");
+      setMsgData(t('translation.erorr'));
     }
   };
   const handlePrimaryAction = () => {
@@ -2692,9 +2093,9 @@ const EditDiscountType = () => {
       title={getData.internal_name}
       titleMetadata={
         formData.offer_status === "Active" ? (
-          <Badge tone="success">Active</Badge>
+          <Badge tone="success">{t('translation.Active')}</Badge>
         ) : (
-          <Badge tone="info">Draft</Badge>
+          <Badge tone="info">{t('translation.Draft')}</Badge>
         )
       }
       primaryAction={{
@@ -2718,7 +2119,7 @@ const EditDiscountType = () => {
               <BlockStack>
                 <div className="aios-upsell_step_heading">Select Products</div>
                 <div className="aios-upsell_step_sub_title">
-                  Products in the offer
+                {t('translation.Productsoffer')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2732,9 +2133,9 @@ const EditDiscountType = () => {
                 {activeTab > 2 ? <Icon source={CheckIcon} tone="base" /> : "02"}
               </div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Discount</div>
+                <div className="aios-upsell_step_heading">{t('translation.Discount')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Discount types & amounts
+                {t('translation.Discounttypes')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2748,9 +2149,9 @@ const EditDiscountType = () => {
                 {activeTab > 3 ? <Icon source={CheckIcon} tone="base" /> : "03"}
               </div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Appearance</div>
+                <div className="aios-upsell_step_heading">{t('translation.Appearance')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Where & how to display
+                {t('translation.Wherehow')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2762,9 +2163,9 @@ const EditDiscountType = () => {
             <InlineStack blockAlign="center">
               <div className="aios-upsell_step_counter">04</div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Review Order</div>
+                <div className="aios-upsell_step_heading"> {t('translation.ReviewOrder')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Review the products
+                {t('translation.Reviewproducts')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2855,7 +2256,7 @@ const EditDiscountType = () => {
             }}
           >
             <ContextualSaveBar
-              message="Unsaved changes"
+              message={t('defaultSettings.content')}
               saveAction={{
                 onAction: handleSave,
                 loading: buttonloading,

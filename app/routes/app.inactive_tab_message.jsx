@@ -2,6 +2,7 @@ import { ButtonGroup,BlockStack, Button, Card, Text, Page, List, Toast,TextField
 import { useState, useCallback, useEffect } from "react";
 import { Link } from '@shopify/polaris';
 import { authenticate } from "../shopify.server";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useLoaderData } from "@remix-run/react";
 import DeactivatePopover from "./components/DeactivatePopover";
 import "./assets/style.css"
@@ -63,6 +64,7 @@ export const loader = async ({ request }) => {
 
 function InactiveTabMessage() {
     const navigate = useNavigate();
+    let { t } = useTranslation();
     const { data } = useLoaderData();
     const [formData, setFormData] = useState(data);
     const [status, setStatus] = useState(data.app_status);
@@ -190,14 +192,14 @@ function InactiveTabMessage() {
         <div className='Inactivetab-message'>
             <Page
                 backAction={{ content: "Back", onAction: handleClick }}
-                title="Inactive Tab Message"
-                subtitle="Reduce cart abandonment by dynamically modifying the browser tab's title when the visitor navigates away from your store."
+                title={`${t('InactiveTab.appTitle')}`}
+                subtitle={`${t('InactiveTab.appdsec')}`}
                 primaryAction={
                     status ? (
                         <DeactivatePopover type={appName} handleToggleStatus={handleToggleStatus} buttonLoading={buttonloading} />
                     ) : (
                         {
-                            content: "Activate App",
+                            content:t('defaultSettings.activateBtn'),
                             tone: "success",
                             onAction: handleToggleStatus,
                             loading: buttonloading,
@@ -209,14 +211,14 @@ function InactiveTabMessage() {
                 <Layout>
                     <Layout.AnnotatedSection
                         id="Settings"
-                        title="Settings"
+                        title={t('defaultSettings.settings')}
                     > 
                         <Card sectioned>
                                 <TextField
-                                    label="Message"
+                                    label={t('InactiveTab.Message')}
                                     autoComplete="off"
                                     value={formData.inactivemessage}
-                                    onFocus={(e)=> handleFocus("fielsd")}
+                                    onFocus={(e)=> handleFocus("field")}
                                     onChange={(e) =>{
                                             handleChange(e, "inactivemessage")
                                            
@@ -224,10 +226,10 @@ function InactiveTabMessage() {
                                     }
                                 />
                                 <Text tone='subdue' as='p'>
-                                    The message that will show in the browser tab's title when the visitor changes to another tab.
+                                {`${t('InactiveTab.helpText')}`}
                                     <br/><br/>
-                                    You can use emojis as well, copy them from  <a target="_blank" href="https://getemoji.com/" >
-                                        this page
+                                    {`${t('InactiveTab.desc')}`}  <a target="_blank" href="https://getemoji.com/" >
+                                    {`${t('InactiveTab.linkText')}`}
                                     </a>.
                                 </Text>
                         </Card>
