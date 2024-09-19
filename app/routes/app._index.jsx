@@ -120,7 +120,6 @@ export default function Index() {
   const [isDismissed, setIsDismissed] = useState(false);
 	let { t } = useTranslation();
   const activateApp = () => {
-
     window.open(
       "https://admin.shopify.com/store/" +
         storeName.replace(".myshopify.com", "") +

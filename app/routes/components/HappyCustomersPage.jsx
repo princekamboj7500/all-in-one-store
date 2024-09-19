@@ -2,26 +2,26 @@ import { BlockStack, Button, ButtonGroup, Card, ChoiceList, Text, Page, InlineGr
 import {ExternalIcon, XIcon} from '@shopify/polaris-icons';
 import gridimg from "./../assets/product_review/grid.png"
 import listimg from "./../assets/product_review/list.png"
-
+import { useTranslation } from "react-i18next";
 function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange, shopname }) {
     const review_layout_options = [
         { id: 'Grid_view', label: 'Grid View', imgSrc: gridimg },
         { id: 'List_view', label: 'List View', imgSrc: listimg }
     ];
     let  pagelink = `https://${shopname}/a/aios/page/top-reviews`;
-
+    let { t } = useTranslation();
     return (
         <>
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
                         <InlineGrid columns="1fr auto">
-                            <Text variant="headingMd" as="h6" fontWeight='semibold'>Show featured reviews on a dedicated page</Text>
+                            <Text variant="headingMd" as="h6" fontWeight='semibold'>{t('customersPage.title')}</Text>
                            
                         </InlineGrid>
 
                         <Checkbox
-                            label="Activate the Happy Customers Page with featured reviews"
+                            label={t('customersPage.check')}
                             checked={formData.activate_happy_customer_page}
                             onChange={(e) => {
                                 handleFocus("activate_happy_customer_page")
@@ -30,7 +30,7 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
                         />
                         {formData.activate_happy_customer_page ? <Text>Happy Customers Page link: <Link url={pagelink}target='_blank'>{pagelink}</Link></Text> : ""}
                         <TextField
-                            label={`Page title`}
+                            label={t('customersPage.page')}
                             value={formData.happy_customer_page_title}
                             onChange={(e) => {
                                 handleFocus("happy_customer_page_title")
@@ -39,7 +39,7 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
                             }
                         />
                         <TextField
-                            label={`Page description`}
+                            label={t('customersPage.desc')}
                             value={formData.happy_customer_page_description}
                             onChange={(e) => {
                                 handleFocus("happy_customer_page_description")
@@ -53,10 +53,10 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Layout</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('customersPage.Layout')}</Text>
                         <div className='img-choicelist'>
                             <ChoiceList
-                                title="Reviews layout"
+                                title={t('customersPage.layout_1')}
                                 choices={review_layout_options.map(option => ({
                                     label: (
                                         <span className={formData.happy_customer_reviews_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -75,13 +75,13 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
                             />
                         </div>
                         <Checkbox
-                            label="Show rating filter bars"
+                            label={t('customersPage.show')}
                             checked={formData.happy_customer_show_filterbar}
                             onChange={(e) => {
                                 handleFocus("happy_customer_show_filterbar")
                                 handleChange(e, "happy_customer_show_filterbar")
                             }}
-                            helpText="Display a breakdown of all reviews using progress bars at the top of the reviews list, allowing easy filtering."
+                            helpText={t('customersPage.help')}
                         />
                     </BlockStack>
                 </Card>
@@ -89,14 +89,14 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Number of reviews</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('customersPage.number')}</Text>
                         <InlineGrid columns={{  sm:"2" }} gap={200}>
                             <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                                 <BlockStack gap="200">
-                                    <Text variant="headingSm" as="h6" fontWeight='semibold'>Desktop</Text>
+                                    <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('customersPage.descktop')}</Text>
                                     <TextField
                                         type='number'
-                                        label={`Number of reviews before showing more`}
+                                        label={t('customersPage.ondesktop')}
                                         value={formData.happy_customer_min_reviews_desktop}
                                         onChange={(e) => {
                                             handleFocus("happy_customer_min_reviews_desktop")
@@ -108,10 +108,10 @@ function HappyCustomers({ formData, handleFocus, handleChange, handleColorChange
                             </Box>
                             <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                                 <BlockStack gap="200">
-                                    <Text variant="headingSm" as="h6" fontWeight='semibold'>Mobile</Text>
+                                    <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('customersPage.                                                                                                                                                               mobile')}</Text>
                                     <TextField
                                         type='number'
-                                        label={`Number of reviews before showing more`}
+                                        label={t('customersPage.onmobile')}
                                         value={formData.happy_customer_min_reviews_mobile}
                                         onChange={(e) => {
                                             handleFocus("happy_customer_min_reviews_mobile")

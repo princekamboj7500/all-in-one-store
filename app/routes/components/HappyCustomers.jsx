@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../assets/review.css";
 import Masonry from "react-masonry-css";
 import ReviewsModel from "./ReviewsModel";
+import { useTranslation } from "react-i18next";
 const reviews = [
   {
     image: [],
