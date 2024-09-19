@@ -39,15 +39,15 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="300">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Publish and position</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('reviewBadge.publish')}</Text>
                        
                         <Box background="bg-surface-secondary" padding="200" borderRadius="200">
                             <BlockStack gap={200}>
-                                <Text variant="headingSm" as="h6" fontWeight='regular'>Display manually</Text>
-                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >Place the All Reviews Badge manually on your homepage or other pages using the editor.</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='regular'>{t('reviewBadge.display')}</Text>
+                                <Text variant="headingSm" as="p" fontWeight='regular' tone="subdued" >{t('reviewBadge.text')}</Text>
                                 <InlineStack align="start">
                                     <ButtonGroup>
-                                        <Button onClick={handleNavigate} accessibilityLabel="Go to editor"> Go to Shopify Editor</Button>
+                                        <Button onClick={handleNavigate} accessibilityLabel="Go to editor"> {t('reviewBadge.btn')}</Button>
                                     </ButtonGroup>
                                 </InlineStack>
                             </BlockStack>
@@ -59,10 +59,10 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Layout and design</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('reviewBadge.layout')}</Text>
                         <div className='img-choicelist'>
                             <ChoiceList
-                                title="Layout"
+                                title={t('reviewBadge.label')}
                                 choices={layout_options.map(option => ({
                                     label: (
                                         <span className={formData.badge_layout == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -82,7 +82,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         </div>
                         <div className='img-choicelist'>
                             <ChoiceList
-                                title="Style"
+                                title={t('reviewBadge.style')}
                                 choices={style_options.map(option => ({
                                     label: (
                                         <span className={formData.badge_style == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -103,7 +103,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         {formData.badge_layout === 'vertical' &&
                             <div className="btn-grp-radio">
                                 <ChoiceList
-                                    title="Star alignment"
+                                    title={t('reviewBadge.star_align')}
                                     choices={widget_alignment_options.map(option => ({
                                         label: (
                                             <span className={formData.custom_widget_alignment == option.id ? "labelchecked labelmain" : "labelmain"}>
@@ -122,7 +122,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         }
                         {formData.badge_style === 'custom' && (<>
                             <Checkbox
-                                label="Show background"
+                                label={t('reviewBadge.show_bg')}
                                 checked={formData.badge_show_bg}
                                 onChange={(e) => {
                                     handleFocus("badge_show_bg")
@@ -132,7 +132,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                             {formData.badge_show_bg && (
                                 <div className='color_section'>
                                     <TextField
-                                        label="Background color"
+                                        label={t('reviewBadge.bgColor')}
                                         type="text"
                                         value={formData.custom_bg_color}
                                         onChange={(e) => {
@@ -155,7 +155,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                                 </div>
                             )}
                             <Checkbox
-                                label="Show border"
+                                label={t('reviewBadge.showBorder')}
                                 checked={formData.badge_show_border}
                                 onChange={(e) => {
                                     handleFocus("badge_show_border")
@@ -165,7 +165,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                             {formData.badge_show_border && (
                                 <div className='color_section'>
                                     <TextField
-                                        label="Border color"
+                                        label={t('reviewBadge.borderColor')}
                                         type="text"
                                         value={formData.custom_border_color}
                                         onChange={(e) => {
@@ -190,7 +190,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         </>)
                         }
                         <Checkbox
-                            label="Show review count"
+                            label={t('reviewBadge.showCount')}
                             checked={formData.show_review_count}
                             onChange={(e) => {
                                 handleFocus("show_review_count")
@@ -200,7 +200,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         {formData.show_review_count && formData.badge_style === 'custom' && (
                             <div className='color_section'>
                                 <TextField
-                                    label="Review count text color"
+                                    label={t('reviewBadge.review')}
                                     type="text"
                                     value={formData.review_count_color}
                                     onChange={(e) => {
@@ -224,7 +224,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                         )}
                         <RangeSlider
                             output
-                            label={<InlineStack style={{ "margin": "0px" }} >Corner radius
+                            label={<InlineStack style={{ "margin": "0px" }} >{t('reviewBadge.radius')}
                                 <Tooltip content={`Controls the background and border corners.`}>
                                     <Icon source={AlertCircleIcon} tone='base'></Icon>
                                 </Tooltip></InlineStack>}
@@ -242,7 +242,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                             <InlineGrid columns={2} gap={200}>
                                 <div className='color_section'>
                                     <TextField
-                                        label="Rating box text color"
+                                        label={t('reviewBadge.rate')}
                                         type="text"
                                         onChange={(e) => {
                                             handleFocus("rating_box_text_color")
@@ -265,7 +265,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                                 </div>
                                 <div className='color_section'>
                                     <TextField
-                                        label="Rating box background color"
+                                        label={t('reviewBadge.bg_Color')}
                                         type="text"
                                         onChange={(e) => {
                                             handleFocus("rating_box_bg_color")
@@ -291,7 +291,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
 
                         <div className='color_section'>
                             <TextField
-                                label="Star color"
+                                label={t('reviewBadge.style')}
                                 type="text"
                                 onChange={(e) => {
                                     handleFocus("badge_star_color")
@@ -313,7 +313,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                             />
                         </div>
                         <Checkbox
-                            label={'Show "Collected by AIOS"'}
+                            label={t('reviewBadge.coll')}
                             checked={formData.show_collected_by_vitals}
                             onChange={(e) => {
                                 handleFocus("show_collected_by_vitals")
@@ -326,16 +326,16 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
             <Layout.Section>
                 <Card roundedAbove="sm">
                     <BlockStack gap="400">
-                        <Text variant="headingSm" as="h6" fontWeight='semibold'>Spacing</Text>
+                        <Text variant="headingSm" as="h6" fontWeight='semibold'>{t('reviewBadge.spacing')}</Text>
                         <Box background="bg-surface-secondary" padding="300" borderRadius="200">
                             <BlockStack gap="200">
-                                <Text variant="headingSm" as="h6" fontWeight='regular'>Margin</Text>
+                                <Text variant="headingSm" as="h6" fontWeight='regular'>{t('reviewBadge.margin')}</Text>
                                 <InlineGrid columns={{
                                     sm:"2",
                                 }} gap={300}>
                                     <TextField
                                         type='number'
-                                        label={`Left`}
+                                        label={t('reviewBadge.left')}
                                         suffix="px"
                                         value={formData.badge_margin_left}
                                         onChange={(e) => {
@@ -346,7 +346,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                                     <TextField
                                         type='number'
                                         suffix="px"
-                                        label={`Right`}
+                                        label={t('reviewBadge.Right')}
                                         value={formData.badge_margin_right}
                                         onChange={(e) => {
                                             handleFocus("badge_margin_right")
@@ -356,7 +356,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                                     <TextField
                                         type='number'
                                         suffix="px"
-                                        label={`Top`}
+                                        label={t('reviewBadge.top')}
                                         value={formData.badge_margin_top}
                                         onChange={(e) => {
                                             handleFocus("badge_margin_top")
@@ -366,7 +366,7 @@ function AllreviewsBadge({shop, formData, handleFocus, handleChange, handleColor
                                     <TextField
                                         suffix="px"
                                         type='number'
-                                        label={`Bottom`}
+                                        label={t('reviewBadge.btm')}
                                         value={formData.badge_margin_bottom}
                                         onChange={(e) => {
                                             handleFocus("badge_margin_bottom")

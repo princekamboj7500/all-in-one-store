@@ -3,7 +3,7 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://showers-architecture-proud-packages.trycloudflare.com"
+application_url = "https://shirts-commit-xp-eugene.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://showers-architecture-proud-packages.trycloudflare.com/auth/callback",
-  "https://showers-architecture-proud-packages.trycloudflare.com/auth/shopify/callback",
-  "https://showers-architecture-proud-packages.trycloudflare.com/api/auth/callback"
+  "https://shirts-commit-xp-eugene.trycloudflare.com/auth/callback",
+  "https://shirts-commit-xp-eugene.trycloudflare.com/auth/shopify/callback",
+  "https://shirts-commit-xp-eugene.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -29,7 +29,7 @@ api_version = "2024-04"
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
 
 [app_proxy]
-url = "https://showers-architecture-proud-packages.trycloudflare.com/api"
+url = "https://shirts-commit-xp-eugene.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 
