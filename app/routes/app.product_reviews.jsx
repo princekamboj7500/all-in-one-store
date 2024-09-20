@@ -2016,7 +2016,7 @@ function ProductReviews() {
     navigate("/app");
     shopify.loading(true);
   };
-  const appName = "Product Reviews";
+  const appName =t('Homepage.product');
 
   return (
     <div className="Produyct-reviews">

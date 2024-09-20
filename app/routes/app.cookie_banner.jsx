@@ -1202,7 +1202,7 @@ function CookieBanner(props) {
     }
    
   ];
-  const appName = "Cookies Banner";
+  const appName = t('CookieBanner.appTitle');
   return (
     <div className="Cookies_Banner_page">
       <Page

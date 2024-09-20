@@ -478,7 +478,7 @@ function Instantsearchapp(props) {
             </div>
         );
     }
-    const appName = "Instant Search"
+    const appName = t('Homepage.search');
     const handleClick = () => {
         navigate("/app");
         shopify.loading(true);

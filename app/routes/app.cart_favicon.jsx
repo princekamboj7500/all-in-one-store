@@ -248,7 +248,7 @@ function Favicon_cart_count(props) {
     setIsDismissed(true);
   };
    const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?context=theme`;
-    const appName = "Favicon Cart Count"
+    const appName = t('FaviconCart.appTitle');
  
   return (
     <div className="Favicon_cart_count_page">

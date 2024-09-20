@@ -370,7 +370,7 @@ export default function ScrollToTop() {
     shopify.loading(true);
   };
 
-  const appName = "Scroll to Top Button";
+  const appName = t('ScrollTop.appTitle');
   return (
     <Page
       backAction={{ content: "Back", onAction: handleClick }}

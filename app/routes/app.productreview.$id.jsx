@@ -45,6 +45,7 @@ import {
   PlusIcon,
 } from "@shopify/polaris-icons";
 import Table from "./components/Table";
+import { useTranslation } from "react-i18next";
 export const loader = async ({ request, params }) => {
   const productId = params.id;
   const { session, admin } = await authenticate.admin(request);
@@ -67,7 +68,7 @@ const ProductReview = () => {
   const [active, setActive] = useState(false);
   const [error, setError] = useState("");
   const [activeField, setActiveField] = useState(null);
-
+  let { t } = useTranslation();
   let store = storeName + ".myshopify.com";
   const [filteredReviews, setFilteredReviews] = useState(getReviews);
   const [buttonLoader, setButtonLoader] = useState(false);
@@ -626,41 +627,7 @@ const ProductReview = () => {
     }
   };
 
-  // const handleUpdate = async () => {
-  //   try {
-  //     const data = {
-  //       product_id: productId,
-  //       store_name: store,
-  //       editReview: editReview,
-  //     };
-
-  //     const response = await fetch("/api/updateReview", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-
-  //     const result = await response.json();
-  //     if (result.success) {
-  //       setActive(true);
-  //       setActiveField(false);
-  //       setButtonLoading(false);
-  //       setFilteredReviews(result.data);
-  //       setMsgData("Review Updated");
-  //       setShowEditModal(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   } finally {
-  //     setButtonLoading(false);
-  //   }
-  // };
+ 
 
   let handleClose = () => {
     setShowEditModal(false);
@@ -954,15 +921,15 @@ const ProductReview = () => {
         <Modal
           open={showPhotosModal}
           onClose={() => setShowPhotoModal(false)}
-          title="Update images"
+          title={t('editReview.update')}
           primaryAction={{
-            content: "Save",
+            content: t('editReview.save'),
             onAction: handleSaveImageModal,
             loading: buttonLoader,
           }}
           secondaryActions={[
             {
-              content: "Close",
+              content: t('editReview.close'),
               onAction: () => setShowPhotoModal(false),
             },
           ]}
@@ -1025,7 +992,7 @@ const ProductReview = () => {
                 </div>
               </InlineGrid>
               <Text tone="subdued">
-                The file size should not be more than 10Mb.
+                {t('editReview.error')}
               </Text>
             </BlockStack>
           </Modal.Section>
@@ -1059,13 +1026,13 @@ const ProductReview = () => {
       setActiveField(false);
       setButtonLoader(false);
       setFilteredReviews(result.data);
-      setMsgData(`Published Successfully`);
+      setMsgData(t('editReview.success'));
     } else {
       setButtonLoader(false);
       setActive(true);
       setActiveField(false);
       setError(true);
-      setMsgData("There is some error while update");
+      setMsgData(t('editReview.fail'));
     }
 
   }
@@ -1153,8 +1120,8 @@ const ProductReview = () => {
                 <BlockStack gap={200} inlineAlign="start">
                   <Text>{truncateContent(reviewDesc, 7)}</Text>
                   <InlineStack gap={200}>
-                    {featured && <Badge tone="info">Featured</Badge>}
-                    {storeReply && <Badge tone="info">Replied</Badge>}
+                    {featured && <Badge tone="info">{t('editReview.Featured')}</Badge>}
+                    {storeReply && <Badge tone="info">{t('editReview.Replied')}</Badge>}
                   </InlineStack>
                 </BlockStack>
               </IndexTable.Cell>
@@ -1173,9 +1140,9 @@ const ProductReview = () => {
               </IndexTable.Cell>
               <IndexTable.Cell>
                 {status == "Published" ? (
-                  <Badge tone="success">Published</Badge>
+                  <Badge tone="success">{t('editReview.Published')}</Badge>
                 ) : (
-                  <Badge>Unpublished</Badge>
+                  <Badge>{t('editReview.Unpublished')}</Badge>
                 )}
               </IndexTable.Cell>
 
@@ -1192,20 +1159,20 @@ const ProductReview = () => {
                       variant="tertiary"
                     />
                   </Tooltip>
-                  <Tooltip content="Write a reply">
+                  <Tooltip content={t('editReview.write')}>
                     <Button
                       icon={ReplayIcon}
-                      accessibilityLabel="Write a reply"
+                      accessibilityLabel={t('editReview.write')}
                       onClick={() =>
                         handleReplyModal(filteredReviews[index], id)
                       }
                       variant="tertiary"
                     />
                   </Tooltip>
-                  <Tooltip content="Publish the reviews">
+                  <Tooltip content={t('editReview.publish')}>
                     <Button
                     icon={ SendIcon}
-                      accessibilityLabel="Publish "
+                      accessibilityLabel={t('editReview.publish')}
                       onClick={() =>
                         handlePublishReviews(filteredReviews[index], id,"publish")
                         
@@ -1222,13 +1189,13 @@ const ProductReview = () => {
         },
       )
     ) : (
-      <div>No reviews found</div>
+      <div>{t('editReview.noexits')}</div>
     );
 
   const emptyStateMarkup = (
     <EmptySearchResult
-      title={"No reviews"}
-      description={"There are no reviews for this product for searched query "}
+      title={t('editReview.empty')}
+      description={t('editReview.emptyDesc')}
       withIllustration
     />
   );
@@ -1254,19 +1221,9 @@ const ProductReview = () => {
         content: "Back",
         onAction: handlePageNavigate,
       }}
-      // actionGroups={[
-      //   {
-      //     title: "More actions",
-      //     actions: [
-      //       { content: "Duplicate" },
-      //       { content: "Print" },
-      //       { content: "Unarchive" },
-      //       { content: "Cancel order" },
-      //     ],
-      //   },
-      // ]}
+    
     >
-      {/* <Table/> */}
+    
       <Layout>
         <Layout.Section>
           <Card padding={0} roundedAbove="sm" style={{ overflow: "hidden" }}>
@@ -1291,14 +1248,14 @@ const ProductReview = () => {
               }
               onSelectionChange={handleSelectionChange}
               headings={[
-                { title: "Name" },
-                { title: "Rating" },
-                { title: "Review Content" },
-                { title: "Source" },
-                { title: "Photos" },
-                { title: "Status" },
-                { title: "Date" },
-                { title: "Actions" },
+                { title: t('editReview.name')},
+                { title: t('editReview.rating') },
+                { title: t('editReview.review') },
+                { title:  t('editReview.source')},
+                { title:t('editReview.photos') },
+                { title:t('editReview.status') },
+                { title: t('editReview.date') },
+                { title: t('editReview.actions') },
               ]}
               bulkActions={bulkActions}
               promotedBulkActions={promotedBulkActions}
