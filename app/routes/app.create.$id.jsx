@@ -44,6 +44,7 @@ import {
   ImageIcon,
 } from "@shopify/polaris-icons";
 import DiscardModal from "./components/DiscardModal";
+import { useTranslation } from "react-i18next";
 import { product, bogoproduct, bogoproduct2 } from "./assets";
 export const loader = async ({ request, params }) => {
   const type = params.id;
@@ -126,6 +127,7 @@ export function Discount({
   formData,
   handleContinueClick,
 }) {
+  let { t } = useTranslation();
   return (
     <>
       <div className="aios_layout_spacer">
@@ -136,7 +138,7 @@ export function Discount({
                 <Card roundedAbove="sm">
                   <BlockStack gap="300">
                     <Text variant="headingSm" as="h6">
-                      Discount value
+                      {t('createUpsell.discount')}
                     </Text>
                     <Box paddingBlockStart="200">
                       <BlockStack gap="400">
@@ -148,13 +150,13 @@ export function Discount({
                                 handleFirstButtonClick("discount");
                               }}
                             >
-                              Percent
+                             {t('createUpsell.percent')}
                             </Button>
                             <Button
                               pressed={!isFirstButtonActive}
                               onClick={handleSecondButtonClick}
                             >
-                              Fixed Amount
+                            {t('createUpsell.fixed')}
                             </Button>
                           </ButtonGroup>
                           <TextField
@@ -178,7 +180,7 @@ export function Discount({
       </div>
       <PageActions
         primaryAction={{
-          content: "Continue to Appearance",
+          content: t('createUpsell.continueAppearnce'),
           onClick: handleContinueClick,
         }}
       />
@@ -196,6 +198,7 @@ export function ReviewsLayout({
   handleChange,
   formData,
 }) {
+  let { t } = useTranslation();
   const getCustomerBuysText = () => {
     const { chosen_type, qty } = formData?.rules?.customer_buy || {};
     const eligibleProductsCount = buyProduct.length;
@@ -228,7 +231,7 @@ export function ReviewsLayout({
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Products
+                        {t('createUpsell.Products')}
                       </Text>
                       <div>
                         <Button
@@ -239,16 +242,16 @@ export function ReviewsLayout({
                       </div>
                     </InlineStack>
                     <Text variant="bodySm" as="p">
-                      Customer buys: {getCustomerBuysText()}
+                    {t('createUpsell.buys')} {getCustomerBuysText()}
                     </Text>
-                    Customer gets: {getCustomerGetsText()}
+                    {t('createUpsell.gets')} {getCustomerGetsText()}
                   </Card>
                 </Layout.Section>
                 <Layout.Section>
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Discount details
+                      {t('createUpsell.details')} 
                       </Text>
                       <div>
                         <Button
@@ -259,14 +262,14 @@ export function ReviewsLayout({
                       </div>
                     </InlineStack>
                     {formData?.rules?.discount?.discount_amount}
-                    {formData?.rules?.discount?.discount_symbol} Discount
+                    {formData?.rules?.discount?.discount_symbol}  {t('createUpsell.discount')} 
                   </Card>
                 </Layout.Section>
                 <Layout.Section>
                   <Card>
                     <InlineStack wrap={false} align="space-between">
                       <Text variant="headingSm" as="h6">
-                        Placements & Appearance
+                      {t('createUpsell.apper')} 
                       </Text>
                       <div>
                         <Button
@@ -287,14 +290,14 @@ export function ReviewsLayout({
                           <BlockStack gap="500">
                             <InlineStack wrap={false} align="space-between">
                               <Text variant="bodyMd" as="p">
-                                BOGO on Product Page
+                              {t('createUpsell.bogo')} 
                               </Text>
                               <div>
                                 {formData?.rules?.product_page.status ==
                                 "Active" ? (
-                                  <Badge tone="success">Active</Badge>
+                                  <Badge tone="success">{t('createUpsell.active')} </Badge>
                                 ) : (
-                                  <Badge tone="info">Inactive</Badge>
+                                  <Badge tone="info">{t('createUpsell.Inactive')}</Badge>
                                 )}
                               </div>
                             </InlineStack>
@@ -313,14 +316,14 @@ export function ReviewsLayout({
                           <BlockStack gap="500">
                             <InlineStack wrap={false} align="space-between">
                               <Text variant="bodyMd" as="p">
-                                Cart Suggestion on Cart page Success
+                              {t('createUpsell.cart')}
                               </Text>
                               <div>
                                 {formData?.rules?.cart_page.status ==
                                 "Active" ? (
-                                  <Badge tone="success">Active</Badge>
+                                  <Badge tone="success">{t('createUpsell.active')}</Badge>
                                 ) : (
-                                  <Badge>Inactive</Badge>
+                                  <Badge>{t('createUpsell.Inactive')}</Badge>
                                 )}
                               </div>
                             </InlineStack>
@@ -341,7 +344,7 @@ export function ReviewsLayout({
             <Layout.Section>
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Offer status
+                  {t('createUpsell.offer_s')}
                 </Text>
                 <Select
                   options={options}
@@ -353,7 +356,7 @@ export function ReviewsLayout({
             <Layout.Section variant="oneThird">
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Internal name
+            {t('createUpsell.name')}
                 </Text>
                 <TextField
                   onChange={(e) => handleChange(e, "internal_name")}
@@ -365,12 +368,12 @@ export function ReviewsLayout({
             <Layout.Section variant="oneThird">
               <Card>
                 <Text variant="headingMd" as="h6">
-                  Cart Label
+                {t('createUpsell.label')}
                 </Text>
                 <TextField
                   onChange={(e) => handleChange(e, "cart_label")}
                   value={formData.cart_label}
-                  helpText="Customize the text that shows up near the discount on the Cart page."
+                  helpText={t('createUpsell.help')}
                   autoComplete="off"
                 />
               </Card>
@@ -379,7 +382,7 @@ export function ReviewsLayout({
         </Layout.Section>
       </Layout>
       <PageActions
-        secondaryActions={<Button onClick={handleSave}>Save</Button>}
+        secondaryActions={<Button onClick={handleSave}>{t('createUpsell.save')}</Button>}
       />
     </div>
   );
@@ -399,6 +402,7 @@ export function AllCustomer({
   formData,
   handleCollectionDelete,
 }) {
+  let { t } = useTranslation();
   const [inputValue, setInputValue] = useState("");
   const handleInputChange = () => {
     selectProduct("customer_buy");
@@ -421,10 +425,10 @@ export function AllCustomer({
               <Card>
                 <BlockStack gap="200">
                   <Text variant="headingMd" as="h6" fontWeight="semibold">
-                    Customer buys
+                  {t('createUpsell.customers')} 
                   </Text>
                   <RadioButton
-                    label="Any product"
+                    label={t('createUpsell.label')} 
                     id="any-products-slotA"
                     name="products-slotA"
                     checked={formData.rules.customer_buy.chosen_type === "any"}
@@ -434,7 +438,7 @@ export function AllCustomer({
                   />
 
                   <RadioButton
-                    label="Specific product or collection"
+                    label={t('createUpsell.label_1')} 
                     id="product-collection-slotA"
                     name="products-slotA"
                     checked={
@@ -450,7 +454,7 @@ export function AllCustomer({
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search Products"
+                            placeholder=   {t('createUpsell.place')} 
                             type="text"
                             onChange={handleInputChange}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -458,13 +462,13 @@ export function AllCustomer({
                           />
                         </div>
                         <Button onClick={() => selectProduct("customer_buy")}>
-                          Browse
+                        {t('createUpsell.browse')} 
                         </Button>
                       </InlineStack>
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search  Collections"
+                            placeholder=     {t('createUpsell.search')} 
                             type="text"
                             onChange={handleInputChangeCustomerCollection}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -474,7 +478,7 @@ export function AllCustomer({
                         <Button
                           onClick={() => selectCollection("customer_buy")}
                         >
-                          Browse
+                          {t('createUpsell.browse')} 
                         </Button>
                       </InlineStack>
                     </>
@@ -483,7 +487,7 @@ export function AllCustomer({
                   )}
 
                   <TextField
-                    label="Quantity"
+                    label= {t('createUpsell.qty')} 
                     type="number"
                     value={formData.rules.customer_buy.qty}
                     autoComplete="off"
@@ -494,7 +498,7 @@ export function AllCustomer({
                       {buyProduct.length === 0 &&
                       buyCollections.length === 0 ? (
                         <InlineError
-                          message="A product or collection selection is required"
+                          message= {t('createUpsell.msg')} 
                           fieldID="myFieldID"
                         />
                       ) : (
@@ -502,7 +506,7 @@ export function AllCustomer({
                           {buyProduct.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {buyProduct.length} product
+                              {t('createUpsell.m1')} {buyProduct.length} {t('createUpsell.pro')}
                                 {buyProduct.length > 1 ? "s" : ""}
                               </Text>
                               {buyProduct.length > 0 &&
@@ -561,8 +565,8 @@ export function AllCustomer({
                           {buyCollections.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {buyCollections.length}{" "}
-                                collection
+                              {t('createUpsell.m1')} {buyCollections.length}{" "}
+                                {t('createUpsell.col_1')}
                                 {buyCollections.length > 1 ? "s" : ""}
                               </Text>
                               {buyCollections.map((item, index) => (
@@ -628,11 +632,11 @@ export function AllCustomer({
               <Card>
                 <BlockStack gap={200}>
                   <Text variant="headingMd" as="h6" fontWeight="semibold">
-                    Customer gets
+                  {t('createUpsell.customers')}
                   </Text>
 
                   <RadioButton
-                    label="Any product"
+                    label={t('createUpsell.label')}
                     id="any-products-slotB"
                     name="products-slotB"
                     checked={formData.rules.customer_get.chosen_type === "any"}
@@ -641,7 +645,7 @@ export function AllCustomer({
                     }
                   />
                   <RadioButton
-                    label="Specific Products or Collections"
+                    label={t('createUpsell.label_1')}
                     id="same-collection-slotB"
                     name="products-slotB"
                     checked={
@@ -657,7 +661,7 @@ export function AllCustomer({
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search Products or Collections"
+                            placeholder=   {t('createUpsell.label_2')}
                             type="text"
                             onChange={handleInputChangeCustomerGet}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -665,13 +669,13 @@ export function AllCustomer({
                           />
                         </div>
                         <Button onClick={() => selectProduct("customer_get")}>
-                          Browse
+                        {t('createUpsell.browse')}
                         </Button>
                       </InlineStack>
                       <InlineStack wrap={false} gap="200">
                         <div style={{ width: "100%" }}>
                           <TextField
-                            placeholder="Search  Collections"
+                            placeholder={t('createUpsell.search')}
                             type="text"
                             onChange={handleInputChangeCustomerColl}
                             prefix={<Icon source={SearchIcon} tone="base" />}
@@ -681,7 +685,7 @@ export function AllCustomer({
                         <Button
                           onClick={() => selectCollection("customer_get")}
                         >
-                          Browse
+                         {t('createUpsell.browse')}
                         </Button>
                       </InlineStack>
                     </>
@@ -690,7 +694,7 @@ export function AllCustomer({
                   )}
 
                   <TextField
-                    label="Quantity"
+                    label={t('createUpsell.qty')}
                     type="number"
                     onChange={(e) => handleChange(e, "customer_get", "qty")}
                     autoComplete="off"
@@ -701,7 +705,7 @@ export function AllCustomer({
                       {getProduct.length === 0 &&
                       getCollections.length === 0 ? (
                         <InlineError
-                          message="A product or collection selection is required"
+                          message={t('createUpsell.msg')}
                           fieldID="myFieldID"
                         />
                       ) : (
@@ -709,7 +713,7 @@ export function AllCustomer({
                           {getProduct.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {getProduct.length} product
+                               {t('createUpsell.m1')} {getProduct.length} {t('createUpsell.pro')}
                                 {getProduct.length > 1 ? "s" : ""}
                               </Text>
                               {getProduct.length > 0 &&
@@ -768,8 +772,8 @@ export function AllCustomer({
                           {getCollections.length > 0 && (
                             <BlockStack gap="200">
                               <Text as="p" fontWeight="bold">
-                                You have selected {getCollections.length}{" "}
-                                collection
+                              {t('createUpsell.m1')}{getCollections.length}{" "}
+                               {t('createUpsell.col_1')}
                                 {getCollections.length > 1 ? "s" : ""}
                               </Text>
                               {getCollections.map((item, index) => (
@@ -840,7 +844,7 @@ export function AllCustomer({
 
       <PageActions
         primaryAction={{
-          content: "Continue to discount",
+          content: t('createUpsell.btn_1'),
           onClick: handleContinueClick,
         }}
       />
@@ -857,6 +861,7 @@ export function Appearance({
   formData,
   handleColorChange,
 }) {
+  let { t } = useTranslation();
   const codeSnippet =
     '<div class="aios_cart_bogo" id="{{ item.product_id  }}" data-key="{{ item.key}}"></div>';
   const Status_options = [
@@ -896,11 +901,11 @@ export function Appearance({
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
                       {" "}
-                      BOGO on Product Page
+                     {t('createUpsell.bogoTitle')}
                       {formData.rules.product_page.status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">   {t('createUpsell.active')}</Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>   {t('createUpsell.Inactive')}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -912,7 +917,7 @@ export function Appearance({
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {t('createUpsell.show')}
                         </Text>
                       </div>
                     )}
@@ -921,8 +926,7 @@ export function Appearance({
                 </div>
               </div>
               <Text variant="bodySm" as="p">
-                Showcase the products from the offer, together with the
-                discount. Suited just below the product description.
+              {t('createUpsell.lines')}
                 {/* <Link href="#">
                   <Text variant="headingSm" as="h5">
                     Preview
@@ -940,7 +944,7 @@ export function Appearance({
           >
             <BlockStack gap="400">
               <Select
-                label="Status"
+                label=  {t('createUpsell.stat')}
                 options={Status_options}
                 onChange={(e) => {
                   handleChange(e, "product_page", "status");
@@ -948,7 +952,7 @@ export function Appearance({
                 value={formData.rules.product_page.status}
               />
               <TextField
-                label="Offer title"
+                label={t('createUpsell.offer')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleChange(e, "product_page", "offer_title");
@@ -956,7 +960,7 @@ export function Appearance({
                 value={formData.rules.product_page.offer_title}
               />
               <TextField
-                label={`Button text`}
+                label={t('createUpsell.btn')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleChange(e, "product_page", "button_text");
@@ -964,7 +968,7 @@ export function Appearance({
                 value={formData.rules.product_page.button_text}
               />
               <TextField
-                label={`Badge text`}
+                label={t('createUpsell.badge')}
                 autoComplete="off"
                 onChange={(e) => {
                   handleChange(e, "product_page", "badge_text");
@@ -983,11 +987,11 @@ export function Appearance({
               <BlockStack gap={200}>
                 <div style={{ float: "left" }}>
                   <Text variant="headingMd" as="h6">
-                    Appearance
+                  {t('createUpsell.apear')}
                   </Text>
                   <Text variant="bodySm" as="p">
-                    These settings apply to offer badges, price badge and
-                    button.
+                 {t('createUpsell.descp')}
+                   
                   </Text>
                 </div>
 
@@ -995,7 +999,7 @@ export function Appearance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Accent color`}
+                        label={t('createUpsell.color')}
                         type="text"
                         onChange={(e) => {
                           handleChange(e, "product_page", "accent_color");
@@ -1039,7 +1043,7 @@ export function Appearance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Text color`}
+                        label={t('createUpsell.tcolor')}
                         type="text"
                         onChange={(e) => {
                           handleChange(e, "product_page", "text_color");
@@ -1085,9 +1089,9 @@ export function Appearance({
                   output
                   label={
                     <InlineStack style={{ margin: "0px" }}>
-                      Offer badge text size
+                     {t('createUpsell.badgeT')}
                       <Tooltip
-                        content={`This is the maximum width that the carousel can have. It will not exceed the width of its container (section).`}
+                        content={t('createUpsell.pp')}
                       ></Tooltip>
                     </InlineStack>
                   }
@@ -1112,22 +1116,23 @@ export function Appearance({
               </BlockStack>
               <div>
                 <Text variant="headingSm" as="h6">
-                  Product card
+                  {t('createUpsell.card')}
                 </Text>
                 <Text variant="bodyMd" as="p">
-                  These settings apply to all BOGO offers on Product Page
+
+                {t('createUpsell.set')}
                 </Text>
               </div>
               <BlockStack gap={300}>
                 <Checkbox
-                  label="Show shadow"
+                  label=      {t('createUpsell.shadow')}
                   checked={formData.rules.product_page.show_shadow}
                   onChange={(e) => {
                     handleChange(e, "product_page", "show_shadow");
                   }}
                 />
                 <Checkbox
-                  label="Show border"
+                  label={t('createUpsell.border')}
                   checked={formData.rules.product_page.show_border}
                   onChange={(e) => {
                     handleChange(e, "product_page", "show_border");
@@ -1138,7 +1143,7 @@ export function Appearance({
                   <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}>
                     <div className="color_section">
                       <TextField
-                        label={`Border color`}
+                        label={t('createUpsell.colo')}
                         type="text"
                         onChange={(e) => {
                           handleChange(e, "product_page", " border_color");
@@ -1203,11 +1208,11 @@ export function Appearance({
                 <div style={{ float: "left" }}>
                   <Text variant="headingSm" as="h6">
                     <InlineStack gap={300}>
-                      Cart Suggestion on Cart page
+                      {t('createUpsell.cart')}
                       {formData.rules.cart_page.status === "Active" ? (
-                        <Badge tone="success">Active</Badge>
+                        <Badge tone="success">{t('createUpsell.active')}</Badge>
                       ) : (
-                        <Badge>Inactive</Badge>
+                        <Badge>{t('createUpsell.Inactive')}</Badge>
                       )}
                     </InlineStack>
                   </Text>
@@ -1219,7 +1224,7 @@ export function Appearance({
                     ) : (
                       <div style={{ marginTop: "2px" }}>
                         <Text variant="bodySm" as="p">
-                          Show settings
+                        {t('createUpsell.show')}
                         </Text>
                       </div>
                     )}
@@ -1227,17 +1232,7 @@ export function Appearance({
                   </InlineStack>
                 </div>
               </div>
-              <Text variant="bodySm" as="p">
-                If your visitors are not required to give permission before
-                their data can be used, you can display an informative banner.
-                It will notify the visitors that by using your service, they
-                accept your Privacy Policy.
-                {/* <Link href="#">
-                        <Text variant="headingSm" as="h5">
-                          Preview
-                        </Text>
-                      </Link> */}
-              </Text>
+             
             </BlockStack>
           </div>
 
@@ -1257,8 +1252,7 @@ export function Appearance({
                 }}
               >
                 <p>
-                  To display Bogo on cart page place the following code in your
-                  file BOGO on cart page:
+                 {t('createUpsell.desc')}
                 </p>
                 <pre
                   style={{
@@ -1282,7 +1276,7 @@ export function Appearance({
                 </Button>
               </div>
               <Select
-                label="Status"
+                label={t('createUpsell.stat')}
                 options={informative_Status_options}
                 onChange={(e) => {
                   handleChange(e, "cart_page", "status");
@@ -1290,7 +1284,7 @@ export function Appearance({
                 value={formData.rules.cart_page.status}
               />
               <TextField
-                label="Product suggestion format when there is a discount"
+                label={t('createUpsell.kk')}
                 onChange={(e) => {
                   handleChange(e, "cart_page", "format");
                 }}
@@ -1870,7 +1864,7 @@ export function Appearance({
       </Layout>
       <PageActions
         primaryAction={{
-          content: "Continue to Review",
+          content: t('createUpsell.review'),
           onClick: handleContinueClick,
         }}
       />
@@ -1888,6 +1882,7 @@ function BuilderCreate() {
     thankubanner: false,
     addCart: false,
   });
+  let { t } = useTranslation();
   const [isFirstButtonActive, setIsFirstButtonActive] = useState(true);
 
   const nav = useNavigate();
@@ -1933,7 +1928,7 @@ function BuilderCreate() {
 
   const handleSecondButtonClick = () => {
     setIsFirstButtonActive(true);
-    // setFormData({ ...formData, discount_type: "fixed" });
+  
     setFormData({
       ...formData,
       rules: {
@@ -2298,7 +2293,7 @@ function BuilderCreate() {
           }}
         >
           <ContextualSaveBar
-            message="Unsaved changes"
+            message={t('createUpsell.unsaved')}
             saveAction={{
               onAction: handleSave,
               loading: buttonloading,
@@ -2322,9 +2317,9 @@ function BuilderCreate() {
                 {activeTab > 1 ? <Icon source={CheckIcon} tone="base" /> : "01"}
               </div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Select Products</div>
+                <div className="aios-upsell_step_heading">{t('createUpsell.select')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Products in the offer
+                {t('createUpsell.offer')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2338,9 +2333,10 @@ function BuilderCreate() {
                 {activeTab > 2 ? <Icon source={CheckIcon} tone="base" /> : "02"}
               </div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Discount</div>
+               
+                <div className="aios-upsell_step_heading">{t('createUpsell.discount')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Discount types & amounts
+                {t('createUpsell.type')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2354,9 +2350,9 @@ function BuilderCreate() {
                 {activeTab > 3 ? <Icon source={CheckIcon} tone="base" /> : "03"}
               </div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Appearance</div>
+                <div className="aios-upsell_step_heading">{t('createUpsell.appearance')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Where & how to display
+              {t('createUpsell.where')}
                 </div>
               </BlockStack>
             </InlineStack>
@@ -2368,9 +2364,9 @@ function BuilderCreate() {
             <InlineStack blockAlign="center">
               <div className="aios-upsell_step_counter">04</div>
               <BlockStack>
-                <div className="aios-upsell_step_heading">Review Order</div>
+                <div className="aios-upsell_step_heading">{t('createUpsell.review')}</div>
                 <div className="aios-upsell_step_sub_title">
-                  Review the products
+                 {t('createUpsell.reviewPro')}
                 </div>
               </BlockStack>
             </InlineStack>

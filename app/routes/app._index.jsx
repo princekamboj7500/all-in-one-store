@@ -123,7 +123,7 @@ export default function Index() {
     window.open(
       "https://admin.shopify.com/store/" +
         storeName.replace(".myshopify.com", "") +
-        "/themes/current/editor?context=apps&activateAppId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/all-in-one-store",
+        "/themes/current/editor?context=apps&activateAppId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/section",
       "__blank",
     );
   };
@@ -150,16 +150,16 @@ export default function Index() {
 
         {(isBannerVisible === false || isBannerVisible === null) && !isDismissed  && (
           <Banner
-            title="Please Enable the app"
+            title={t('Homepage.banner')}
             action={{
-              content: "Activate the app",
+              content: t('Homepage.bannerBtn'),
               variant: "primary",
               onAction: activateApp,
             }}
            tone="warning"
             onDismiss={handleDismiss}
           >
-            <p>{`${t('Homepage.Activatetext')}`}</p>
+            <p>{`${t('Homepage.text')}`}</p>
           </Banner>
         )}
         <Box>

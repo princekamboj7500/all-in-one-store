@@ -156,14 +156,14 @@ function Auto_External_Links(props) {
     );
   };
 
-  const appName = "Auto External Links";
+  const appName =t('Autolinks.appTitle');
 
   return (
     <div className="Auto_External_Links">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title="Auto External Links"
-        subtitle="Prevent visitors from closing your store when opening external links, by automatically opening them in new tabs."
+        title={t('Autolinks.appTitle')}
+        subtitle={t('Autolinks.appdes')}
         primaryAction={
           status ? (
             <DeactivatePopover
@@ -173,7 +173,7 @@ function Auto_External_Links(props) {
             />
           ) : (
             {
-              content: "Activate App",
+              content:t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
               loading: buttonloading,

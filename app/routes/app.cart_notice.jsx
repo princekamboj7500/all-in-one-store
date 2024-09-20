@@ -312,7 +312,7 @@ function CartNotice(props) {
             </div>
      );
      const url = `https://admin.shopify.com/store/${storeName.replace('.myshopify.com', '')}/admin/themes/current/editor?template=cart&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/cartnotice&target=newAppsSection`;
-     const appName = "Cart Notice"
+     const appName = t('CartNotice.appTitle');
      const handleClick = () => {
          navigate("/app");
          shopify.loading(true);
