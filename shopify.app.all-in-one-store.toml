@@ -3,7 +3,7 @@
 client_id = "1445c808f6db36fba859603c99988f76"
 name = "All-In-One Store"
 handle = "all-in-one-store"
-application_url = "https://puppy-diego-briefing-republicans.trycloudflare.com"
+application_url = "https://steam-selling-nasty-wells.trycloudflare.com"
 embedded = true
 
 [build]
@@ -16,9 +16,9 @@ scopes = "read_products,read_themes,write_discounts,write_products"
 
 [auth]
 redirect_urls = [
-  "https://puppy-diego-briefing-republicans.trycloudflare.com/auth/callback",
-  "https://puppy-diego-briefing-republicans.trycloudflare.com/auth/shopify/callback",
-  "https://puppy-diego-briefing-republicans.trycloudflare.com/api/auth/callback"
+  "https://steam-selling-nasty-wells.trycloudflare.com/auth/callback",
+  "https://steam-selling-nasty-wells.trycloudflare.com/auth/shopify/callback",
+  "https://steam-selling-nasty-wells.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
@@ -29,7 +29,7 @@ api_version = "2024-04"
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
 
 [app_proxy]
-url = "https://puppy-diego-briefing-republicans.trycloudflare.com/api"
+url = "https://steam-selling-nasty-wells.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

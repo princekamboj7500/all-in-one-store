@@ -818,6 +818,7 @@ align-items: center;
 justify-content: center;
 
 }
+
 .upsell_bundle_name.upsell_active_bundle{
    background-color: #c5f3e0;
    color: #31765a;
@@ -848,4 +849,9 @@ width: 100% !important;
 .apps_name>.Polaris-InlineStack>.all_in_apps_Card {
     max-width: calc(33.33333% - 10px);
 }
+}
+
+
+@media only screen and (min-width:1240px){
+ 
 }
