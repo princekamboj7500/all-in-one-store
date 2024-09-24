@@ -184,7 +184,7 @@ export default function Index() {
       
         </InlineGrid>
        
-        <div className="vitals_app_card">
+        <div className="aios_app_card">
           <Card roundedAbove="sm">
             <BlockStack gap="200">
               <InlineGrid columns="1fr auto">
@@ -203,7 +203,7 @@ export default function Index() {
                   
                 </Button>
               </InlineGrid>
-              <div className="vitals_app_body">
+              <div className="aios_app_body">
                 <InlineStack align="space-between" blockAlign="center">
                   <InlineStack align="space-between" blockAlign="center">
                     <BlockStack gap="20">
@@ -424,7 +424,7 @@ export default function Index() {
                         <div className="app_icon">
                           <img src={upsell} style={{ width: "100%" }} />
                         </div>
-                        <div className="app_name">
+                        <div className="app_name_hide">
                           <Text variant="bodyMd" as="h3">
                           {`${t('Homepage.hide')}`}
                           </Text>
