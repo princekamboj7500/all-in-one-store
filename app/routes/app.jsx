@@ -10,7 +10,7 @@ export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }) => {
   const { billing, session  } = await authenticate.admin(request);
-  const appTest = false;
+  const appTest = true;
 
 
   await billing.require({
