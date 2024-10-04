@@ -39,6 +39,9 @@ import {
   visitor,
   reviews,
   sticky,
+  hide_dynamic,
+  inactive_tab,
+  cookie_banner
 } from "./assets";
 
 export const loader = async ({ request }) => {
@@ -86,6 +89,8 @@ if(metafielData){
   var currentTheme = getThemes?.data?.find(
     (themes) => themes.role === "main",
   )?.id;
+ 
+
 
 
   const checkStatus = await admin.rest.resources.Asset.all({
@@ -385,7 +390,7 @@ export default function Index() {
                         blockAlign="center"
                       >
                         <div className="app_icon">
-                          <img src={reviews} style={{ width: "100%" }} />
+                          <img src={inactive_tab} style={{ width: "100%" }} />
                         </div>
                         <div className="app_name">
                           <Text variant="bodyMd" as="h3">
@@ -422,7 +427,7 @@ export default function Index() {
                         blockAlign="center"
                       >
                         <div className="app_icon">
-                          <img src={upsell} style={{ width: "100%" }} />
+                          <img src={hide_dynamic} style={{ width: "100%" }} />
                         </div>
                         <div className="app_name_hide">
                           <Text variant="bodyMd" as="h3">
@@ -433,7 +438,7 @@ export default function Index() {
                     </Link>
                   </div>
                   <div className="all_in_apps_Card">
-                    <Link   onClick= {handleClick} monochrome removeUnderline url="/app/cookie_banner">
+                    <Link  onClick= {handleClick} monochrome removeUnderline url="/app/cookie_banner">
                       <InlineStack
                         align="space-between"
                         gap="200"

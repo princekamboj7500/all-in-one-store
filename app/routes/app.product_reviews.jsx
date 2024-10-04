@@ -31,6 +31,7 @@ import {
   Grid,
   Frame,
   InlineStack,
+  Collapsible,
   Link,
   Popover,
   ActionList,
@@ -43,6 +44,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import {
   ViewIcon,
   ImageIcon,
+  ChevronDownIcon,
+
   ImportIcon,
   StarIcon,
   NoteIcon,
@@ -66,6 +69,8 @@ import AllreviewsBadge from "./components/AllReviewsBadge";
 import ReviewsCarousel from "./components/ReviewsCarousel";
 import DiscardModal from "./components/DiscardModal";
 import PublishingSeo from "./components/PublishingSeo";
+import Moderation from "./components/Moderation";
+import RequestReviews from "./components/RequestReviews";
 import db from "../db.server";
 import {
   LineChart,
@@ -82,6 +87,7 @@ import DateRangePicker from "./components/DateRangePicker";
 export const loader = async ({ request }) => {
   const { session, admin } = await authenticate.admin(request);
   const shopName = session.shop;
+
 
   const response = await admin.graphql(`query {
           currentAppInstallation {
@@ -107,7 +113,14 @@ export const loader = async ({ request }) => {
     app_status: false,
     star_shape: "Rounded",
     widget_star_color: "#ffce07",
-
+    automatic_email: 1,
+    after: "Purchased",
+    email_timing: "7days",
+    offer_discount: 1,
+    send_discount: "Review Requests Only",
+    discount_type: "percentage",
+    discount_value: 10,
+    discount_method: "Auto-generate",
     reviews_layout: "Grid_view",
     show_rating_filterbar: 1,
     show_reviewbox_whenzero: 1,
@@ -187,6 +200,7 @@ export const loader = async ({ request }) => {
     margin_bottom_homepage: 10,
     // publishing
     autopublish_reviews: "Don't auto Publish",
+    send_mail: 1,
 
     // reviewscarousel
     reviews_carousel_option: "automatically",
@@ -265,6 +279,8 @@ export const loader = async ({ request }) => {
     data = appSettings;
   }
 
+
+
   const totalReviews = await db.Reviews.count({
     where: {
       store_name: session.shop,
@@ -277,11 +293,21 @@ export const loader = async ({ request }) => {
       store_name: session.shop,
     },
   });
+  const moderationReviews = await db.Reviews.findMany({
+    where: {
+      status: "UnPublished",
+      store_name: session.shop,
+    },
+  });
+
   const reviews = await db.Reviews.findMany({
     where: {
       store_name: session.shop,
     },
   });
+
+
+
   const productStats = reviews.reduce((acc, product) => {
     const { product_id, rating } = product;
     const ratingNumber = parseFloat(rating);
@@ -332,7 +358,7 @@ export const loader = async ({ request }) => {
     },
   });
 
-  return {
+return {
     data,
     shopName,
     totalReviews,
@@ -340,7 +366,10 @@ export const loader = async ({ request }) => {
     averageRating,
     productReviews,
     analyticsData,
+    
     collectionData,
+    moderationReviews,
+
   };
 };
 
@@ -408,7 +437,7 @@ export function ReviewList({ reviews }) {
                   {`${t('productreviews.Reviews')}`} <b>{reviews}</b>
                 </Badge>
                 <Badge>
-                {`${t('productreviews.Rating')}`}<b>{totalRating}</b>
+                  {`${t('productreviews.Rating')}`}<b>{totalRating}</b>
                 </Badge>
               </div>
             </ResourceItem>
@@ -734,8 +763,8 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
   const buttonValue =
     activeDateRange.title === "Custom"
       ? activeDateRange.period.since.toDateString() +
-        " - " +
-        activeDateRange.period.until.toDateString()
+      " - " +
+      activeDateRange.period.until.toDateString()
       : activeDateRange.title;
 
   const [date, setActiveDate] = useState({ startDate: "", endDate: "" });
@@ -896,7 +925,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
               <InlineStack align="end">
                 <Button onClick={cancel}>{`${t('productreviews.Cancel')}`}</Button>
                 <Button primary onClick={apply}>
-                {`${t('productreviews.Apply')}`}
+                  {`${t('productreviews.Apply')}`}
                 </Button>
               </InlineStack>
             </Popover.Section>
@@ -1199,7 +1228,7 @@ export const AnalyticsDataTab = ({ data, reviews }) => {
                       as="h4"
                       tone="inherit"
                     >
-                     {`${t('productreviews.collected')}`}
+                      {`${t('productreviews.collected')}`}
                     </Text>
                     <Text fontWeight="bold" variant="headingLg" tone="inherit">
                       {Reviewscount}
@@ -1342,13 +1371,16 @@ function ProductReviews() {
   const {
     data,
     shopName,
+
     reviews,
+
     totalReviews,
     publishReviews,
     analyticsData,
     collectionData,
     averageRating,
     productReviews,
+    moderationReviews
   } = useLoaderData();
   const [Analyticsdata, setAnalyticsdata] = useState();
   const [Reviewdata, setReviewdata] = useState(collectionData);
@@ -1376,7 +1408,7 @@ function ProductReviews() {
   const widgetoptions = [
     { value: "ReviewsWidget", label: t('productreviews.ReviewsWidget') },
     { value: "StarRatings", label: t('productreviews.StarRatings') },
-    { value: "ReviewsCarousel", label:  t('productreviews.ReviewsCarousel') },
+    { value: "ReviewsCarousel", label: t('productreviews.ReviewsCarousel') },
     { value: "HappyCustomers", label: t('productreviews.happy') },
     { value: "FeaturedReviews", label: t('productreviews.featured') },
     { value: "AllReviewsBadge", label: t('productreviews.allhere') },
@@ -1394,10 +1426,13 @@ function ProductReviews() {
     const dataToSend = {
       actionType: actionType,
       data: updatedFormData,
+
+
+
     };
 
     try {
-      
+
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -1477,6 +1512,7 @@ function ProductReviews() {
   };
 
   const handleChange = (value, property) => {
+
     setFormData((formData) => ({
       ...formData,
       [property]: value,
@@ -1498,7 +1534,17 @@ function ProductReviews() {
     (selectedTabIndex) => setSelected(selectedTabIndex),
     [],
   );
-
+  const [openStates, setOpenStates] = useState({
+    generalDesignSettings: false,
+    cookiesettings: false,
+    informativeCookieBanner: false,
+  });
+  const handleToggle = (section) => {
+    setOpenStates((prevOpenStates) => ({
+      ...prevOpenStates,
+      [section]: !prevOpenStates[section],
+    }));
+  };
   const handleColorChange = useCallback((e, fieldName) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -1614,6 +1660,7 @@ function ProductReviews() {
   );
 
   const Dashboard = () => {
+
     return (
       <div style={{ padding: "10px" }} className="product-review">
         <BlockStack gap="200">
@@ -1645,7 +1692,7 @@ function ProductReviews() {
                 <BlockStack gap="100">
                   <Text fontWeight="bold">{`${t('productreviews.Importreviews')}`}</Text>
                   <Text variant="p">
-                  {`${t('productreviews.description')}`}
+                    {`${t('productreviews.description')}`}
                   </Text>
                 </BlockStack>
               </InlineGrid>
@@ -1665,7 +1712,7 @@ function ProductReviews() {
                 <BlockStack gap="100">
                   <Text fontWeight="bold">{`${t('productreviews.customize')}`}</Text>
                   <Text variant="p">
-                  {`${t('productreviews.sub')}`}
+                    {`${t('productreviews.sub')}`}
                   </Text>
                 </BlockStack>
               </InlineGrid>
@@ -1678,6 +1725,88 @@ function ProductReviews() {
               </Button>
             </BlockStack>
           </Card>
+          <Card>
+            <BlockStack gap={300} inlineAlign="start">
+              <InlineGrid columns="45px 1fr" gap="200" alignItems="start">
+                <Thumbnail source={ImportIcon} size="small" />
+                <BlockStack gap="100">
+                  <Text fontWeight="bold">{`${t('productreviews.customize')}`}</Text>
+                  <Text variant="p">
+                    {`${t('productreviews.sub')}`}
+                  </Text>
+                </BlockStack>
+              </InlineGrid>
+              <Button
+                onClick={() => {
+                  setSelected(3);
+                }}
+              >
+                {`${t('productreviews.gosettings')}`}
+              </Button>
+            </BlockStack>
+          </Card>
+          <div>
+            <Card sectioned>
+              <BlockStack gap="500">
+                <div className="arrow-sign">
+                  <BlockStack gap={200}>
+                    <div
+                      onClick={() => handleToggle("informativeCookieBanner")}
+                      style={{ display: "inline-block", cursor: "pointer" }}
+                    >
+                      <div style={{ float: "left" }}>
+                        <Text variant="headingSm" as="h6">
+                          Collect more reviews
+                        </Text>
+                      </div>
+                      <div style={{ float: "right" }}>
+                        <InlineStack>
+
+                          <Icon source={ChevronDownIcon} tone="base" />
+                        </InlineStack>
+                      </div>
+                    </div>
+
+                  </BlockStack>
+                </div>
+
+                <Collapsible
+                  open={openStates.informativeCookieBanner}
+                  id="basic-collapsible"
+                  transition={{ duration: "500ms", timingFunction: "ease-in-out" }}
+                  expandOnPrint
+                >
+                  <BlockStack gap="400">
+                    {status ? (<InlineStack>
+                      <div><svg viewBox="0 0 20 20" style={{ width: '20px', fill: '#29845a' }} focusable="false" aria-hidden="true"><path d="M13.28 9.03a.75.75 0 0 0-1.06-1.06l-2.97 2.97-1.22-1.22a.75.75 0 0 0-1.06 1.06l1.75 1.75a.75.75 0 0 0 1.06 0l3.5-3.5Z"></path><path fillRule="evenodd" d="M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Zm-1.5 0a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0Z"></path></svg></div>
+                      <div><Text as="p" fontWeight="bold">Activate the Product Reviews app</Text></div>
+                    </InlineStack>) : (<Box padding="400">
+                      <InlineStack>
+                        <div class="aios_circle"></div>
+                        <div>
+                          <Text as="p" fontWeight="bold">
+                            Activate the Product Reviews app
+                          </Text>
+
+                          <Box padding="10">
+                            <Text variant="bodyLg" as="p" alignment="start">
+                              Activate the app to start collecting reviews & to display the product reviews widget on your store.</Text>
+                            <Button variant="primary" loading={buttonloading} onClick={handleToggleStatus}>Activate App</Button>
+                          </Box>
+                        </div>
+                      </InlineStack>
+
+                    </Box>)}
+
+
+
+
+
+                  </BlockStack>
+                </Collapsible>
+              </BlockStack>
+            </Card>
+          </div>
         </BlockStack>
       </div>
     );
@@ -1694,7 +1823,7 @@ function ProductReviews() {
       setShowImportModal(true);
     };
     const handleExportModal = () => {
-      
+
       setExportBanner(true);
     };
     const handleCheckChange = (newChecked) => {
@@ -1763,7 +1892,7 @@ function ProductReviews() {
           setMsgData("There is Error while Import");
           setActive(true);
         }
-      } catch (err) {}
+      } catch (err) { }
     };
     const fileUpload = !files.length && <DropZone.FileUpload />;
     const ImportModal = (
@@ -1794,7 +1923,7 @@ function ProductReviews() {
                   </Text>
                   <List type="number">
                     <List.Item>
-                    {`${t('productreviews.Download')}`}
+                      {`${t('productreviews.Download')}`}
                       <a
                         href="https://cdn.shopify.com/s/files/1/0654/5388/3651/files/aios-reviews-template.csv?v=1724129630"
                         target="_blank"
@@ -1804,7 +1933,7 @@ function ProductReviews() {
                     </List.Item>
                     <List.Item>{`${t('productreviews.fill')}`}</List.Item>
                     <List.Item>
-                    {`${t('productreviews.uploaded')}`}
+                      {`${t('productreviews.uploaded')}`}
                     </List.Item>
                   </List>
                 </Box>
@@ -1823,7 +1952,7 @@ function ProductReviews() {
                   <Checkbox
                     checked={checkImport}
                     onChange={handleCheckChange}
-                    label= {`${t('productreviews.confirm')}`}
+                    label={`${t('productreviews.confirm')}`}
                   ></Checkbox>
                 </BlockStack>
               </Box>
@@ -1833,7 +1962,7 @@ function ProductReviews() {
       </div>
     );
 
-  
+
 
     // const ExportModal = (
     //   <div className="modals">
@@ -1876,7 +2005,7 @@ function ProductReviews() {
               }}
             >
               <p>
-              {`${t('productreviews.importtext')}`}
+                {`${t('productreviews.importtext')}`}
               </p>
             </Banner>
           )}
@@ -1914,7 +2043,7 @@ function ProductReviews() {
                     style={{ borderRadius: "8px" }}
                   />
                   <Text variant="p">
-                  {`${t('productreviews.secimport')}`}
+                    {`${t('productreviews.secimport')}`}
                   </Text>
                 </InlineGrid>
                 <Button onClick={handleImportModal}>{`${t('productreviews.Import')}`}</Button>
@@ -1963,10 +2092,13 @@ function ProductReviews() {
           </Card> */}
         </BlockStack>
         {ImportModal}
-    
+
       </div>
     );
   };
+
+
+
 
   const tabs = [
     {
@@ -1977,11 +2109,20 @@ function ProductReviews() {
       component: <Dashboard />,
       dummy: "",
     },
+
     {
       id: "Reviews",
       content: t('productreviews.Reviews'),
       panelID: "Reviews",
       component: <ReviewList reviews={productReviews} />,
+      dummy: "",
+    },
+    {
+      id: "Moderation",
+      content: t('productreviews.moderation'),
+      accessibilityLabel: "moderation",
+      panelID: "Moderation",
+      component: <Moderation data={moderationReviews} store={shopName} />,
       dummy: "",
     },
     {
@@ -1991,6 +2132,7 @@ function ProductReviews() {
       component: <Importtab />,
       dummy: "",
     },
+    
     {
       id: "settings",
       content: t('defaultSettings.settings'),
@@ -2016,13 +2158,13 @@ function ProductReviews() {
     navigate("/app");
     shopify.loading(true);
   };
-  const appName =t('Homepage.product');
+  const appName = t('Homepage.product');
 
   return (
     <div className="Produyct-reviews">
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
-        title= {`${t('Homepage.product')}`}
+        title={`${t('Homepage.product')}`}
         subtitle={`${t('productreviews.descriptions')}`}
         primaryAction={
           status ? (
@@ -2032,7 +2174,7 @@ function ProductReviews() {
               buttonLoading={buttonloading}
             />
           ) : (
-            { 
+            {
               content: t('defaultSettings.activateBtn'),
               tone: "success",
               onAction: handleToggleStatus,
@@ -2046,7 +2188,7 @@ function ProductReviews() {
             {selected == "0" && (
               <BlockStack gap="200">
                 <Text alignment="end" tone="subdued">
-                {`${t('productreviews.resultss')}`}{" "}
+                  {`${t('productreviews.resultss')}`}{" "}
                 </Text>
                 <InlineGrid
                   columns={{
@@ -2064,7 +2206,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                      {`${t('productreviews.reviewscollected')}`}
+                        {`${t('productreviews.reviewscollected')}`}
                       </Text>
                       <Text as="p" variant="headingLg">
                         {totalReviews}
@@ -2083,7 +2225,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                      {`${t('productreviews.Reviewspublished')}`}
+                        {`${t('productreviews.Reviewspublished')}`}
                       </Text>
                       <Text as="p" variant="headingLg">
                         {publishReviews}
@@ -2102,7 +2244,7 @@ function ProductReviews() {
                   >
                     <BlockStack gap="100">
                       <Text as="h2" variant="headingSm">
-                      {`${t('productreviews.Averagerating')}`}
+                        {`${t('productreviews.Averagerating')}`}
                       </Text>
                       <InlineStack align="start" gap="200" blockAlign="center">
                         <span>

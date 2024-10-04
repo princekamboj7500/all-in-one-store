@@ -112,9 +112,17 @@
     "rating":"Notation",
     "review":"Vérifier le contenu",
     "source":"Source",
+    "moderations":"Modérations",
+    "product":"Produit",
     "photos":"Photos",
+    "heading":"Détails de l'examen",
+    "details":"Vérifier les détails",
+    "update":"Modifier l'avis",
     "status":"Statut",
+    "help":"La note n'est pas modifiable.",
     "date":"Date",
+    "content":"Revoir",
+    "email":"E-mail",
     "actions":"Actes",
     "empty":"Aucun avis",
     "emptyDesc":"Il n'y a aucun avis pour ce produit pour la requête recherchée ",
@@ -126,13 +134,14 @@
     "edit":"Modifier l'avis",
     "write":"Écrivez une réponse",
     "publish":"Publier les avis",
-    "update":"Update images",
+    
     "save":"Sauvegarder",
     "close":"Fermer",
     "error":"La taille du fichier ne doit pas dépasser 10 Mo.",
     "success":"Publié avec succès",
-    "fail":"Il y a une erreur lors de la mise à jour"
-  
+    "fail":"Il y a une erreur lors de la mise à jour",
+   "reply":"Répondre à l'avis",
+    "replybtn":"Enregistrer la réponse"
   
   
   },
@@ -251,6 +260,7 @@
     "title":"Veuillez ajouter des commentaires",
     "newlayout":"Disposition des avis",
     "Dashboard":"Tableau de bord",
+    "moderation":"Modération",
     "Desktop":"Bureau",
     "dataformet":"Format des dates",
     "verifyicon":"Icône d'achat vérifié",

@@ -1,9 +1,9 @@
-.vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack {
+/* .vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack {
     background-color: var(--p-color-bg-surface-secondary);
     border-radius: var(--p-border-radius-200);
     padding: var(--p-space-400);
     width: calc(50% - var(--p-space-200));
-  }
+  } */
   
   .vitals_app_body>.Polaris-InlineStack>.Polaris-BlockStack {
     background-color: var(--p-color-bg-surface-secondary);
@@ -16,7 +16,7 @@
     font-weight: var(--p-font-weight-semibold);
   }
   
-  gg.scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Title {
+  .scroll_up_to_top_page .Polaris-Header-Title__TitleWrapper .Polaris-Header-Title {
     font-size: 25px;
     display: inline;
     margin-right: var(--p-space-200);
@@ -31,7 +31,7 @@
   .color_section {
     display: flex;
   }
-  
+ 
   .color_section input[type="color"] {
     height: 40px;
     background-color: transparent;

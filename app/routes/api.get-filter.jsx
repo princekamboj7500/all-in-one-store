@@ -31,6 +31,17 @@ export const action = async ({ request }) => {
         }
        
     }
+    else if(typeParam=="moderate" && action=="Rating"){
+        data = await db.Reviews.findMany({
+            where:{
+                store_name:session.shop,
+                status:"UnPublished",
+                rating: {
+                    in: type,
+                  },
+            }
+        })
+    }
  else if(action=="Rating"){
    data = await db.Reviews.findMany({
         where:{

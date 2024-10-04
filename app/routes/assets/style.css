@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 .vitals_app_body>.Polaris-InlineStack>.Polaris-InlineStack{
   background-color: var(--p-color-bg-surface-secondary);
   border-radius: var(--p-border-radius-200);
@@ -819,9 +822,51 @@ justify-content: center;
 
 }
 
+.email--previews{
+  padding: 20px;
+  font-family: "Raleway", sans-serif;
+  font-size: 16px;
+}
+.email--header{
+  font-size: 16px;
+  font-family: "Raleway", sans-serif;
+  margin-bottom: 20px;
+}
+.send--btn{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+.email--body{
+  text-align: center;
+}
+.email--body  button{
+  color: #fff;
+    font-weight: 500;
+    margin: 28px 0;
+    font-family: "Raleway", sans-serif;
+    padding: 11px 22px;
+    background: #000;
+}
+.email--content{
+  font-family: "Raleway", sans-serif;
+  padding-bottom: 20px;
+  font-size: 16px;
+}
+.email--footer{
+  font-family: "Raleway", sans-serif;
+  padding: 30px 0 0;
+}
 .upsell_bundle_name.upsell_active_bundle{
    background-color: #c5f3e0;
    color: #31765a;
+} .aios_circle{
+  height: 20px;
+  width: 20px;
+  border: var(--p-border-radius-050) dotted var(--p-color-icon-secondary);
+  border-radius: var(--p-border-radius-750);
+  margin-right: 10px;
+  display: inline;
 }
 
 @media only screen and (min-width: 728px) {
