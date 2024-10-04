@@ -41,7 +41,7 @@ import {
   sticky,
   hide_dynamic,
   inactive_tab,
-  cookie_banner
+  
 } from "./assets";
 
 export const loader = async ({ request }) => {

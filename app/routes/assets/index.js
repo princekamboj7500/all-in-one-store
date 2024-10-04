@@ -1,5 +1,5 @@
 export { default as upsell } from './upsell-builder.svg';
-export { default as cookie_banner} from './cookie_banner.svg';
+
 export { default as logo } from './app_logo.png';
 export { default as product } from './product_1.png';
 export { default as bogoproduct } from './product_1.jpg';
