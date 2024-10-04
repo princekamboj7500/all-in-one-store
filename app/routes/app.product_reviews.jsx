@@ -2119,7 +2119,7 @@ function ProductReviews() {
     },
     {
       id: "Moderation",
-      content: t('productreviews.moderation'),
+      content: "Moderation",
       accessibilityLabel: "moderation",
       panelID: "Moderation",
       component: <Moderation data={moderationReviews} store={shopName} />,
