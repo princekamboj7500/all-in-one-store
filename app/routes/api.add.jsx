@@ -1,6 +1,10 @@
 import db from "../db.server";
 import { json } from "@remix-run/node";
 import AWS from "aws-sdk";
+import nodemailer from 'nodemailer';
+
+import { sendEmailReviewsSubmit } from "./utils/getEmailReviews";
+
 const spacesEndpoint = new AWS.Endpoint("nyc3.digitaloceanspaces.com");
 const s3 = new AWS.S3({
   endpoint: spacesEndpoint,
@@ -13,6 +17,16 @@ const s3 = new AWS.S3({
 
 
 export const action = async ({ request }) => {
+  const transporter = nodemailer.createTransport({
+    host:process.env.SMTP_HOST ,
+  port: process.env.PORT,
+  secure: false, 
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  });
+
   const  shopName = new URL(request.url).searchParams.get("shop");
    const formData = await request.formData();
   const files_q = formData.getAll('file');
@@ -31,6 +45,7 @@ export const action = async ({ request }) => {
 
     return s3.upload(params).promise();
   });
+ 
  try {
     const uploaded = await Promise.all(uploadPromises);
   const locations = uploaded.map(item => item.Location);
@@ -60,6 +75,8 @@ const addReviews = await db.Reviews.create({
         source:"AIOS"
     },
 })
+
+
 return { success: true, message:"Review added successfully",data:addReviews};
 }catch (error) {
   console.error('Error: ', error);

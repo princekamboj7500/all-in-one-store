@@ -140,14 +140,22 @@
  },
 
  "editReview":{
+    "email":"Email",
   "name":"Name",
   "rating":"Rating",
+  "help":"The rating is not editable.",
   "review":"Review Content",
   "source":"Source",
   "photos":"Photos",
+  "moderations":"Moderations",
+  "product":"Product",
   "date":"Date",
   "status":"Status",
   "actions":"Actions",
+  "update":"Edit Review",
+  "details":"Review details",
+  "heading":"Review details",
+"content":"Review",
   "empty":"No reviews",
     "emptyDesc":"There are no reviews for this product for searched query ",
     "noexits":"No reviews found",
@@ -161,7 +169,9 @@
     "close":"Close",
     "error":"The file size should not be more than 10Mb.",
     "success":"Published Successfully",
-    "fail":"There is some error while update"
+    "fail":"There is some error while update",
+    "reply":"Reply to the review",
+    "replybtn":"Save Reply"
 
 
 },
@@ -353,6 +363,7 @@
     "title":"Please add reviews",
     "Publishing":"Publishing",
     "Dashboard":"Dashboard",
+    "moderation":"Moderation",
     "Desktop":"Desktop",
     "dataformet":"Date format",
     "Grid":"Grid",

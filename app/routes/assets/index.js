@@ -1,4 +1,5 @@
 export { default as upsell } from './upsell-builder.svg';
+export { default as cookie_banner} from './cookie_banner.svg';
 export { default as logo } from './app_logo.png';
 export { default as product } from './product_1.png';
 export { default as bogoproduct } from './product_1.jpg';
@@ -43,3 +44,6 @@ export { default as svg_icon15} from './scroll_top/svg_icon15.svg';
 export { default as svg_icon16} from './scroll_top/svg_icon16.svg';
 export { default as product_bundle} from './product_bundle.png';
 export { default as bogo} from './bogo.png';
+export { default as hide_dynamic} from './hide_dynamic.svg';
+export { default as inactive_tab} from './inactive_tab.svg';
+

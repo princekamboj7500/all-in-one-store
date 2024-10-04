@@ -8,7 +8,7 @@ export const loader = async ({ request }) => {
   const url = new URL(request.url);
   const typeParam = url.searchParams.get("type");
   const pro_id = url.searchParams.get("id");
-  
+  const all = url.searchParams.get("all");
   const queryParam = `%${typeParam}%`;
   const fromParam = url.searchParams.get("from");
  
@@ -54,7 +54,39 @@ export const loader = async ({ request }) => {
           200,
         );
       }
-    } else{
+    } else if(queryParam && all){
+      console.log("all_____")
+      const searchQuery = await db.Reviews.findMany({
+        where: {
+          store_name: session.shop,
+          status :"UnPublished",
+          OR: [
+            {
+              name: {
+                contains: typeParam,
+                mode: 'insensitive', 
+              },
+            },
+          ]
+         
+        },
+      });
+
+      if (searchQuery.length === 0) {
+        return json({ success: false, message: "No data Exists" }, 200);
+      } else {
+        return json(
+          {
+            success: true,
+            message: "Exists",
+            data: searchQuery,
+          },
+          200,
+        );
+      }
+    }
+    
+    else{
    
       const searchQuery = await db.Reviews.findMany({
         where: {

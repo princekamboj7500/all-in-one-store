@@ -331,62 +331,7 @@ const ProductReview = () => {
     },
   ];
 
-  // const filters = [
-  //   {
-  //     key: "rating",
-  //     label: "Rating",
-  //     filter: (
-  //       <ChoiceList
-  //         title="Rating"
-  //         titleHidden
-  //         choices={[
-  //           { label: "5 Stars", value: "5 Stars" },
-  //           { label: "4 Stars", value: "4 Stars" },
-  //           { label: "3 Stars", value: "3 Stars" },
-  //           { label: "2 Stars", value: "2 Stars" },
-  //           { label: "1 Stars", value: "1 Stars" },
-  //         ]}
-  //         selected={accountStatus || []}
-  //         onChange={handleRatingChange}
-  //         allowMultiple
-  //       />
-  //     ),
-  //     shortcut: true,
-  //   },
-  //   {
-  //     key: "source",
-  //     label: "Source",
-  //     filter: (
-  //       <ChoiceList
-  //         title="Source"
-  //         titleHidden
-  //         choices={[{ label: "aios", value: "AIOS" }]}
-  //         selected={accountStatus || []}
-  //         onChange={handleRatingChange}
-  //         allowMultiple
-  //       />
-  //     ),
-  //     shortcut: true,
-  //   },
-  //   {
-  //     key: "status",
-  //     label: "Status",
-  //     filter: (
-  //       <ChoiceList
-  //         title="Status"
-  //         titleHidden
-  //         choices={[
-  //           { label: "Unpublished", value: "Unpublished" },
-  //           { label: "Published", value: "Published" },
-  //         ]}
-  //         selected={accountStatus || []}
-  //         onChange={handleRatingChange}
-  //         allowMultiple
-  //       />
-  //     ),
-  //     shortcut: true,
-  //   },
-  // ];
+  
   const appliedFilters = [];
   if (!isEmpty(availability)) {
     const key = "rating";
@@ -779,15 +724,15 @@ const ProductReview = () => {
         <Modal
           open={showReplyModal}
           onClose={() => setShowReplyModal(false)}
-          title="Reply to the review"
+          title={t('editReview.reply')}
           primaryAction={{
-            content: "Save Reply",
+            content: t('editReview.replybtn'),
             loading: buttonLoader,
             onAction: () => handleSaveReply(),
           }}
           secondaryActions={[
             {
-              content: "Close",
+              content: t('editReview.close'),
               onAction: () => setShowReplyModal(false),
             },
           ]}
@@ -1149,10 +1094,10 @@ const ProductReview = () => {
               <IndexTable.Cell>{formattedDate}</IndexTable.Cell>
               <IndexTable.Cell>
                 <ButtonGroup>
-                  <Tooltip content="Edit review">
+                  <Tooltip content={t('editReview.update')}>
                     <Button
                       icon={EditIcon}
-                      accessibilityLabel="Edit review"
+                      accessibilityLabel={t('editReview.update')}
                       onClick={() =>
                         handleEditModal(filteredReviews[index], id)
                       }
