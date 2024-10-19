@@ -145,12 +145,54 @@ function Auto_External_Links(props) {
     navigate("/app");
     shopify.loading(true);
   };
-
+  const handleMail = ()=>{
+    const email = 'melanie@enfinlibre.com'; 
+    const subject = 'Query regarding Auto External Links App';
+    const body = `Hello Support,
+                 I want to know how can I use AutoExternal Links app?
+    
+    `;
+  window.top.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
   const SettingsDataTab = () => {
     return (
       <div className="Cart_notice_page_SettingsDataTab_container">
         <BlockStack gap="400">
-       
+          <div className="lower_section">
+            <Grid>
+              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+              <Card roundedAbove="sm">
+                  <BlockStack gap="200">
+                    <Text as="h2" variant="headingSm">
+                      We're here for you
+                    </Text>
+                    <BlockStack gap="200">
+                      <Text as="p" fontWeight="reguler">
+                        Contact Us  for any query or help.
+                      </Text>
+                    
+                    </BlockStack>
+                    <InlineStack align="end">
+                      <ButtonGroup>
+                        <Button
+                          onClick={handleMail}
+                          accessibilityLabel="Fulfill items"
+                        >
+                        
+                          <Text variant="headingXs" as="h6" fontWeight="medium">
+                            Contact us
+                          </Text>
+                        </Button>
+                      </ButtonGroup>
+                    </InlineStack>
+                  </BlockStack>
+                </Card>
+              </Grid.Cell>
+              <Grid.Cell columnSpan={{ xs: 6, sm: 3, md: 3, lg: 4, xl: 4 }}>
+               
+              </Grid.Cell>
+            </Grid>
+          </div>
         </BlockStack>
       </div>
     );
@@ -163,7 +205,7 @@ function Auto_External_Links(props) {
       <Page
         backAction={{ content: "Back", onAction: handleClick }}
         title={t('Autolinks.appTitle')}
-        subtitle={t('Autolinks.appdes')}
+        subtitle={t('Autolinks.appdsec')}
         primaryAction={
           status ? (
             <DeactivatePopover
