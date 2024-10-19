@@ -2169,7 +2169,7 @@ function UpsellBuilder() {
 
   const handleUpsellBuilderClick = () => {
     window.open(
-      `https://admin.shopify.com/store/${shopName.replace(".myshopify.com", "")}/admin/themes/current/editor?&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/upsellbuilder&target=newAppsSection`,
+      `https://admin.shopify.com/store/${shopName.replace(".myshopify.com", "")}/admin/themes/current/editor?template=product&addAppBlockId=8177ef1b-fb1c-4ebb-a686-d743f22ea714/upsellbuilder&target=newAppsSection`,
       "__blank",
     );
   };

@@ -36,7 +36,7 @@ export const loader = async ({ request }) => {
         app_status: false,
         notice_bg_color: "#000000",
         notice_text_color: "#ffffff",
-        cart_notice_title: "An item in your cart is in high demand.",
+        cart_notice_title: "An item in your cart is a top seller.",
         cart_notice_secondary: "Complete the order to make sure it’s yours!",
         hide_fire_icon: 0
     };
