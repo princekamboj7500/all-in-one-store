@@ -3,7 +3,7 @@
 client_id = "30e55710145993ddb5716e3a7c3e50c3"
 name = "droptracking-dev"
 handle = "droptracking-dev"
-application_url = "https://shoot-aviation-nasa-workflow.trycloudflare.com"
+application_url = "https://pearl-yen-fatal-we.trycloudflare.com"
 embedded = true
 
 [build]
@@ -13,20 +13,20 @@ include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_products,read_script_tags,read_themes,write_content,write_discounts,write_online_store_pages,write_script_tags,write_themes"
+scopes = "read_content,read_locales,read_online_store_pages,read_orders,read_products,read_script_tags,read_themes,write_content,write_discounts,write_online_store_pages,write_orders,write_price_rules,write_script_tags,write_themes"
 
 [auth]
 redirect_urls = [
-  "https://shoot-aviation-nasa-workflow.trycloudflare.com/auth/callback",
-  "https://shoot-aviation-nasa-workflow.trycloudflare.com/auth/shopify/callback",
-  "https://shoot-aviation-nasa-workflow.trycloudflare.com/api/auth/callback"
+  "https://pearl-yen-fatal-we.trycloudflare.com/auth/callback",
+  "https://pearl-yen-fatal-we.trycloudflare.com/auth/shopify/callback",
+  "https://pearl-yen-fatal-we.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-10"
 
 [app_proxy]
-url = "https://shoot-aviation-nasa-workflow.trycloudflare.com/api"
+url = "https://pearl-yen-fatal-we.trycloudflare.com/api"
 subpath = "aios"
 prefix = "a"
 

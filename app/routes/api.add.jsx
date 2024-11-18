@@ -2,7 +2,7 @@ import db from "../db.server";
 import { json } from "@remix-run/node";
 import AWS from "aws-sdk";
 import nodemailer from 'nodemailer';
-
+import {authenticate} from '../shopify.server';
 import { sendEmailReviewsSubmit } from "./utils/getEmailReviews";
 
 const spacesEndpoint = new AWS.Endpoint("nyc3.digitaloceanspaces.com");
@@ -17,6 +17,7 @@ const s3 = new AWS.S3({
 
 
 export const action = async ({ request }) => {
+  const {admin} = await authenticate.public.appProxy(request);
   const transporter = nodemailer.createTransport({
     host:process.env.SMTP_HOST ,
   port: process.env.PORT,
