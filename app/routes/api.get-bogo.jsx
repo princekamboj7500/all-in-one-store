@@ -1,16 +1,16 @@
 import db from "../db.server";
-
+import {authenticate} from '../shopify.server';
 import { json } from "@remix-run/node";
-import { unauthenticated } from "../shopify.server";
+
 export const loader = async ({ request, params }) => {
   const url = new URL(request.url);
   const shopName = url.searchParams.get("shop");
   const type = url.searchParams.get("type");
 
   const product_id = url.searchParams.get("product_id");
+  const {admin} = await authenticate.public.appProxy(request);
 
-
-  const { admin, session } = await unauthenticated.admin(shopName);
+  
 
   const getAllCollections = async () => {
     const response = await admin.graphql(

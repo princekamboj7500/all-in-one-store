@@ -1,10 +1,10 @@
 import db from "../db.server";
 import { json } from "@remix-run/node";
-
+import {authenticate} from '../shopify.server';
 export const loader = async ({ request }) => {
   const shopName = new URL(request.url).searchParams.get("shop");
   const analytType = new URL(request.url).searchParams.get("type");
-
+  const {admin} = await authenticate.public.appProxy(request);
   const date = new Date();
   const dateString = date.toISOString();
 
